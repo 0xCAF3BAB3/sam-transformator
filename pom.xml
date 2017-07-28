@@ -12,6 +12,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <!-- dependencies -->
+        <org.cdlflex.models.caex.version>1.0.6-SNAPSHOT</org.cdlflex.models.caex.version>
         <junit.version>4.12</junit.version>
         <mockito-all.version>1.10.19</mockito-all.version>
         <slf4j.version>1.7.12</slf4j.version>
@@ -25,6 +26,12 @@
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
     </properties>
     <dependencies>
+        <!-- CDL-Flex :: Models :: CAEX -->
+        <dependency>
+            <groupId>org.cdlflex.models</groupId>
+            <artifactId>org.cdlflex.models.caex</artifactId>
+            <version>${org.cdlflex.models.caex.version}</version>
+        </dependency>
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>

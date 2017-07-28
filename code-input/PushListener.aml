@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CAEXFile FileName="PushListener.aml" SchemaVersion="2.15" xsi:noNamespaceSchemaLocation="CAEX_ClassModel_V2.15.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<AdditionalInformation>
+		<WriterHeader>
+			<WriterName>AutomationML Editor</WriterName>
+			<WriterID>916578CA-FE0D-474E-A4FC-9E1719892369</WriterID>
+			<WriterVendor>AutomationML e.V.</WriterVendor>
+			<WriterVendorURL>www.AutomationML.org</WriterVendorURL>
+			<WriterVersion>4.7.0.0</WriterVersion>
+			<WriterRelease>4.7.0.0</WriterRelease>
+			<LastWritingDateTime>2017-07-28T01:07:52.2226986+02:00</LastWritingDateTime>
+			<WriterProjectTitle>unspecified</WriterProjectTitle>
+			<WriterProjectID>unspecified</WriterProjectID>
+		</WriterHeader>
+	</AdditionalInformation>
+	<AdditionalInformation AutomationMLVersion="2.0" />
+	<InstanceHierarchy Name="PushListener">
+		<Version>1.0.0</Version>
+		<InternalElement Name="Service" ID="94491633-800e-4c1b-9906-cd722aad49f8">
+			<Attribute Name="Standalone.url" AttributeDataType="xs:anyURI">
+				<Value>http://127.0.0.1/pushlistener/</Value>
+			</Attribute>
+			<Attribute Name="Service.artifactId" AttributeDataType="xs:string">
+				<Value>pushlistener</Value>
+			</Attribute>
+			<Attribute Name="Service.groupId" AttributeDataType="xs:string">
+				<Value>com.jwa</Value>
+			</Attribute>
+			<Attribute Name="GitRepository.connection" AttributeDataType="xs:string">
+				<Value>scm:git:git@bitbucket.org:0xCAF3BAB3/pushlistener.git</Value>
+			</Attribute>
+			<Attribute Name="GitRepository.developerConnection" AttributeDataType="xs:string">
+				<Value>scm:git:git@bitbucket.org:0xCAF3BAB3/pushlistener.git</Value>
+			</Attribute>
+			<Attribute Name="GitRepository.url" AttributeDataType="xs:anyURI">
+				<Value>https://bitbucket.org/0xCAF3BAB3/pushlistener</Value>
+			</Attribute>
+			<Attribute Name="GitRepository.tag" AttributeDataType="xs:string">
+				<Value>HEAD</Value>
+			</Attribute>
+			<InternalElement Name="Component1" ID="a606c3fe-ad5b-49b9-8390-a8334ae9967a">
+				<Attribute Name="Component.artifactId" AttributeDataType="xs:string">
+					<Value>component1</Value>
+				</Attribute>
+				<Attribute Name="Component.groupId" AttributeDataType="xs:string">
+					<Value>com.jwa.pushlistener</Value>
+				</Attribute>
+				<InternalElement Name="Ports" ID="6f683e85-fd7b-4850-9d09-9a902016c527">
+					<InternalElement Name="Port1" ID="8b689792-3a90-4722-8242-731b01396939">
+						<Attribute Name="PortParameters.Rmi.hostname" AttributeDataType="xs:string">
+							<Value>127.0.0.1</Value>
+						</Attribute>
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11021</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="c86d22f0-a24d-4826-aa6e-adbf2f8db135" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/AMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Sender/SynchronousSender" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port2" ID="15168a15-e760-403a-ab6d-dbbce73f6849">
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11012</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="9f2cbd3d-4638-45e4-b7b8-757eb2ae4052" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Receiver" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port3" ID="d6b88305-2bb4-479a-87c3-61190a475565">
+						<Attribute Name="PortParameters.Rmi.hostname" AttributeDataType="xs:string">
+							<Value>127.0.0.1</Value>
+						</Attribute>
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11023</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="5c3276db-5b04-4f17-ad6d-bb95b9baa61b" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/CMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Sender/SynchronousSender" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port4" ID="bd20da93-e687-4ac2-9c61-f6a7b8c232c0">
+						<Attribute Name="PortParameters.Rmi.hostname" AttributeDataType="xs:string">
+							<Value>127.0.0.1</Value>
+						</Attribute>
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11033</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="f152d756-33b4-498c-a251-b7bb71b10b82" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/DMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Sender/SynchronousSender" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Ports" />
+				</InternalElement>
+				<SupportedRoleClass RefRoleClassPath="ProgrammingLanguageRoleClassLib/ProgrammingLanguage/Java" />
+				<RoleRequirements RefBaseRoleClassPath="ArchitectureRoleClassLib/Component" />
+			</InternalElement>
+			<InternalElement Name="Component2" ID="53a0c56a-3c8d-4691-b768-2328305434da">
+				<Attribute Name="Component.artifactId" AttributeDataType="xs:string">
+					<Value>component2</Value>
+				</Attribute>
+				<Attribute Name="Component.groupId" AttributeDataType="xs:string">
+					<Value>com.jwa.pushlistener</Value>
+				</Attribute>
+				<InternalElement Name="Ports" ID="bb0d930d-43c5-472e-9504-4a3a3b64be85">
+					<InternalElement Name="Port1" ID="63f96bb3-546a-42e8-8027-821ff7205284">
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11021</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="3e8b5c6b-ca86-46d7-8def-d2151ce27b91" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/AAMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Receiver" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port2" ID="47356e17-21d2-4e2d-a216-6128975b91f9">
+						<Attribute Name="PortParameters.Rmi.hostname" AttributeDataType="xs:string">
+							<Value>127.0.0.1</Value>
+						</Attribute>
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11012</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="752f94f3-3cee-47e8-87ff-dd3c33e470a9" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/BMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Sender/SynchronousSender" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port3" ID="a30b587f-61aa-4a61-85a1-0cd2e8305d11">
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11023</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="fa1cc3f4-8279-4adb-b6ff-ad151b58a4d3" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/CCMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Receiver" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port4" ID="ed827aed-bd50-4e13-bd17-b07206c68ef7">
+						<Attribute Name="PortParameters.Rmi.hostname" AttributeDataType="xs:string">
+							<Value>127.0.0.1</Value>
+						</Attribute>
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11031</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="68862a0d-7cba-47ac-8554-591863d8b1b5" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/EMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Sender/SynchronousSender" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port5" ID="c735b49a-b494-4497-ab75-bb1206963878">
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11025</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="e24ebf53-6359-4b8d-bdd5-19ad586b89e8" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/FFMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Receiver" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Ports" />
+				</InternalElement>
+				<SupportedRoleClass RefRoleClassPath="ProgrammingLanguageRoleClassLib/ProgrammingLanguage/Java" />
+				<RoleRequirements RefBaseRoleClassPath="ArchitectureRoleClassLib/Component" />
+			</InternalElement>
+			<InternalElement Name="Component3" ID="54d43a55-d9e9-4a71-be08-761109d619e0">
+				<Attribute Name="Component.artifactId" AttributeDataType="xs:string">
+					<Value>component3</Value>
+				</Attribute>
+				<Attribute Name="Component.groupId" AttributeDataType="xs:string">
+					<Value>com.jwa.pushlistener</Value>
+				</Attribute>
+				<InternalElement Name="Ports" ID="ed3ea103-73e4-42b7-b856-7e212bd91131">
+					<InternalElement Name="Port1" ID="4d0c7abc-eb5b-4dce-a037-68be18ee6880">
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11031</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="bb5dfcba-2c2c-480c-8401-c8e1e655ab7a" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Receiver" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port2" ID="7f8cbdd2-48a6-43c1-96d5-8a11bf726028">
+						<Attribute Name="PortParameters.Rmi.hostname" AttributeDataType="xs:string">
+							<Value>127.0.0.1</Value>
+						</Attribute>
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11025</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="c7e306cb-b451-46e1-b0a4-c51580ada683" />
+						<SupportedRoleClass RefRoleClassPath="DomainModelRoleClassLib/MessageModel/FMessage" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Sender/SynchronousSender" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<InternalElement Name="Port3" ID="924b899d-875e-4086-a546-f7ffb032207f">
+						<Attribute Name="PortParameters.Rmi.portRegistry" AttributeDataType="xs:string">
+							<Value>11033</Value>
+						</Attribute>
+						<ExternalInterface Name="ConnectionPoint" ID="abe4ad7f-c7b7-451e-b3d4-14634a309f3a" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortType/Receiver" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortStyle/Rmi" />
+						<SupportedRoleClass RefRoleClassPath="CommunicationRoleClassLib/PortParameters" />
+						<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Port" />
+					</InternalElement>
+					<RoleRequirements RefBaseRoleClassPath="CommunicationRoleClassLib/Ports" />
+				</InternalElement>
+				<SupportedRoleClass RefRoleClassPath="ProgrammingLanguageRoleClassLib/ProgrammingLanguage/Java" />
+				<RoleRequirements RefBaseRoleClassPath="ArchitectureRoleClassLib/Component" />
+			</InternalElement>
+			<SupportedRoleClass RefRoleClassPath="EnvironmentRoleClassLib/Standalone" />
+			<SupportedRoleClass RefRoleClassPath="SourcecodeRepositoryRoleClassLib/GitRepository" />
+			<InternalLink Name="CommunicationPortsLink1" RefPartnerSideA="8b689792-3a90-4722-8242-731b01396939:ConnectionPoint" RefPartnerSideB="63f96bb3-546a-42e8-8027-821ff7205284:ConnectionPoint" />
+			<InternalLink Name="CommunicationPortsLink2" RefPartnerSideA="47356e17-21d2-4e2d-a216-6128975b91f9:ConnectionPoint" RefPartnerSideB="15168a15-e760-403a-ab6d-dbbce73f6849:ConnectionPoint" />
+			<InternalLink Name="CommunicationPortsLink3" RefPartnerSideA="d6b88305-2bb4-479a-87c3-61190a475565:ConnectionPoint" RefPartnerSideB="a30b587f-61aa-4a61-85a1-0cd2e8305d11:ConnectionPoint" />
+			<InternalLink Name="CommunicationPortsLink4" RefPartnerSideA="bd20da93-e687-4ac2-9c61-f6a7b8c232c0:ConnectionPoint" RefPartnerSideB="924b899d-875e-4086-a546-f7ffb032207f:ConnectionPoint" />
+			<InternalLink Name="CommunicationPortsLink5" RefPartnerSideA="ed827aed-bd50-4e13-bd17-b07206c68ef7:ConnectionPoint" RefPartnerSideB="4d0c7abc-eb5b-4dce-a037-68be18ee6880:ConnectionPoint" />
+			<InternalLink Name="CommunicationPortsLink6" RefPartnerSideA="7f8cbdd2-48a6-43c1-96d5-8a11bf726028:ConnectionPoint" RefPartnerSideB="c735b49a-b494-4497-ab75-bb1206963878:ConnectionPoint" />
+			<RoleRequirements RefBaseRoleClassPath="ArchitectureRoleClassLib/Service" />
+		</InternalElement>
+	</InstanceHierarchy>
+	<InterfaceClassLib Name="AutomationMLInterfaceClassLib">
+		<Description>Standard Automation Markup Language Interface Class Library</Description>
+		<Version>2.2.0</Version>
+		<InterfaceClass Name="AutomationMLBaseInterface">
+			<InterfaceClass Name="Order" RefBaseClassPath="AutomationMLBaseInterface">
+				<Attribute Name="Direction" AttributeDataType="xs:string" />
+			</InterfaceClass>
+			<InterfaceClass Name="PortConnector" RefBaseClassPath="AutomationMLBaseInterface" />
+			<InterfaceClass Name="InterlockingConnector" RefBaseClassPath="AutomationMLBaseInterface" />
+			<InterfaceClass Name="PPRConnector" RefBaseClassPath="AutomationMLBaseInterface" />
+			<InterfaceClass Name="ExternalDataConnector" RefBaseClassPath="AutomationMLBaseInterface">
+				<Attribute Name="refURI" AttributeDataType="xs:anyURI" />
+				<InterfaceClass Name="COLLADAInterface" RefBaseClassPath="ExternalDataConnector" />
+				<InterfaceClass Name="PLCopenXMLInterface" RefBaseClassPath="ExternalDataConnector" />
+			</InterfaceClass>
+			<InterfaceClass Name="Communication" RefBaseClassPath="AutomationMLBaseInterface">
+				<InterfaceClass Name="SignalInterface" RefBaseClassPath="Communication" />
+			</InterfaceClass>
+		</InterfaceClass>
+	</InterfaceClassLib>
+	<RoleClassLib Name="AutomationMLBaseRoleClassLib">
+		<Description>Automation Markup Language base role class library</Description>
+		<Version>2.2.0</Version>
+		<RoleClass Name="AutomationMLBaseRole">
+			<RoleClass Name="Group" RefBaseClassPath="AutomationMLBaseRole">
+				<Attribute Name="AssociatedFacet" AttributeDataType="xs:string" />
+			</RoleClass>
+			<RoleClass Name="Facet" RefBaseClassPath="AutomationMLBaseRole" />
+			<RoleClass Name="Port" RefBaseClassPath="AutomationMLBaseRole">
+				<Attribute Name="Direction" AttributeDataType="xs:string" />
+				<Attribute Name="Cardinality">
+					<Attribute Name="MinOccur" AttributeDataType="xs:unsignedInt" />
+					<Attribute Name="MaxOccur" AttributeDataType="xs:unsignedInt" />
+				</Attribute>
+				<Attribute Name="Category" AttributeDataType="xs:string" />
+				<ExternalInterface ID="9942bd9c-c19d-44e4-a197-11b9edf264e7" Name="ConnectionPoint" RefBaseClassPath="AutomationMLInterfaceClassLib/AutomationMLBaseInterface/PortConnector" />
+			</RoleClass>
+			<RoleClass Name="Resource" RefBaseClassPath="AutomationMLBaseRole" />
+			<RoleClass Name="Product" RefBaseClassPath="AutomationMLBaseRole" />
+			<RoleClass Name="Process" RefBaseClassPath="AutomationMLBaseRole" />
+			<RoleClass Name="Structure" RefBaseClassPath="AutomationMLBaseRole">
+				<RoleClass Name="ProductStructure" RefBaseClassPath="Structure" />
+				<RoleClass Name="ProcessStructure" RefBaseClassPath="Structure" />
+				<RoleClass Name="ResourceStructure" RefBaseClassPath="Structure" />
+			</RoleClass>
+			<RoleClass Name="PropertySet" RefBaseClassPath="AutomationMLBaseRole" />
+		</RoleClass>
+	</RoleClassLib>
+	<RoleClassLib Name="SystemExtendedRoleClassLib">
+		<Version>2.7.0</Version>
+		<RoleClass Name="SystemBase" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole/Structure/ResourceStructure">
+			<Attribute Name="artifactId" AttributeDataType="xs:string"></Attribute>
+			<Attribute Name="groupId" AttributeDataType="xs:string" />
+		</RoleClass>
+	</RoleClassLib>
+	<RoleClassLib Name="ArchitectureRoleClassLib">
+		<Version>1.0.0</Version>
+		<RoleClass Name="Component" RefBaseClassPath="SystemExtendedRoleClassLib/SystemBase" />
+		<RoleClass Name="Service" RefBaseClassPath="SystemExtendedRoleClassLib/SystemBase" />
+	</RoleClassLib>
+	<RoleClassLib Name="DomainModelRoleClassLib">
+		<Version>1.0.0</Version>
+		<RoleClass Name="MessageModel" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole">
+			<RoleClass Name="AMessage" RefBaseClassPath="MessageModel" />
+			<RoleClass Name="AAMessage" RefBaseClassPath="MessageModel" />
+			<RoleClass Name="BMessage" RefBaseClassPath="MessageModel" />
+			<RoleClass Name="CMessage" RefBaseClassPath="MessageModel" />
+			<RoleClass Name="CCMessage" RefBaseClassPath="MessageModel" />
+			<RoleClass Name="DMessage" RefBaseClassPath="MessageModel" />
+			<RoleClass Name="EMessage" RefBaseClassPath="MessageModel" />
+			<RoleClass Name="FMessage" RefBaseClassPath="MessageModel" />
+			<RoleClass Name="FFMessage" RefBaseClassPath="MessageModel" />
+		</RoleClass>
+	</RoleClassLib>
+	<RoleClassLib Name="EnvironmentRoleClassLib">
+		<Version>1.0.0</Version>
+		<RoleClass Name="Container" RefBaseClassPath="AutomationMLBaseRole">
+			<RoleClass Name="Tomcat" RefBaseClassPath="Container" />
+			<RoleClass Name="Jetty" RefBaseClassPath="Container" />
+		</RoleClass>
+		<RoleClass Name="Cloud" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole" />
+		<RoleClass Name="Standalone" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole">
+			<Attribute Name="url" AttributeDataType="xs:anyURI" />
+		</RoleClass>
+	</RoleClassLib>
+	<RoleClassLib Name="ProgrammingLanguageRoleClassLib">
+		<Version>1.0.0</Version>
+		<RoleClass Name="ProgrammingLanguage" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole">
+			<RoleClass Name="Java" RefBaseClassPath="ProgrammingLanguage" />
+			<RoleClass Name="C#" RefBaseClassPath="ProgrammingLanguage" />
+		</RoleClass>
+	</RoleClassLib>
+	<RoleClassLib Name="SourcecodeRepositoryRoleClassLib">
+		<Version>1.0.0</Version>
+		<RoleClass Name="GitRepository" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole">
+			<Attribute Name="connection" AttributeDataType="xs:string"></Attribute>
+			<Attribute Name="developerConnection" AttributeDataType="xs:string" />
+			<Attribute Name="url" AttributeDataType="xs:anyURI" />
+			<Attribute Name="tag" AttributeDataType="xs:string" />
+		</RoleClass>
+	</RoleClassLib>
+	<RoleClassLib Name="CommunicationRoleClassLib">
+		<Version>1.0.0</Version>
+		<RoleClass Name="Ports" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole" />
+		<RoleClass Name="Port" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole"></RoleClass>
+		<RoleClass Name="PortType" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole">
+			<RoleClass Name="Receiver" RefBaseClassPath="CommunicationRoleClassLib/PortType"></RoleClass>
+			<RoleClass Name="Sender" RefBaseClassPath="CommunicationRoleClassLib/PortType">
+				<RoleClass Name="SynchronousSender" RefBaseClassPath="CommunicationRoleClassLib/PortType/Sender"></RoleClass>
+				<RoleClass Name="AsynchronousSender" RefBaseClassPath="CommunicationRoleClassLib/PortType/Sender"></RoleClass>
+			</RoleClass>
+		</RoleClass>
+		<RoleClass Name="PortStyle" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole">
+			<RoleClass Name="Rmi" RefBaseClassPath="CommunicationRoleClassLib/PortStyle" />
+			<RoleClass Name="Udp" RefBaseClassPath="CommunicationRoleClassLib/PortStyle" />
+		</RoleClass>
+		<RoleClass Name="PortParameters" RefBaseClassPath="AutomationMLBaseRoleClassLib/AutomationMLBaseRole" />
+	</RoleClassLib>
+</CAEXFile>
