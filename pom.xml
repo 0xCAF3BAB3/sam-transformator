@@ -32,6 +32,12 @@
             <artifactId>org.cdlflex.models.caex</artifactId>
             <version>${org.cdlflex.models.caex.version}</version>
         </dependency>
+        <!-- Apache FreeMarker -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.26-incubating</version>
+        </dependency>
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>
