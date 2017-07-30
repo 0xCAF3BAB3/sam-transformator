@@ -1,8 +1,8 @@
-package com.jwa.pushlistener.code.generator.generators.impl;
+package com.jwa.amlmodel.code.generator.generators.impl;
 
-import com.jwa.pushlistener.code.generator.generators.CodeGenerator;
-import com.jwa.pushlistener.code.generator.generators.CodeGeneratorException;
-import com.jwa.pushlistener.code.generator.generators.config.CodeGeneratorConfig;
+import com.jwa.amlmodel.code.generator.generators.CodeGenerator;
+import com.jwa.amlmodel.code.generator.generators.CodeGeneratorException;
+import com.jwa.amlmodel.code.generator.generators.config.CodeGeneratorConfig;
 
 public final class CommunicationCodeGenerator implements CodeGenerator {
     @Override

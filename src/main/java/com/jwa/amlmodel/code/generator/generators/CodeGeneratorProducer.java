@@ -1,7 +1,7 @@
-package com.jwa.pushlistener.code.generator.generators;
+package com.jwa.amlmodel.code.generator.generators;
 
-import com.jwa.pushlistener.code.generator.generators.config.CodeGeneratorConfig;
-import com.jwa.pushlistener.code.generator.generators.impl.ServiceCodeGenerator;
+import com.jwa.amlmodel.code.generator.generators.config.CodeGeneratorConfig;
+import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodeGenerator;
 
 public final class CodeGeneratorProducer implements CodeGenerator {
     private static CodeGeneratorProducer instance = null;

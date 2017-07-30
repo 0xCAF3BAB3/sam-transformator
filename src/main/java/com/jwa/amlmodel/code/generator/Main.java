@@ -1,4 +1,4 @@
-package com.jwa.pushlistener.code.generator;
+package com.jwa.amlmodel.code.generator;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

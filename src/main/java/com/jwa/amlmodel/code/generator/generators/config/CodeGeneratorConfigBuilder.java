@@ -1,4 +1,4 @@
-package com.jwa.pushlistener.code.generator.generators.config;
+package com.jwa.amlmodel.code.generator.generators.config;
 
 import freemarker.template.Configuration;
 

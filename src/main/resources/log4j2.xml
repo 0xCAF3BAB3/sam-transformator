@@ -6,7 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com.jwa.pushlistener.code.generator" level="trace" />
+        <Logger name="com.jwa.amlmodel.code.generator" level="trace" />
         <Root level="warn">
             <AppenderRef ref="console"/>
         </Root>
