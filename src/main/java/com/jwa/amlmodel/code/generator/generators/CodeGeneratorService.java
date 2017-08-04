@@ -1,5 +1,7 @@
 package com.jwa.amlmodel.code.generator.generators;
 
+import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelConstants;
+import com.jwa.amlmodel.code.generator.generators.config.CodeGeneratorConfig;
 import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodeGenerator;
 
 import freemarker.template.Configuration;
@@ -73,12 +75,14 @@ public final class CodeGeneratorService {
         }
         InstanceHierarchy instanceHierarchy = amlModel.getInstanceHierarchy().get(0);
 
+        CodeGeneratorConfig codeGeneratorConfig = new CodeGeneratorConfig(freemarkerConfig);
+
         EList<InternalElement> rootNodes = instanceHierarchy.getInternalElement();
         for(InternalElement rootNode : rootNodes) {
             // TODO: for every service
             boolean isService = AmlUtil.hasRole(rootNode, AmlmodelConstants.NAME_ROLE_SERVICE);
             if (isService) {
-                new ServiceCodeGenerator(freemarkerConfig).generate(rootNode);
+                new ServiceCodeGenerator().generate(rootNode, codeGeneratorConfig);
             }
         }
 

@@ -1,9 +1,8 @@
 package com.jwa.amlmodel.code.generator.generators.impl;
 
-import com.jwa.amlmodel.code.generator.generators.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.CodeGenerator;
-
-import freemarker.template.Configuration;
+import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelConstants;
+import com.jwa.amlmodel.code.generator.generators.config.CodeGeneratorConfig;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.cdlflex.models.CAEX.util.AmlUtil;
@@ -14,14 +13,9 @@ import java.io.File;
 
 public final class PortsCodeGenerator implements CodeGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(PortsCodeGenerator.class);
-    private final Configuration freemarkerConfig;
-
-    public PortsCodeGenerator(final Configuration freemarkerConfig) {
-        this.freemarkerConfig = freemarkerConfig;
-    }
 
     @Override
-    public void generate(final InternalElement node) {
+    public void generate(final InternalElement node, final CodeGeneratorConfig codeGeneratorConfig) {
         LOGGER.trace("Generating ports '" + node.getName() + "' ...");
 
         // TODO: ...
@@ -33,7 +27,7 @@ public final class PortsCodeGenerator implements CodeGenerator {
             // TODO: for every port
             boolean isPort = AmlUtil.hasRole(internalElement, AmlmodelConstants.NAME_ROLE_PORT);
             if (isPort) {
-                new PortCodeGenerator(communicationServiceFile, freemarkerConfig).generate(internalElement);
+                new PortCodeGenerator(communicationServiceFile).generate(internalElement, codeGeneratorConfig);
             }
         }
 
