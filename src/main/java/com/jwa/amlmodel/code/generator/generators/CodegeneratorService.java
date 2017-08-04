@@ -1,8 +1,8 @@
 package com.jwa.amlmodel.code.generator.generators;
 
 import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelConstants;
-import com.jwa.amlmodel.code.generator.generators.config.CodeGeneratorConfig;
-import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodeGenerator;
+import com.jwa.amlmodel.code.generator.generators.config.CodegeneratorConfig;
+import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodegenerator;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
@@ -24,21 +24,21 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public final class CodeGeneratorService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CodeGeneratorService.class);
+public final class CodegeneratorService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodegeneratorService.class);
     // TODO: refactor to relative path from this class
     private final static String TEMPLATE_DIRECTORY = "src/main/java/com/jwa/amlmodel/code/generator/generators/templates/";
     private final Configuration freemarkerConfig;
     private final File amlmodelFile;
     private final Path outputDirectory;
 
-    public CodeGeneratorService(final File amlmodelFile, final Path outputDirectory) throws CodeGeneratorException {
+    public CodegeneratorService(final File amlmodelFile, final Path outputDirectory) throws CodegeneratorException {
         final Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_26);
         final File templateDirectory = new File(TEMPLATE_DIRECTORY);
         try {
             freemarkerConfig.setDirectoryForTemplateLoading(templateDirectory);
         } catch (IOException e) {
-            throw new CodeGeneratorException("Template directory invalid: " + e.getMessage(), e);
+            throw new CodegeneratorException("Template directory invalid: " + e.getMessage(), e);
         }
         freemarkerConfig.setDefaultEncoding("UTF-8");
         freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
@@ -49,7 +49,7 @@ public final class CodeGeneratorService {
         this.outputDirectory = outputDirectory;
     }
 
-    public final void generateCode() throws CodeGeneratorException {
+    public final void generateCode() throws CodegeneratorException {
         /*
         final Map<String, String> dataModel = new HashMap<>();
         final String parameter = amlModel.getInstanceHierarchy().get(0).getName();
@@ -60,29 +60,29 @@ public final class CodeGeneratorService {
         try {
             amlModel = readAmlFile(amlmodelFile);
         } catch (IOException e) {
-            throw new CodeGeneratorException("Reading aml-model failed: " + e.getMessage(), e);
+            throw new CodegeneratorException("Reading aml-model failed: " + e.getMessage(), e);
         }
 
         // TODO: if output-dir exists: clean; if not: create it
         try {
             FileUtils.cleanDirectory(outputDirectory.toFile());
         } catch (IOException e) {
-            throw new CodeGeneratorException("Cleaning output-directory failed: " + e.getMessage(), e);
+            throw new CodegeneratorException("Cleaning output-directory failed: " + e.getMessage(), e);
         }
 
         if (amlModel.getInstanceHierarchy().size() != 1) {
-            throw new CodeGeneratorException("Not valid");
+            throw new CodegeneratorException("Not valid");
         }
         InstanceHierarchy instanceHierarchy = amlModel.getInstanceHierarchy().get(0);
 
-        CodeGeneratorConfig codeGeneratorConfig = new CodeGeneratorConfig(freemarkerConfig);
+        CodegeneratorConfig codeGeneratorConfig = new CodegeneratorConfig(freemarkerConfig);
 
         EList<InternalElement> rootNodes = instanceHierarchy.getInternalElement();
         for(InternalElement rootNode : rootNodes) {
             // TODO: for every service
             boolean isService = AmlUtil.hasRole(rootNode, AmlmodelConstants.NAME_ROLE_SERVICE);
             if (isService) {
-                new ServiceCodeGenerator().generate(rootNode, codeGeneratorConfig);
+                new ServiceCodegenerator().generate(rootNode, codeGeneratorConfig);
             }
         }
 

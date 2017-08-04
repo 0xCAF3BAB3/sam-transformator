@@ -1,19 +1,19 @@
 package com.jwa.amlmodel.code.generator.generators.impl;
 
-import com.jwa.amlmodel.code.generator.generators.CodeGenerator;
+import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelConstants;
-import com.jwa.amlmodel.code.generator.generators.config.CodeGeneratorConfig;
+import com.jwa.amlmodel.code.generator.generators.config.CodegeneratorConfig;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.cdlflex.models.CAEX.util.AmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class ServiceCodeGenerator implements CodeGenerator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceCodeGenerator.class);
+public final class ServiceCodegenerator implements Codegenerator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceCodegenerator.class);
 
     @Override
-    public void generate(final InternalElement node, final CodeGeneratorConfig codeGeneratorConfig) {
+    public void generate(final InternalElement node, final CodegeneratorConfig codeGeneratorConfig) {
         LOGGER.trace("Generating service '" + node.getName() + "' ...");
 
         // TODO: generates Maven project
@@ -22,7 +22,7 @@ public final class ServiceCodeGenerator implements CodeGenerator {
             // TODO: for every component
             boolean isComponent = AmlUtil.hasRole(internalElement, AmlmodelConstants.NAME_ROLE_COMPONENT);
             if (isComponent) {
-                new ComponentCodeGenerator().generate(internalElement, codeGeneratorConfig);
+                new ComponentCodegenerator().generate(internalElement, codeGeneratorConfig);
             }
         }
 

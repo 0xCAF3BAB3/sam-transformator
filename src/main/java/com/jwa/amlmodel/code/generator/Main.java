@@ -1,7 +1,7 @@
 package com.jwa.amlmodel.code.generator;
 
-import com.jwa.amlmodel.code.generator.generators.CodeGeneratorException;
-import com.jwa.amlmodel.code.generator.generators.CodeGeneratorService;
+import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
+import com.jwa.amlmodel.code.generator.generators.CodegeneratorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ public final class Main {
         File amlmodelFile = new File(PATH_AMLFILE);
         Path outputDirectory = Paths.get(PATH_CODEOUTPUT);
         try {
-            new CodeGeneratorService(amlmodelFile, outputDirectory).generateCode();
-        } catch (CodeGeneratorException e) {
+            new CodegeneratorService(amlmodelFile, outputDirectory).generateCode();
+        } catch (CodegeneratorException e) {
             LOGGER.error("Error: " + e.getMessage(), e);
         }
         LOGGER.info("Generator finished");

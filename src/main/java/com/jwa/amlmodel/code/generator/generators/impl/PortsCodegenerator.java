@@ -1,8 +1,8 @@
 package com.jwa.amlmodel.code.generator.generators.impl;
 
-import com.jwa.amlmodel.code.generator.generators.CodeGenerator;
+import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelConstants;
-import com.jwa.amlmodel.code.generator.generators.config.CodeGeneratorConfig;
+import com.jwa.amlmodel.code.generator.generators.config.CodegeneratorConfig;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.cdlflex.models.CAEX.util.AmlUtil;
@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public final class PortsCodeGenerator implements CodeGenerator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PortsCodeGenerator.class);
+public final class PortsCodegenerator implements Codegenerator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PortsCodegenerator.class);
 
     @Override
-    public void generate(final InternalElement node, final CodeGeneratorConfig codeGeneratorConfig) {
+    public void generate(final InternalElement node, final CodegeneratorConfig codeGeneratorConfig) {
         LOGGER.trace("Generating ports '" + node.getName() + "' ...");
 
         // TODO: ...
@@ -27,7 +27,7 @@ public final class PortsCodeGenerator implements CodeGenerator {
             // TODO: for every port
             boolean isPort = AmlUtil.hasRole(internalElement, AmlmodelConstants.NAME_ROLE_PORT);
             if (isPort) {
-                new PortCodeGenerator(communicationServiceFile).generate(internalElement, codeGeneratorConfig);
+                new PortCodegenerator(communicationServiceFile).generate(internalElement, codeGeneratorConfig);
             }
         }
 
