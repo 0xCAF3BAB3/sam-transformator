@@ -14,6 +14,7 @@
         <!-- dependencies -->
         <org.cdlflex.models.caex.version>1.0.6-SNAPSHOT</org.cdlflex.models.caex.version>
         <freemarker.version>2.3.26-incubating</freemarker.version>
+        <commons-io.version>2.5</commons-io.version>
         <junit.version>4.12</junit.version>
         <mockito-all.version>1.10.19</mockito-all.version>
         <slf4j.version>1.7.12</slf4j.version>
@@ -38,6 +39,12 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${freemarker.version}</version>
+        </dependency>
+        <!-- Apache Commons IO -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
         <!-- test -->
         <dependency>

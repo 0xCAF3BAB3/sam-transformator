@@ -1,7 +1,7 @@
 package com.jwa.amlmodel.code.generator.generators;
 
-import com.jwa.amlmodel.code.generator.generators.config.CodeGeneratorConfig;
+import org.cdlflex.models.CAEX.InternalElement;
 
 public interface CodeGenerator {
-    void generateCode(final CodeGeneratorConfig config) throws IllegalArgumentException, CodeGeneratorException;
+    void generate(final InternalElement node);
 }
