@@ -16,4 +16,5 @@ log/
 target/
 
 # project specific
+code-input/
 code-output/

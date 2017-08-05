@@ -5,5 +5,5 @@ import com.jwa.amlmodel.code.generator.generators.config.CodegeneratorConfig;
 import org.cdlflex.models.CAEX.InternalElement;
 
 public interface Codegenerator {
-    void generate(final InternalElement node, final CodegeneratorConfig codeGeneratorConfig);
+    void generate(final InternalElement node, final CodegeneratorConfig codeGeneratorConfig) throws CodegeneratorException;
 }

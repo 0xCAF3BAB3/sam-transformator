@@ -7,7 +7,6 @@ import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodegenerator;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 
-import org.apache.commons.io.FileUtils;
 import org.cdlflex.models.CAEX.CAEXFile;
 import org.cdlflex.models.CAEX.DocumentRoot;
 import org.cdlflex.models.CAEX.InstanceHierarchy;
@@ -50,12 +49,6 @@ public final class CodegeneratorService {
     }
 
     public final void generateCode() throws CodegeneratorException {
-        /*
-        final Map<String, String> dataModel = new HashMap<>();
-        final String parameter = amlModel.getInstanceHierarchy().get(0).getName();
-        dataModel.put("parameter", parameter);
-        */
-
         final CAEXFile amlModel;
         try {
             amlModel = readAmlFile(amlmodelFile);
@@ -64,11 +57,13 @@ public final class CodegeneratorService {
         }
 
         // TODO: if output-dir exists: clean; if not: create it
+        /*
         try {
             FileUtils.cleanDirectory(outputDirectory.toFile());
         } catch (IOException e) {
             throw new CodegeneratorException("Cleaning output-directory failed: " + e.getMessage(), e);
         }
+        */
 
         if (amlModel.getInstanceHierarchy().size() != 1) {
             throw new CodegeneratorException("Not valid");
@@ -85,19 +80,6 @@ public final class CodegeneratorService {
                 new ServiceCodegenerator().generate(rootNode, codeGeneratorConfig);
             }
         }
-
-        /*
-        final Template mainTemplate = cfg.getTemplate("Component_Main.ftlh");
-        try (final Writer writer = new StringWriter()) {
-            mainTemplate.process(dataModel, writer);
-            return writer.toString();
-        }
-
-        if (serviceGenerator == null) {
-            serviceGenerator = new ServiceCodeGenerator();
-        }
-        serviceGenerator.generateCode(config);
-        */
 
         LOGGER.info("Generation finished");
     }
