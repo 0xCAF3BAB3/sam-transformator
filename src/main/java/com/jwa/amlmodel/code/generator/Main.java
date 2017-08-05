@@ -32,7 +32,7 @@ public final class Main {
     }
 
     private static File getAmlmodelFile() throws IOException {
-        final URL url = new URL("https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v3/PushListener.aml");
+        final URL url = new URL("https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml");
         final File file = new File(PATH_FILE_AMLMODEL);
         file.getParentFile().mkdirs();
         FileUtils.copyURLToFile(url, file);
