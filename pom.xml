@@ -5,13 +5,13 @@
     <artifactId>generator</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <name>AMLModel-Code-Generator</name>
+    <name>AMLmodel-Code-Generator</name>
     <properties>
-        <!-- project -->
+        <!-- Project -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!-- dependencies -->
+        <!-- Dependencies -->
         <org.cdlflex.models.caex.version>1.0.6-SNAPSHOT</org.cdlflex.models.caex.version>
         <freemarker.version>2.3.26-incubating</freemarker.version>
         <junit.version>4.12</junit.version>
@@ -23,23 +23,20 @@
         <log4j-slf4j-impl.version>${log4j.version}</log4j-slf4j-impl.version>
         <log4j-api.version>${log4j.version}</log4j-api.version>
         <log4j-core.version>${log4j.version}</log4j-core.version>
-        <!-- maven plugins -->
+        <!-- Maven plugins -->
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
     </properties>
     <dependencies>
-        <!-- CDL-Flex :: Models :: CAEX -->
         <dependency>
             <groupId>org.cdlflex.models</groupId>
             <artifactId>org.cdlflex.models.caex</artifactId>
             <version>${org.cdlflex.models.caex.version}</version>
         </dependency>
-        <!-- Apache FreeMarker -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${freemarker.version}</version>
         </dependency>
-        <!-- test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -52,7 +49,6 @@
             <version>${mockito-all.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

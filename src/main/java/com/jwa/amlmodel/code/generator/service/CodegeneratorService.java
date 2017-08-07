@@ -8,6 +8,7 @@ import com.jwa.amlmodel.code.generator.generators.config.generated.impl.Generate
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedRootConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedServiceConfig;
+import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.impl.ComponentCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.MessagemodelCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.PortCodegenerator;
@@ -16,7 +17,6 @@ import com.jwa.amlmodel.code.generator.generators.impl.PortsCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.PortstyleCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.PorttypeCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodegenerator;
-import com.jwa.amlmodel.code.generator.generators.utils.AmlmodelConstants;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
@@ -37,7 +37,7 @@ import java.nio.file.Paths;
 
 public final class CodegeneratorService {
     // TODO: the following line is quite hacky
-    private final static String TEMPLATE_DIRECTORY = "src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates";
+    private final static String DIRECTORY_FREEMARKER_TEMPLATES = "src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/freemarker";
 
     public final void generateCode(final Path amlmodelFile, final Path outputDirectory) throws CodegeneratorServiceException {
         final CAEXFile amlmodel;
@@ -84,7 +84,7 @@ public final class CodegeneratorService {
 
     private static GlobalConfig createGlobalConfig() {
         final Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_26);
-        final Path templateDirectory = Paths.get(TEMPLATE_DIRECTORY);
+        final Path templateDirectory = Paths.get(DIRECTORY_FREEMARKER_TEMPLATES);
         try {
             freemarkerConfig.setDirectoryForTemplateLoading(templateDirectory.toFile());
         } catch (IOException e) {

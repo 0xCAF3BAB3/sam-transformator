@@ -7,8 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-public final class CodefilesUtils {
-    private CodefilesUtils() {}
+public final class CodefileUtils {
+    private CodefileUtils() {}
 
     public static void addValueToEnum(final String enumValue, final String enumName, final Path file) throws IllegalArgumentException, IOException {
         if (!isValidJavaIdentifier(enumValue)) {

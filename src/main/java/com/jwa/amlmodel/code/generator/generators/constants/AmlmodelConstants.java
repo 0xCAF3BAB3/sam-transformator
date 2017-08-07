@@ -1,4 +1,4 @@
-package com.jwa.amlmodel.code.generator.generators.utils;
+package com.jwa.amlmodel.code.generator.generators.constants;
 
 public final class AmlmodelConstants {
     // ArchitectureRoleClassLib
@@ -14,9 +14,9 @@ public final class AmlmodelConstants {
     private static final String NAME_ROLECLASSLIB_COMMUNICATION = "CommunicationRoleClassLib";
     public static final String NAME_ROLE_PORTS = NAME_ROLECLASSLIB_COMMUNICATION + "/Ports";
     public static final String NAME_ROLE_PORT = NAME_ROLECLASSLIB_COMMUNICATION + "/Port";
-    public static final String NAME_ROLE_PORTTYPE = NAME_ROLECLASSLIB_COMMUNICATION + "/PortType";
     public static final String NAME_ROLE_PORTSTYLE = NAME_ROLECLASSLIB_COMMUNICATION + "/PortStyle";
     public static final String NAME_ROLE_PORTPARAMETERS = NAME_ROLECLASSLIB_COMMUNICATION + "/PortParameters";
+    public static final String NAME_ROLE_PORTTYPE = NAME_ROLECLASSLIB_COMMUNICATION + "/PortType";
 
     private AmlmodelConstants() {}
 }
