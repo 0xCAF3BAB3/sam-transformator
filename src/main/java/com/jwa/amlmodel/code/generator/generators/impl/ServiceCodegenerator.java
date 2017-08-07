@@ -60,6 +60,6 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
 
         LOGGER.trace("Generating service for service-node '" + serviceName + "' finished");
 
-        return new GeneratedServiceConfig(serviceDirectory, serviceGroupId, serviceArtifactId, servicePomFile);
+        return new GeneratedServiceConfig(parentConfig, serviceDirectory, serviceGroupId, serviceArtifactId, servicePomFile);
     }
 }

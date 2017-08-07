@@ -15,9 +15,13 @@ public final class PortparametersCodegenerator implements Codegenerator<Generate
 
     @Override
     public final GeneratedPortparametersConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        LOGGER.trace("Generating port-parameters for xxx '" + "xxx" + "' ...");
+        final String portName = node.getName();
 
-        LOGGER.trace("Generating port-parameters for xxx '" + "xxx" + "' finished");
+        LOGGER.trace("Generating port-parameters for port-node '" + portName + "' ...");
+
+        // TODO: implement me
+
+        LOGGER.trace("Generating port-parameters for port-node '" + portName + "' finished");
 
         return new GeneratedPortparametersConfig();
     }

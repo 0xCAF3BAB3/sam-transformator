@@ -17,33 +17,14 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
 
     @Override
     public final GeneratedMessagemodelConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        String messagemodelName = AmlmodelUtils.getRoleStartingWith(node, AmlmodelConstants.NAME_ROLE_MESSAGEMODEL + "/");
+        final String portName = node.getName();
 
-        LOGGER.trace("Generating message-model for xxx '" + messagemodelName + "' ...");
+        LOGGER.trace("Generating message-model for port-node '" + portName + "' ...");
 
-        /*
-        final Path messagemodelFile = Paths.get(messagemodelOutput.toFile().getPath() + "/" + messagemodelName + ".java");
+        // TODO: implement me
+        // String messagemodelName = AmlmodelUtils.getRoleStartingWith(node, AmlmodelConstants.NAME_ROLE_MESSAGEMODEL + "/");
 
-        final boolean exists = Files.exists(messagemodelFile) && Files.isRegularFile(messagemodelFile);
-        if (exists) {
-            LOGGER.trace(messagemodelName + " is already generated");
-        } else {
-            final Map<String, String> dataModel = new HashMap<>();
-            dataModel.put("packageName", packageName);
-            dataModel.put("messagemodelName", messagemodelName);
-            try {
-                final Template template = codeGeneratorConfig.getFreemarkerConfig().getTemplate("Messagemodel_Instance.ftlh");
-                try (final Writer writer = Files.newBufferedWriter(messagemodelFile, StandardCharsets.UTF_8)) {
-                    template.process(dataModel, writer);
-                }
-            } catch (IOException | TemplateException e) {
-                throw new CodegeneratorException(e.getMessage(), e);
-            }
-            LOGGER.trace(messagemodelName + " was created");
-        }
-        */
-
-        LOGGER.trace("Generating message-model for xxx '" + messagemodelName + "' finished");
+        LOGGER.trace("Generating message-model for port-node '" + portName + "' finished");
 
         return new GeneratedMessagemodelConfig();
     }

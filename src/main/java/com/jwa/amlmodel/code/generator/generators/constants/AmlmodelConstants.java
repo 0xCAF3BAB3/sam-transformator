@@ -19,6 +19,7 @@ public final class AmlmodelConstants {
     public static final String NAME_ROLE_PORTS = NAME_ROLECLASSLIB_COMMUNICATION + "/Ports";
     public static final String NAME_ROLE_PORT = NAME_ROLECLASSLIB_COMMUNICATION + "/Port";
     public static final String NAME_ROLE_PORTSTYLE = NAME_ROLECLASSLIB_COMMUNICATION + "/PortStyle";
+    public static final String NAME_ATTRIBUTE_PORTSTYLE_STYLE = "PortStyle.style";
     public static final String NAME_ROLE_PORTPARAMETERS = NAME_ROLECLASSLIB_COMMUNICATION + "/PortParameters";
     public static final String NAME_ROLE_PORTTYPE = NAME_ROLECLASSLIB_COMMUNICATION + "/PortType";
 

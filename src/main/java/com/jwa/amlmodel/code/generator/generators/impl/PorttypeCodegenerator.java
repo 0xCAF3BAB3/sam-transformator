@@ -15,9 +15,13 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
 
     @Override
     public final GeneratedPorttypeConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        LOGGER.trace("Generating port-type for xxx '" + "xxx" + "' ...");
+        final String portName = node.getName();
 
-        LOGGER.trace("Generating port-type for xxx '" + "xxx" + "' finished");
+        LOGGER.trace("Generating port-type for port-node '" + portName + "' ...");
+
+        // TODO: implement me
+
+        LOGGER.trace("Generating port-type for port-node '" + portName + "' finished");
 
         return new GeneratedPorttypeConfig();
     }

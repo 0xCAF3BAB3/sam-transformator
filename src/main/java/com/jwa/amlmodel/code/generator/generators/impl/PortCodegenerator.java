@@ -5,58 +5,59 @@ import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
+import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
+
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class PortCodegenerator implements Codegenerator<GeneratedPortsConfig, GeneratedPortConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PortCodegenerator.class);
 
     @Override
     public final GeneratedPortConfig generate(final InternalElement node, final GeneratedPortsConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        LOGGER.trace("Generating port for node '" + node.getName() + "' ...");
+        final String portName = node.getName();
 
-        /*
-        // TODO: verify node is valid port
-        if (!AmlmodelUtils.hasRoleStartingWith(node, AmlmodelConstants.NAME_ROLE_PORTTYPE + "/")) {
-            throw new CodegeneratorValidationException("...");
-        }
+        LOGGER.trace("Generating port for port-node '" + portName + "' ...");
 
-        // TODO: extract port info
-        final String type = AmlmodelUtils.getRoleStartingWith(node, AmlmodelConstants.NAME_ROLE_PORTTYPE + "/");
-
-        // TODO: write to communicationServiceFile
-        final String enumValue = CodeUtils.toValidJavaIdentifier(node.getName());
-        // a) to Enums
+        // CommunicationService.java anpassen  Port zu Methode ‚init’ hinzufügen, Parameter ‚portName’ = IE-Name
+        final String portsnippet;
+        final Map<String, String> portsnippetDatamodel = new HashMap<>();
+        portsnippetDatamodel.put("portName", portName);
         try {
-            if (type.startsWith("Receiver")) {
-                CodeUtils.addValueToEnum(enumValue, "Receivers", communicationServiceFile);
-            } else if (type.startsWith("Sender")) {
-                CodeUtils.addValueToEnum(enumValue, "Senders", communicationServiceFile);
-                if (type.endsWith("SynchronousSender")) {
-                    CodeUtils.addValueToEnum(enumValue, "SynchronousSenders", communicationServiceFile);
-                } else if (type.endsWith("AsynchronousSender")) {
-                    CodeUtils.addValueToEnum(enumValue, "AsynchronousSenders", communicationServiceFile);
-                }
+            final Template template = globalConfig.getFreemarkerConfig().getTemplate("ComponentCommunicationservicePortsnippet.ftlh");
+            try (final Writer writer = new StringWriter()) {
+                template.process(portsnippetDatamodel, writer);
+                portsnippet = writer.toString();
             }
+        } catch (IOException | TemplateException e) {
+            throw new CodegeneratorException("Failed to generate snippet '" + "ComponentCommunicationservicePortsnippet" + "': " + e.getMessage(), e);
+        }
+        try {
+            CodefileUtils.addToMethod(portsnippet, "public final void init() throws PortsServiceException {", parentConfig.getComponentCommunicationserviceFile(), globalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }
 
-        // TODO: b) to constructor: set factory (if nor aleady added) ... also handle no existance --> should this not be done in ports or component?
-        // TODO: c) to init() method
-
-        boolean isMessagemodelAssigned = AmlmodelUtils.hasRoleStartingWith(node, AmlmodelConstants.NAME_ROLE_MESSAGEMODEL + "/");
-        if (isMessagemodelAssigned) {
-            final Path messageModelOutput = Paths.get("code-output/messagemodel/src/");
-            final String packageName = "com.jwa.pushlistener.code.architecture.messagemodel";
-            new MessagemodelCodegenerator(messageModelOutput, packageName).generate(node, codeGeneratorConfig);
+        // add import-statement: port.config.PortConfigBuilder
+        final String importStatement = parentConfig.getCommunicationPackageName() + ".port.config.PortConfigBuilder";
+        try {
+            CodefileUtils.addImport(importStatement, parentConfig.getComponentCommunicationserviceFile(), globalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }
-        */
 
-        LOGGER.trace("Generating port for node '" + node.getName() + "' finished");
+        LOGGER.trace("Generating port for port-node '" + portName + "' finished");
 
-        return new GeneratedPortConfig();
+        return new GeneratedPortConfig(parentConfig);
     }
 }
