@@ -5,6 +5,6 @@ import com.jwa.amlmodel.code.generator.generators.config.generated.GeneratedConf
 
 import org.cdlflex.models.CAEX.InternalElement;
 
-public interface Codegenerator <T extends GeneratedConfig, U extends GeneratedConfig> {
-    T generate(final InternalElement node, final U parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException;
+public interface Codegenerator <ParentConfig extends GeneratedConfig, ReturnedConfig extends GeneratedConfig> {
+    ReturnedConfig generate(final InternalElement node, final ParentConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException;
 }

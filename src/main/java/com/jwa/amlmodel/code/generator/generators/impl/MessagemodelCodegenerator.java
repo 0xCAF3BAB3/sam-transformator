@@ -12,7 +12,7 @@ import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class MessagemodelCodegenerator implements Codegenerator<GeneratedMessagemodelConfig, GeneratedPortConfig> {
+public final class MessagemodelCodegenerator implements Codegenerator<GeneratedPortConfig, GeneratedMessagemodelConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessagemodelCodegenerator.class);
 
     @Override

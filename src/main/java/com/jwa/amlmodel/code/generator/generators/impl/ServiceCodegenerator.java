@@ -10,7 +10,7 @@ import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class ServiceCodegenerator implements Codegenerator<GeneratedServiceConfig, GeneratedRootConfig> {
+public final class ServiceCodegenerator implements Codegenerator<GeneratedRootConfig, GeneratedServiceConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceCodegenerator.class);
 
     @Override

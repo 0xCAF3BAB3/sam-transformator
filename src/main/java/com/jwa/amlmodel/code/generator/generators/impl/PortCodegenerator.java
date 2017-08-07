@@ -10,7 +10,7 @@ import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class PortCodegenerator implements Codegenerator<GeneratedPortConfig, GeneratedPortsConfig> {
+public final class PortCodegenerator implements Codegenerator<GeneratedPortsConfig, GeneratedPortConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PortCodegenerator.class);
 
     @Override
