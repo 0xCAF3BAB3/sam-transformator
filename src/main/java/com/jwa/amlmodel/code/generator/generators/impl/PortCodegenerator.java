@@ -1,37 +1,23 @@
 package com.jwa.amlmodel.code.generator.generators.impl;
 
-import com.jwa.amlmodel.code.generator.generators.CodeUtils;
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
-import com.jwa.amlmodel.code.generator.generators.CodegeneratorValidationException;
-import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelConstants;
-import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelUtils;
-import com.jwa.amlmodel.code.generator.generators.config.CodegeneratorConfig;
+import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
+import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
+import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-public final class PortCodegenerator implements Codegenerator {
+public final class PortCodegenerator implements Codegenerator<GeneratedPortConfig, GeneratedPortsConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PortCodegenerator.class);
-    private final File communicationServiceFile;
-
-    public PortCodegenerator(final File communicationServiceFile) {
-        if (!communicationServiceFile.isFile()) {
-            throw new IllegalArgumentException("...");
-        }
-        this.communicationServiceFile = communicationServiceFile;
-    }
 
     @Override
-    public final void generate(final InternalElement node, final CodegeneratorConfig codeGeneratorConfig) throws CodegeneratorException {
-        LOGGER.trace("Generating port '" + node.getName() + "' ...");
+    public final GeneratedPortConfig generate(final InternalElement node, final GeneratedPortsConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
+        LOGGER.trace("Generating port for node '" + node.getName() + "' ...");
 
+        /*
         // TODO: verify node is valid port
         if (!AmlmodelUtils.hasRoleStartingWith(node, AmlmodelConstants.NAME_ROLE_PORTTYPE + "/")) {
             throw new CodegeneratorValidationException("...");
@@ -67,7 +53,10 @@ public final class PortCodegenerator implements Codegenerator {
             final String packageName = "com.jwa.pushlistener.code.architecture.messagemodel";
             new MessagemodelCodegenerator(messageModelOutput, packageName).generate(node, codeGeneratorConfig);
         }
+        */
 
-        LOGGER.trace("Generating port '" + node.getName() + "' finished");
+        LOGGER.trace("Generating port for node '" + node.getName() + "' finished");
+
+        return new GeneratedPortConfig();
     }
 }

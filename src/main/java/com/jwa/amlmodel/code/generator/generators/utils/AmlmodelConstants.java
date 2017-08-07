@@ -1,4 +1,4 @@
-package com.jwa.amlmodel.code.generator.generators.amlmodel;
+package com.jwa.amlmodel.code.generator.generators.utils;
 
 public final class AmlmodelConstants {
     // ArchitectureRoleClassLib

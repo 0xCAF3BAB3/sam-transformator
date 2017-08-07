@@ -1,21 +1,21 @@
-package com.jwa.amlmodel.code.generator.generators;
+package com.jwa.amlmodel.code.generator.generators.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
-public final class CodeUtils {
-    private CodeUtils() {}
+public final class CodefilesUtils {
+    private CodefilesUtils() {}
 
-    public static void addValueToEnum(final String enumValue, final String enumName, final File file) throws IllegalArgumentException, IOException {
+    public static void addValueToEnum(final String enumValue, final String enumName, final Path file) throws IllegalArgumentException, IOException {
         if (!isValidJavaIdentifier(enumValue)) {
             throw new IllegalArgumentException("Passed enum-value is not a valid Java identifier");
         }
         final Charset usedCharset = StandardCharsets.UTF_8;
-        final List<String> lines = Files.readAllLines(file.toPath(), usedCharset);
+        final List<String> lines = Files.readAllLines(file, usedCharset);
         Integer startIndex = null;
         for (int i = 0; i < lines.size(); i++) {
             final String line = lines.get(i);
@@ -44,7 +44,7 @@ public final class CodeUtils {
             lines.set(lastElementIndex, lines.get(lastElementIndex) + ",");
         }
         lines.add(endIndex, "        " + enumValue);
-        Files.write(file.toPath(), lines, usedCharset);
+        Files.write(file, lines, usedCharset);
     }
 
     public static boolean isValidJavaIdentifier(final String name) {

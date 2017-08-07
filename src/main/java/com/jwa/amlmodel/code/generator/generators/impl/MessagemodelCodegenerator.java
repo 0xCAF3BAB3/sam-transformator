@@ -2,53 +2,29 @@ package com.jwa.amlmodel.code.generator.generators.impl;
 
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
-import com.jwa.amlmodel.code.generator.generators.CodegeneratorValidationException;
-import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelConstants;
-import com.jwa.amlmodel.code.generator.generators.amlmodel.AmlmodelUtils;
-import com.jwa.amlmodel.code.generator.generators.config.CodegeneratorConfig;
-
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
+import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedMessagemodelConfig;
+import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
+import com.jwa.amlmodel.code.generator.generators.utils.AmlmodelConstants;
+import com.jwa.amlmodel.code.generator.generators.utils.AmlmodelUtils;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-
-public final class MessagemodelCodegenerator implements Codegenerator {
+public final class MessagemodelCodegenerator implements Codegenerator<GeneratedMessagemodelConfig, GeneratedPortConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessagemodelCodegenerator.class);
-    private final Path messagemodelOutput;
-    private final String packageName;
-
-    public MessagemodelCodegenerator(final Path messagemodelOutput, final String packageName) {
-        if (!Files.exists(messagemodelOutput)) {
-            throw new IllegalArgumentException("Passed messagemodel-output doesn't exists");
-        }
-        this.messagemodelOutput = messagemodelOutput;
-        this.packageName = packageName;
-    }
 
     @Override
-    public final void generate(final InternalElement node, final CodegeneratorConfig codeGeneratorConfig) throws CodegeneratorException {
+    public final GeneratedMessagemodelConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
         String messagemodelName = AmlmodelUtils.getRoleStartingWith(node, AmlmodelConstants.NAME_ROLE_MESSAGEMODEL + "/");
 
-        LOGGER.trace("Generating message-model '" + messagemodelName + "' ...");
+        LOGGER.trace("Generating message-model for xxx '" + messagemodelName + "' ...");
 
-        if (messagemodelName.equals("MessageModel")) {
-            throw new CodegeneratorValidationException("Reserved message-model name");
-        }
+        /*
+        final Path messagemodelFile = Paths.get(messagemodelOutput.toFile().getPath() + "/" + messagemodelName + ".java");
 
-        final File messagemodelFile = new File(messagemodelOutput.toFile().getPath()+ "/" + messagemodelName + ".java");
-
-        final boolean exists = messagemodelFile.isFile();
+        final boolean exists = Files.exists(messagemodelFile) && Files.isRegularFile(messagemodelFile);
         if (exists) {
             LOGGER.trace(messagemodelName + " is already generated");
         } else {
@@ -57,7 +33,7 @@ public final class MessagemodelCodegenerator implements Codegenerator {
             dataModel.put("messagemodelName", messagemodelName);
             try {
                 final Template template = codeGeneratorConfig.getFreemarkerConfig().getTemplate("Messagemodel_Instance.ftlh");
-                try (final Writer writer = new FileWriter(messagemodelFile)) {
+                try (final Writer writer = Files.newBufferedWriter(messagemodelFile, StandardCharsets.UTF_8)) {
                     template.process(dataModel, writer);
                 }
             } catch (IOException | TemplateException e) {
@@ -65,7 +41,10 @@ public final class MessagemodelCodegenerator implements Codegenerator {
             }
             LOGGER.trace(messagemodelName + " was created");
         }
+        */
 
-        LOGGER.trace("Generating message-model '" + messagemodelName + "' finished");
+        LOGGER.trace("Generating message-model for xxx '" + messagemodelName + "' finished");
+
+        return new GeneratedMessagemodelConfig();
     }
 }

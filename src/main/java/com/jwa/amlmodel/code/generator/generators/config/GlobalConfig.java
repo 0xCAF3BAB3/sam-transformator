@@ -2,10 +2,10 @@ package com.jwa.amlmodel.code.generator.generators.config;
 
 import freemarker.template.Configuration;
 
-public final class CodegeneratorConfig {
+public final class GlobalConfig {
     private final Configuration freemarkerConfig;
 
-    public CodegeneratorConfig(final Configuration freemarkerConfig) {
+    public GlobalConfig(final Configuration freemarkerConfig) {
         this.freemarkerConfig = freemarkerConfig;
     }
 
