@@ -58,11 +58,11 @@ public final class Main {
             throw new IllegalArgumentException("Wrong usage");
         }
 
-        if (Files.notExists(amlmodelFile)) {
-            throw new IllegalArgumentException("Path '" + amlmodelFile + "' not valid");
+        if (!(Files.exists(amlmodelFile) && Files.isRegularFile(amlmodelFile))) {
+            throw new IllegalArgumentException("File '" + amlmodelFile + "' doesn't exists or is not a valid file");
         }
-        if (Files.notExists(outputDirectory)) {
-            throw new IllegalArgumentException("Path '" + outputDirectory + "' not valid");
+        if (!(Files.exists(outputDirectory) && Files.isDirectory(outputDirectory))) {
+            throw new IllegalArgumentException("Directory '" + outputDirectory + "' doesn't exists or is not a valid directory");
         }
 
         LOGGER.info("Generator is now running ...");

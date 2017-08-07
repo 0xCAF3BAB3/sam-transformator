@@ -5,6 +5,8 @@ public final class AmlmodelConstants {
     private static final String NAME_ROLECLASSLIB_ARCHITECTURE = "ArchitectureRoleClassLib";
     public static final String NAME_ROLE_COMPONENT = NAME_ROLECLASSLIB_ARCHITECTURE + "/Component";
     public static final String NAME_ROLE_SERVICE = NAME_ROLECLASSLIB_ARCHITECTURE + "/Service";
+    public static final String NAME_ATTRIBUTE_SERVICE_ARTIFACTID = "Service.artifactId";
+    public static final String NAME_ATTRIBUTE_SERVICE_GROUPID = "Service.groupId";
 
     // DomainModelRoleClassLib
     private static final String NAME_ROLECLASSLIB_DOMAINMODEL = "DomainModelRoleClassLib";

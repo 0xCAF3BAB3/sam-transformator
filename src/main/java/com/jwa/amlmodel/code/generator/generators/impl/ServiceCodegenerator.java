@@ -5,38 +5,61 @@ import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedRootConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedServiceConfig;
+import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
+import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import org.cdlflex.models.CAEX.InternalElement;
+import org.cdlflex.models.CAEX.util.AmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class ServiceCodegenerator implements Codegenerator<GeneratedRootConfig, GeneratedServiceConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceCodegenerator.class);
 
     @Override
     public final GeneratedServiceConfig generate(final InternalElement node, final GeneratedRootConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        LOGGER.trace("Generating service for node '" + node.getName() + "' ...");
+        final String serviceName = node.getName();
 
-        // TODO: generates Maven project
+        LOGGER.trace("Generating service for service-node '" + serviceName + "' ...");
 
-        // TODO: generate Maven module 'messagemodel'
-        // final Path file = Paths.get("code-output/messagemodel/src/");
-        //file.mkdirs();
+        final Path serviceDirectory = parentConfig.getOutputDirectory().resolve(serviceName);
+        try {
+            Files.createDirectories(serviceDirectory);
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to create directory '" + serviceName + "': " + e.getMessage(), e);
+        }
 
-        /*
-        for(InternalElement internalElement : node.getInternalElement()) {
-            // TODO: for every component
-            boolean isComponent = AmlUtil.hasRole(internalElement, AmlmodelConstants.NAME_ROLE_COMPONENT);
-            if (isComponent) {
-                new ComponentCodegenerator().generate(internalElement, codeGeneratorConfig);
+        final String[] textfiles = {"LICENCE.txt", "NOTICE.txt", "README.txt"};
+        for(String textfile : textfiles) {
+            final Path textfilePath = serviceDirectory.resolve(textfile);
+            try {
+                Files.createFile(textfilePath);
+            } catch (IOException e) {
+                throw new CodegeneratorException("Failed to generate file '" + textfilePath + "': " + e.getMessage(), e);
             }
         }
-        */
 
-        // TODO: generates Maven module 'communication' which holds communication components (no data needed, just copy)
+        String serviceGroupId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_GROUPID).get();
+        String serviceArtifactId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_ARTIFACTID).get();
+        final Path servicePomTemplateFile = globalConfig.getTemplateFilesDirectory().resolve("service").resolve("pom.xml");
+        final Path servicePomFile = serviceDirectory.resolve("pom.xml");
+        final Map<String, String> dataModel = new HashMap<>();
+        dataModel.put("groupId", serviceGroupId);
+        dataModel.put("artifactId", serviceArtifactId);
+        try {
+            CodefileUtils.processFileTemplate(servicePomTemplateFile, servicePomFile, dataModel, globalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to generate file '" + servicePomFile + "': " + e.getMessage(), e);
+        }
 
-        LOGGER.trace("Generating service for node '" + node.getName() + "' finished");
+        LOGGER.trace("Generating service for service-node '" + serviceName + "' finished");
 
-        return new GeneratedServiceConfig();
+        return new GeneratedServiceConfig(serviceDirectory, serviceGroupId, serviceArtifactId, servicePomFile);
     }
 }

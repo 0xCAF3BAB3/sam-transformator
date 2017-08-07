@@ -21,6 +21,7 @@ import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodegenerator;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 
+import org.apache.commons.io.FileUtils;
 import org.cdlflex.models.CAEX.CAEXFile;
 import org.cdlflex.models.CAEX.DocumentRoot;
 import org.cdlflex.models.CAEX.InstanceHierarchy;
@@ -31,13 +32,17 @@ import org.openengsb.api.serialize.Deserializer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public final class CodegeneratorService {
     // TODO: the following line is quite hacky
-    private final static String DIRECTORY_FREEMARKER_TEMPLATES = "src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/freemarker";
+    private final static String DIRECTORY_TEMPLATES = "src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/";
+    private final static String DIRECTORY_FREEMARKER_TEMPLATES = DIRECTORY_TEMPLATES + "freemarker/";
+    private final static String DIRECTORY_FILES_TEMPLATES = DIRECTORY_TEMPLATES + "files/";
 
     public final void generateCode(final Path amlmodelFile, final Path outputDirectory) throws CodegeneratorServiceException {
         final CAEXFile amlmodel;
@@ -49,14 +54,11 @@ public final class CodegeneratorService {
 
         validate(amlmodel);
 
-        /*
-        // TODO: if output-dir exists: clean; if not: create it
         try {
             FileUtils.cleanDirectory(outputDirectory.toFile());
         } catch (IOException e) {
-            throw new CodegeneratorException("Cleaning output-directory failed: " + e.getMessage(), e);
+            throw new CodegeneratorServiceException("Cleaning output-directory '" + outputDirectory + "' failed: " + e.getMessage(), e);
         }
-        */
 
         try {
             generateRecursively(amlmodel, outputDirectory);
@@ -94,7 +96,11 @@ public final class CodegeneratorService {
         freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         freemarkerConfig.setLogTemplateExceptions(false);
 
-        return new GlobalConfig(freemarkerConfig);
+        final Path templateFilesDirectory = Paths.get(DIRECTORY_FILES_TEMPLATES);
+
+        final Charset charset = StandardCharsets.UTF_8;
+
+        return new GlobalConfig(freemarkerConfig, templateFilesDirectory, charset);
     }
 
     private static void generateRecursively(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {

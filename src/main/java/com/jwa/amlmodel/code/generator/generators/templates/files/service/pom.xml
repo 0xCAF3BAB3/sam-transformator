@@ -1,20 +1,19 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.jwa.amlmodel.code</groupId>
-    <artifactId>generator</artifactId>
-    <packaging>jar</packaging>
+    <groupId>{{groupId}}</groupId>
+    <artifactId>{{artifactId}}</artifactId>
+    <packaging>pom</packaging>
     <version>1.0</version>
-    <name>AMLmodel-Code-Generator</name>
+    <modules>
+    </modules>
     <properties>
         <!-- Project -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <!-- Dependencies -->
-        <org.cdlflex.models.caex.version>1.0.6-SNAPSHOT</org.cdlflex.models.caex.version>
-        <freemarker.version>2.3.26-incubating</freemarker.version>
-        <commons-io.version>2.5</commons-io.version>
+        <guava.version>22.0</guava.version>
         <junit.version>4.12</junit.version>
         <mockito-all.version>1.10.19</mockito-all.version>
         <slf4j.version>1.7.12</slf4j.version>
@@ -29,19 +28,9 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.cdlflex.models</groupId>
-            <artifactId>org.cdlflex.models.caex</artifactId>
-            <version>${org.cdlflex.models.caex.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>${freemarker.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -86,28 +75,4 @@
             <version>${log4j-core.version}</version>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>generator</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>${exec-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>java</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <mainClass>com.jwa.amlmodel.code.generator.Main</mainClass>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

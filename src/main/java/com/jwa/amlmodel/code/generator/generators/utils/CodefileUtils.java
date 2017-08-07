@@ -6,9 +6,20 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 public final class CodefileUtils {
     private CodefileUtils() {}
+
+    public static void processFileTemplate(final Path templateFile, final Path outputFile, final Map<String, String> dataModel, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
+        String content = new String(Files.readAllBytes(templateFile), charset);
+        for(Map.Entry<String, String> entry : dataModel.entrySet()) {
+            final String placeholder = "{{" + entry.getKey() + "}}";
+            content = content.replace(placeholder, entry.getValue());
+        }
+        Files.write(outputFile, content.getBytes(charset));
+    }
 
     public static void addValueToEnum(final String enumValue, final String enumName, final Path file) throws IllegalArgumentException, IOException {
         if (!isValidJavaIdentifier(enumValue)) {
