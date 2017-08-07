@@ -32,7 +32,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
         try {
             Files.createDirectories(serviceDirectory);
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to create directory '" + serviceName + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Failed to create directory '" + serviceDirectory + "': " + e.getMessage(), e);
         }
 
         final String[] textfiles = {"LICENCE.txt", "NOTICE.txt", "README.txt"};
@@ -45,15 +45,15 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
             }
         }
 
-        String serviceGroupId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_GROUPID).get();
-        String serviceArtifactId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_ARTIFACTID).get();
+        final String serviceGroupId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_GROUPID).get();
+        final String serviceArtifactId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_ARTIFACTID).get();
         final Path servicePomTemplateFile = globalConfig.getTemplateFilesDirectory().resolve("service").resolve("pom.xml");
         final Path servicePomFile = serviceDirectory.resolve("pom.xml");
-        final Map<String, String> dataModel = new HashMap<>();
-        dataModel.put("groupId", serviceGroupId);
-        dataModel.put("artifactId", serviceArtifactId);
+        final Map<String, String> serviePomDatamodel = new HashMap<>();
+        serviePomDatamodel.put("groupId", serviceGroupId);
+        serviePomDatamodel.put("artifactId", serviceArtifactId);
         try {
-            CodefileUtils.processFileTemplate(servicePomTemplateFile, servicePomFile, dataModel, globalConfig.getCharset());
+            CodefileUtils.processFileTemplate(servicePomTemplateFile, servicePomFile, serviePomDatamodel, globalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to generate file '" + servicePomFile + "': " + e.getMessage(), e);
         }
