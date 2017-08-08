@@ -14,7 +14,6 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 import org.cdlflex.models.CAEX.InternalElement;
-import org.cdlflex.models.CAEX.util.AmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
 
         LOGGER.trace("Generating component for component-node '" + componentName + "' ...");
 
-        final String componentArtifactId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_COMPONENT_ARTIFACTID).get();
+        final String componentArtifactId = AmlmodelConstants.getComponentArtifactId(node);
         final Path componentDirectory = parentConfig.getServiceDirectory().resolve(componentArtifactId);
         try {
             Files.createDirectories(componentDirectory);
@@ -46,7 +45,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
             throw new CodegeneratorException("Failed to create directory '" + componentDirectory + "': " + e.getMessage(), e);
         }
 
-        final String componentGroupId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_COMPONENT_GROUPID).get();
+        final String componentGroupId = AmlmodelConstants.getComponentGroupId(node);
 
         final CodefileUtils.MavenDirectoryStructure componentMavenDirectoryStructure;
         try {

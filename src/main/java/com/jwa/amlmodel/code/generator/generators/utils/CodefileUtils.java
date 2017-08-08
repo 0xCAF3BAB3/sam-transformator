@@ -183,7 +183,7 @@ public final class CodefileUtils {
         return new MavenModuleStructure(moduleDirectory, codeDirectory);
     }
 
-    public static void addToMethod(final String content, final String methodName, final Path file, final Charset charset) throws IOException {
+    public static void addToMethod(final String statements, final String methodName, final Path file, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
         final List<String> lines = Files.readAllLines(file, charset);
         Integer startIndex = null;
@@ -208,7 +208,7 @@ public final class CodefileUtils {
         if (endIndex == null) {
             throw new IOException("End of method not found");
         }
-        lines.add(endIndex, content);
+        lines.add(endIndex, statements);
         Files.write(file, lines, charset);
     }
 

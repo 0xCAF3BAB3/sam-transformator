@@ -34,6 +34,9 @@ public final class GlobalConfig {
     }
 
     public static Template getTemplate(final FreemarkerTemplate template) {
+        if (template == null) {
+            throw new IllegalArgumentException("Passed template is null");
+        }
         try {
             return CONFIG_FREEMARKER.getTemplate(template.getFilepath());
         } catch (IOException e) {
@@ -42,6 +45,9 @@ public final class GlobalConfig {
     }
 
     public static Path getTemplate(final FileTemplate template) {
+        if (template == null) {
+            throw new IllegalArgumentException("Passed template is null");
+        }
         final Path path = DIRECTORY_FILE_TEMPLATES.resolve(template.getFilepath());
         if (!IOUtils.isValidFile(path)) {
             throw new RuntimeException("Loading file-template '" + path + "' failed: " + "File doesn't exists or is invalid");

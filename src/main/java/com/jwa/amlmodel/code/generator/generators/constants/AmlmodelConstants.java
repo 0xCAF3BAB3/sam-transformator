@@ -3,6 +3,8 @@ package com.jwa.amlmodel.code.generator.generators.constants;
 import org.cdlflex.models.CAEX.InternalElement;
 import org.cdlflex.models.CAEX.util.AmlUtil;
 
+import java.util.Optional;
+
 public final class AmlmodelConstants {
     // ArchitectureRoleClassLib
     private static final String NAME_ROLECLASSLIB_ARCHITECTURE = "ArchitectureRoleClassLib";
@@ -82,5 +84,65 @@ public final class AmlmodelConstants {
             throw new IllegalArgumentException("Passed node is null");
         }
         return AmlUtil.hasRole(node, NAME_ROLE_MESSAGEMODEL);
+    }
+
+    public static String getServiceArtifactId(final InternalElement node) {
+        if (!hasServiceRole(node)) {
+            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_SERVICE + "'");
+        }
+        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ATTRIBUTE_SERVICE_ARTIFACTID);
+        if (value.isPresent()) {
+            return value.get();
+        } else {
+            throw new IllegalArgumentException("Attribute '" + NAME_ATTRIBUTE_SERVICE_ARTIFACTID + "' not found");
+        }
+    }
+
+    public static String getServiceGroupId(final InternalElement node) {
+        if (!hasServiceRole(node)) {
+            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_SERVICE + "'");
+        }
+        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ATTRIBUTE_SERVICE_GROUPID);
+        if (value.isPresent()) {
+            return value.get();
+        } else {
+            throw new IllegalArgumentException("Attribute '" + NAME_ATTRIBUTE_SERVICE_GROUPID + "' not found");
+        }
+    }
+
+    public static String getComponentArtifactId(final InternalElement node) {
+        if (!hasComponentRole(node)) {
+            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_COMPONENT + "'");
+        }
+        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ATTRIBUTE_COMPONENT_ARTIFACTID);
+        if (value.isPresent()) {
+            return value.get();
+        } else {
+            throw new IllegalArgumentException("Attribute '" + NAME_ATTRIBUTE_COMPONENT_ARTIFACTID + "' not found");
+        }
+    }
+
+    public static String getComponentGroupId(final InternalElement node) {
+        if (!hasComponentRole(node)) {
+            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_COMPONENT + "'");
+        }
+        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ATTRIBUTE_COMPONENT_GROUPID);
+        if (value.isPresent()) {
+            return value.get();
+        } else {
+            throw new IllegalArgumentException("Attribute '" + NAME_ATTRIBUTE_COMPONENT_GROUPID + "' not found");
+        }
+    }
+
+    public static String getPortstyleStyle(final InternalElement node) {
+        if (!hasPortstyleRole(node)) {
+            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_PORTSTYLE + "'");
+        }
+        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ATTRIBUTE_PORTSTYLE_STYLE);
+        if (value.isPresent()) {
+            return value.get();
+        } else {
+            throw new IllegalArgumentException("Attribute '" + NAME_ATTRIBUTE_PORTSTYLE_STYLE + "' not found");
+        }
     }
 }

@@ -24,7 +24,6 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         LOGGER.trace("Generating message-model for port-node '" + portName + "' ...");
 
         // TODO: implement me
-        // String messagemodelName = AmlmodelUtils.getRoleStartingWith(node, AmlmodelConstants.NAME_ROLE_MESSAGEMODEL + "/");
 
         LOGGER.trace("Generating message-model for port-node '" + portName + "' finished");
 

@@ -10,7 +10,6 @@ import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import org.cdlflex.models.CAEX.InternalElement;
-import org.cdlflex.models.CAEX.util.AmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +49,8 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
             }
         }
 
-        final String serviceGroupId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_GROUPID).get();
-        final String serviceArtifactId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_ARTIFACTID).get();
+        final String serviceGroupId = AmlmodelConstants.getServiceGroupId(node);
+        final String serviceArtifactId = AmlmodelConstants.getServiceArtifactId(node);
         final Path servicePomTemplateFile = GlobalConfig.getTemplate(FileTemplate.POM_SERVICE);
         final Path servicePomFile = serviceDirectory.resolve("pom.xml");
         final Map<String, String> serviePomDatamodel = new HashMap<>();

@@ -9,7 +9,6 @@ import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import org.cdlflex.models.CAEX.InternalElement;
-import org.cdlflex.models.CAEX.util.AmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,7 @@ public final class PortstyleCodegenerator implements Codegenerator<GeneratedPort
 
         LOGGER.trace("Generating port-style for port-node '" + portName + "' ...");
 
-        final String portstyleStyle = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_PORTSTYLE_STYLE).get();
+        final String portstyleStyle = AmlmodelConstants.getPortstyleStyle(node);
         try {
             final String portstyleContent = "                        .setStyle(\"" + portstyleStyle + "\")";
             CodefileUtils.addToPortConfig(portstyleContent, portName, parentConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.CHARSET);

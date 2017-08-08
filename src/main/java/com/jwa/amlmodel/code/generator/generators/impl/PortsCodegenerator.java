@@ -77,7 +77,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
             throw new CodegeneratorException("Failed to generate snippet '" + "ComponentMainCommunicationserviceUsage" + "': " + e.getMessage(), e);
         }
         try {
-            CodefileUtils.addToMethod(snippet, "public static void main(final String[] args) {", parentConfig.getComponentMainFile(), GlobalConfig.CHARSET);
+            CodefileUtils.addToMethod(snippet, "main", parentConfig.getComponentMainFile(), GlobalConfig.CHARSET);
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
         }
