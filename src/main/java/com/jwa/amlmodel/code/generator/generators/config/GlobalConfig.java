@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public final class GlobalConfig {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final Path DIRECTORY_TEMPLATES = Paths.get("src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/"); // TODO: this line is quite hacky
-    private static final Path DIRECTORY_FILES_TEMPLATES = DIRECTORY_TEMPLATES.resolve("files/");
+    private static final Path DIRECTORY_FILE_TEMPLATES = DIRECTORY_TEMPLATES.resolve("file/");
     private static final Path DIRECTORY_FREEMARKER_TEMPLATES = DIRECTORY_TEMPLATES.resolve("freemarker/");
     private static final Configuration CONFIG_FREEMARKER;
 
@@ -42,7 +42,7 @@ public final class GlobalConfig {
     }
 
     public static Path getTemplate(final FileTemplate template) {
-        final Path path = DIRECTORY_FILES_TEMPLATES.resolve(template.getFilepath());
+        final Path path = DIRECTORY_FILE_TEMPLATES.resolve(template.getFilepath());
         if (!IOUtils.isValidFile(path)) {
             throw new RuntimeException("Loading file-template '" + path + "' failed: " + "File doesn't exists or is invalid");
         }
