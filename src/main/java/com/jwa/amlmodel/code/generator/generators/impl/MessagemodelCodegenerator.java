@@ -8,6 +8,7 @@ import com.jwa.amlmodel.code.generator.generators.config.generated.impl.Generate
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
+import com.jwa.amlmodel.code.generator.generators.utils.IOUtils;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -64,7 +65,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         final String messagemodelName = AmlmodelConstants.getMessagemodelName(node);
         final Path messagemodelMavenCodeDirectory = Paths.get("code-output/Service1/messagemodel/src/main/java/com/jwa/service1/messagemodel"); // TODO: remove this hack
         final Path messagemodelFile = messagemodelMavenCodeDirectory.resolve(messagemodelName + ".java");
-        if (Files.notExists(messagemodelFile)) {
+        if (!IOUtils.isValidFile(messagemodelFile)) {
             final Map<String, String> messagemodelDatamodel = new HashMap<>();
             messagemodelDatamodel.put("messagemodelName", messagemodelName);
             try {
