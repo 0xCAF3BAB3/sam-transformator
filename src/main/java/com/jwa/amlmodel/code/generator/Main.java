@@ -1,5 +1,6 @@
 package com.jwa.amlmodel.code.generator;
 
+import com.jwa.amlmodel.code.generator.generators.utils.IOUtils;
 import com.jwa.amlmodel.code.generator.service.CodegeneratorService;
 import com.jwa.amlmodel.code.generator.service.CodegeneratorServiceException;
 
@@ -7,13 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 public final class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
@@ -31,7 +28,7 @@ public final class Main {
         if (args.length == 0) {
             try {
                 final URL url = new URL("https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml");
-                amlmodelFile = downloadFile(url, PATH_DOWLOADEDFILE);
+                amlmodelFile = IOUtils.downloadFile(url, PATH_DOWLOADEDFILE);
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -43,10 +40,10 @@ public final class Main {
                 }
             }
             final String pathToAmlmodelFile = args[0];
-            if (isUrl(pathToAmlmodelFile)) {
+            if (IOUtils.isUrl(pathToAmlmodelFile)) {
                 try {
                     final URL url = new URL(pathToAmlmodelFile);
-                    amlmodelFile = downloadFile(url, PATH_DOWLOADEDFILE);
+                    amlmodelFile = IOUtils.downloadFile(url, PATH_DOWLOADEDFILE);
                 } catch (IOException e) {
                     throw new IllegalArgumentException(e);
                 }
@@ -58,10 +55,11 @@ public final class Main {
             throw new IllegalArgumentException("Wrong usage");
         }
 
-        if (!(Files.exists(amlmodelFile) && Files.isRegularFile(amlmodelFile))) {
+        if (!IOUtils.isValidFile(amlmodelFile)) {
             throw new IllegalArgumentException("File '" + amlmodelFile + "' doesn't exists or is not a valid file");
         }
-        if (!(Files.exists(outputDirectory) && Files.isDirectory(outputDirectory))) {
+
+        if (!IOUtils.isValidDirectory(outputDirectory)) {
             throw new IllegalArgumentException("Directory '" + outputDirectory + "' doesn't exists or is not a valid directory");
         }
 
@@ -73,33 +71,5 @@ public final class Main {
             return;
         }
         LOGGER.info("Generator finished");
-
-        /*
-        // TODO:
-        try {
-            Files.deleteIfExists(PATH_DOWLOADEDFILE);
-        } catch (IOException e) {
-            LOGGER.warn("Deleting downloaded AML-model file failed: " + e.getMessage(), e);
-        }
-        */
-    }
-
-    private static Path downloadFile(final URL urlToFile, final Path file) throws IOException {
-        if (Files.notExists(file)) {
-            Files.createDirectories(file.getParent());
-            Files.createFile(file);
-        }
-        try (InputStream in = urlToFile.openStream()) {
-            Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
-        }
-        return file;
-    }
-
-    private static boolean isUrl(final String url) {
-        try {
-            new URL(url);
-            return true;
-        } catch (MalformedURLException ignored) {}
-        return false;
     }
 }

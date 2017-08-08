@@ -53,7 +53,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         componentCommunicationserviceDatamodel.put("packageName", parentConfig.getComponentGroupId() + "." + parentConfig.getArtifactId());
         componentCommunicationserviceDatamodel.put("communicationPackageName", communicationPackageName);
         try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.COMMSERVICE);
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.COMMSERVICE_INITIAL);
             try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, GlobalConfig.CHARSET)) {
                 template.process(componentCommunicationserviceDatamodel, writer);
             }

@@ -55,7 +55,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final String packageName = componentGroupId + "." + componentArtifactId;
         componentMainDatamodel.put("packageName", packageName);
         try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.MAIN);
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.MAIN_INITIAL);
             try (final Writer writer = Files.newBufferedWriter(componentMainFile, GlobalConfig.CHARSET)) {
                 template.process(componentMainDatamodel, writer);
             }

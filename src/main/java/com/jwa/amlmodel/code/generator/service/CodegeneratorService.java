@@ -15,36 +15,32 @@ import com.jwa.amlmodel.code.generator.generators.impl.PortsCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.PortstyleCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.PorttypeCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodegenerator;
+import com.jwa.amlmodel.code.generator.generators.utils.AmlmodelUtils;
+import com.jwa.amlmodel.code.generator.generators.utils.IOUtils;
 
-import org.apache.commons.io.FileUtils;
 import org.cdlflex.models.CAEX.CAEXFile;
-import org.cdlflex.models.CAEX.DocumentRoot;
 import org.cdlflex.models.CAEX.InstanceHierarchy;
 import org.cdlflex.models.CAEX.InternalElement;
-import org.cdlflex.models.CAEX.util.AmlDeserializer;
 import org.cdlflex.models.CAEX.util.AmlUtil;
-import org.openengsb.api.serialize.Deserializer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class CodegeneratorService {
     public final void generateCode(final Path amlmodelFile, final Path outputDirectory) throws CodegeneratorServiceException {
         final CAEXFile amlmodel;
         try {
-            amlmodel = deserialize(amlmodelFile);
+            amlmodel = AmlmodelUtils.deserialize(amlmodelFile);
         } catch (IOException e) {
-            throw new CodegeneratorServiceException("Aml-model deserialization failed: " + e.getMessage(), e);
+            throw new CodegeneratorServiceException("Deserialization of aml-model file '" + amlmodelFile + "' failed: " + e.getMessage(), e);
         }
 
         validate(amlmodel);
 
         try {
-            FileUtils.cleanDirectory(outputDirectory.toFile());
+            IOUtils.clearDirectory(outputDirectory);
         } catch (IOException e) {
-            throw new CodegeneratorServiceException("Cleaning output-directory '" + outputDirectory + "' failed: " + e.getMessage(), e);
+            throw new CodegeneratorServiceException(e);
         }
 
         try {
@@ -52,15 +48,6 @@ public final class CodegeneratorService {
         } catch (CodegeneratorException e) {
             throw new CodegeneratorServiceException("Code-generation failed: " + e.getMessage(), e);
         }
-    }
-
-    private static CAEXFile deserialize(final Path amlmodelFile) throws IOException {
-        final Deserializer<DocumentRoot> deserializer = new AmlDeserializer();
-        final DocumentRoot documentRoot;
-        try (final InputStream in = Files.newInputStream(amlmodelFile)) {
-            documentRoot = deserializer.deserialize(in);
-        }
-        return documentRoot.getCAEXFile();
     }
 
     private static void validate(final CAEXFile amlmodel) throws CodegeneratorServiceException {
