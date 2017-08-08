@@ -2,11 +2,12 @@ package com.jwa.amlmodel.code.generator.generators.impl;
 
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
+import com.jwa.amlmodel.code.generator.generators.config.FileTemplate;
+import com.jwa.amlmodel.code.generator.generators.config.FreemarkerTemplate;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedComponentConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedServiceConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
-import com.jwa.amlmodel.code.generator.generators.constants.FreemarkerTemplatesConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import freemarker.template.Template;
@@ -59,7 +60,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final String packageName = componentGroupId + "." + componentArtifactId;
         componentMainDatamodel.put("packageName", packageName);
         try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.MAIN_INITIAL);
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_INITIAL);
             try (final Writer writer = Files.newBufferedWriter(componentMainFile, GlobalConfig.CHARSET)) {
                 template.process(componentMainDatamodel, writer);
             }
@@ -72,7 +73,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         componentLogconfigDatamodel.put("name", componentArtifactId);
         componentLogconfigDatamodel.put("groupId", componentGroupId);
         try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.LOG4J2);
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
             try (final Writer writer = Files.newBufferedWriter(componentLogconfigFile, GlobalConfig.CHARSET)) {
                 template.process(componentLogconfigDatamodel, writer);
             }
@@ -80,9 +81,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
             throw new CodegeneratorException("Failed to generate file '" + componentLogconfigFile + "': " + e.getMessage(), e);
         }
 
-        final Path componentPomTemplateFile = GlobalConfig.DIRECTORY_FILES_TEMPLATES
-                .resolve("component")
-                .resolve("pom.xml");
+        final Path componentPomTemplateFile = GlobalConfig.getTemplate(FileTemplate.POM_COMPONENT);
         final Path componentPomFile = componentDirectory.resolve("pom.xml");
         final Map<String, String> componentPomDatamodel = new HashMap<>();
         componentPomDatamodel.put("parentGroupId", parentConfig.getServiceGroupId());

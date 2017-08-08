@@ -2,11 +2,11 @@ package com.jwa.amlmodel.code.generator.generators.impl;
 
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
+import com.jwa.amlmodel.code.generator.generators.config.FreemarkerTemplate;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedComponentConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
-import com.jwa.amlmodel.code.generator.generators.constants.FreemarkerTemplatesConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import freemarker.template.Template;
@@ -58,7 +58,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         componentCommunicationserviceDatamodel.put("packageName", parentConfig.getComponentGroupId() + "." + parentConfig.getArtifactId());
         componentCommunicationserviceDatamodel.put("communicationPackageName", communicationPackageName);
         try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.COMMSERVICE_INITIAL);
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_INITIAL);
             try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, GlobalConfig.CHARSET)) {
                 template.process(componentCommunicationserviceDatamodel, writer);
             }
@@ -68,7 +68,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         // Main.java anpassen  Example-Usage des CommunicationService der Methode ‚main’ hinzufügen
         final String snippet;
         try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.MAIN_COMMSERVICEUSAGE_SNIPPET);
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_COMMSERVICEUSAGE_SNIPPET);
             try (final Writer writer = new StringWriter()) {
                 template.process(new HashMap<>(), writer);
                 snippet = writer.toString();

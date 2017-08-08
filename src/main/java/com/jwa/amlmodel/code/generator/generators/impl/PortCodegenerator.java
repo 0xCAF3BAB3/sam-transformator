@@ -2,11 +2,11 @@ package com.jwa.amlmodel.code.generator.generators.impl;
 
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
+import com.jwa.amlmodel.code.generator.generators.config.FreemarkerTemplate;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
-import com.jwa.amlmodel.code.generator.generators.constants.FreemarkerTemplatesConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import freemarker.template.Template;
@@ -40,7 +40,7 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
         final Map<String, String> portsnippetDatamodel = new HashMap<>();
         portsnippetDatamodel.put("portName", portName);
         try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.COMMSERVICE_PORT_SNIPPET);
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_PORT_SNIPPET);
             try (final Writer writer = new StringWriter()) {
                 template.process(portsnippetDatamodel, writer);
                 portsnippet = writer.toString();

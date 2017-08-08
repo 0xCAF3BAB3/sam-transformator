@@ -2,6 +2,7 @@ package com.jwa.amlmodel.code.generator.generators.impl;
 
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
+import com.jwa.amlmodel.code.generator.generators.config.FileTemplate;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedRootConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedServiceConfig;
@@ -51,9 +52,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
 
         final String serviceGroupId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_GROUPID).get();
         final String serviceArtifactId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_ARTIFACTID).get();
-        final Path servicePomTemplateFile = GlobalConfig.DIRECTORY_FILES_TEMPLATES
-                .resolve("service")
-                .resolve("pom.xml");
+        final Path servicePomTemplateFile = GlobalConfig.getTemplate(FileTemplate.POM_SERVICE);
         final Path servicePomFile = serviceDirectory.resolve("pom.xml");
         final Map<String, String> serviePomDatamodel = new HashMap<>();
         serviePomDatamodel.put("groupId", serviceGroupId);

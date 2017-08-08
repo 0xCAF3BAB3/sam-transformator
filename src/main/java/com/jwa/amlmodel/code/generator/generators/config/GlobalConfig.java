@@ -1,7 +1,7 @@
 package com.jwa.amlmodel.code.generator.generators.config;
 
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
-import com.jwa.amlmodel.code.generator.generators.constants.FreemarkerTemplatesConstants;
+import com.jwa.amlmodel.code.generator.generators.utils.IOUtils;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public final class GlobalConfig {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final Path DIRECTORY_TEMPLATES = Paths.get("src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/"); // TODO: this line is quite hacky
-    public static final Path DIRECTORY_FILES_TEMPLATES = DIRECTORY_TEMPLATES.resolve("files/");
+    private static final Path DIRECTORY_FILES_TEMPLATES = DIRECTORY_TEMPLATES.resolve("files/");
     private static final Path DIRECTORY_FREEMARKER_TEMPLATES = DIRECTORY_TEMPLATES.resolve("freemarker/");
     private static final Configuration CONFIG_FREEMARKER;
 
@@ -33,11 +33,19 @@ public final class GlobalConfig {
         CONFIG_FREEMARKER = freemarkerConfig;
     }
 
-    public static Template getTemplate(final FreemarkerTemplatesConstants templateType) {
+    public static Template getTemplate(final FreemarkerTemplate template) {
         try {
-            return CONFIG_FREEMARKER.getTemplate(templateType.getFilepath());
+            return CONFIG_FREEMARKER.getTemplate(template.getFilepath());
         } catch (IOException e) {
-            throw new RuntimeException("Loading Freemarker-template '" + templateType.getFilepath() + "' failed: " + e.getMessage(), e);
+            throw new RuntimeException("Loading Freemarker-template '" + template.getFilepath() + "' failed: " + e.getMessage(), e);
         }
+    }
+
+    public static Path getTemplate(final FileTemplate template) {
+        final Path path = DIRECTORY_FILES_TEMPLATES.resolve(template.getFilepath());
+        if (!IOUtils.isValidFile(path)) {
+            throw new RuntimeException("Loading file-template '" + path + "' failed: " + "File doesn't exists or is invalid");
+        }
+        return path;
     }
 }

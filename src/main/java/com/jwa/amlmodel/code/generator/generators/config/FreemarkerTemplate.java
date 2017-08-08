@@ -1,6 +1,6 @@
-package com.jwa.amlmodel.code.generator.generators.constants;
+package com.jwa.amlmodel.code.generator.generators.config;
 
-public enum FreemarkerTemplatesConstants {
+public enum FreemarkerTemplate {
     COMMSERVICE_INITIAL(Constants.DIRECTORY_COMPONENT + "CommunicationServiceInitial.java.ftlh"),
     COMMSERVICE_PORT_SNIPPET(Constants.DIRECTORY_COMPONENT + "CommunicationServicePortSnippet.java.ftlh"),
     LOG4J2(Constants.DIRECTORY_COMPONENT + "log4j2.xml.ftlh"),
@@ -9,7 +9,7 @@ public enum FreemarkerTemplatesConstants {
 
     private final String filepath;
 
-    FreemarkerTemplatesConstants(final String filepath) {
+    FreemarkerTemplate(final String filepath) {
         this.filepath = filepath;
     }
 
