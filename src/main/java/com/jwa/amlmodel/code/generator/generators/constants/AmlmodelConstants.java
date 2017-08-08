@@ -23,6 +23,7 @@ public final class AmlmodelConstants {
     // DomainModelRoleClassLib
     private static final String NAME_ROLECLASSLIB_DOMAINMODEL = "DomainModelRoleClassLib";
     private static final String NAME_ROLE_MESSAGEMODEL = "MessageModel";
+    private static final String NAME_ATTRIBUTE_MESSAGEMODEL_NAME = "name";
 
     // CommunicationRoleClassLib
     private static final String NAME_ROLECLASSLIB_COMMUNICATION = "CommunicationRoleClassLib";
@@ -172,6 +173,18 @@ public final class AmlmodelConstants {
             return porttype.get().replace(leadingPart, "");
         } else {
             throw new IllegalArgumentException("Porttype not found");
+        }
+    }
+
+    public static String getMessagemodelName(final InternalElement node) {
+        if (!hasMessagemodelRole(node)) {
+            throw new IllegalArgumentException("Passed node has no messagemodel-role");
+        }
+        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_MESSAGEMODEL + "." + NAME_ATTRIBUTE_MESSAGEMODEL_NAME);
+        if (value.isPresent()) {
+            return value.get();
+        } else {
+            throw new IllegalArgumentException("Attribute not found");
         }
     }
 }

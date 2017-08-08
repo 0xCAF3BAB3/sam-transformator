@@ -104,6 +104,6 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
 
         LOGGER.trace("Generating component for component-node '" + componentName + "' finished");
 
-        return new GeneratedComponentConfig(parentConfig, componentGroupId, componentArtifactId, componentDirectory, componentMainFile);
+        return new GeneratedComponentConfig(parentConfig, componentGroupId, componentArtifactId, componentDirectory, componentMainFile, componentPomFile);
     }
 }

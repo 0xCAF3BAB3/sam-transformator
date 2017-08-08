@@ -55,7 +55,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         // CommunicationService.java anlegen  hat initial noch keine Ports zugewiesen
         Path componentCommunicationserviceFile = parentConfig.getComponentMainFile().getParent().resolve("CommunicationService.java");
         final Map<String, String> componentCommunicationserviceDatamodel = new HashMap<>();
-        componentCommunicationserviceDatamodel.put("packageName", parentConfig.getComponentGroupId() + "." + parentConfig.getArtifactId());
+        componentCommunicationserviceDatamodel.put("packageName", parentConfig.getComponentGroupId() + "." + parentConfig.getComponentArtifactId());
         componentCommunicationserviceDatamodel.put("communicationPackageName", communicationPackageName);
         try {
             final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_INITIAL);

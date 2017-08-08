@@ -2,6 +2,7 @@ package com.jwa.amlmodel.code.generator.generators.utils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -90,6 +91,29 @@ public final class CodefileUtils {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             transformer.transform(new DOMSource(document), new StreamResult(pomFile.toFile()));
         } catch (TransformerException | SAXException | ParserConfigurationException e) {
+            throw new IOException(e);
+            // TODO: create a good exception-message
+        }
+    }
+
+    public static boolean hasMavenDependancy(final String groupId, final String artifactId, final Path pomFile, final Charset charset) throws IOException {
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(pomFile.toFile());
+            NodeList nodes = document.getElementsByTagName("dependency");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Element dependency = (Element) nodes.item(i);
+                final String dependencyGroupId = dependency.getElementsByTagName("groupId").item(0).getTextContent();
+                if (dependencyGroupId.equals(groupId)) {
+                    final String dependencyArtifactId = dependency.getElementsByTagName("artifactId").item(0).getTextContent();
+                    if (dependencyArtifactId.equals(artifactId)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (SAXException | ParserConfigurationException e) {
             throw new IOException(e);
             // TODO: create a good exception-message
         }
