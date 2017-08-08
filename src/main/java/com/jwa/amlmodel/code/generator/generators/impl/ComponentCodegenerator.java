@@ -6,6 +6,7 @@ import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedComponentConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedServiceConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
+import com.jwa.amlmodel.code.generator.generators.constants.FreemarkerTemplatesConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import freemarker.template.Template;
@@ -27,7 +28,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
     private static final Logger LOGGER = LoggerFactory.getLogger(ComponentCodegenerator.class);
 
     @Override
-    public final GeneratedComponentConfig generate(final InternalElement node, final GeneratedServiceConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
+    public final GeneratedComponentConfig generate(final InternalElement node, final GeneratedServiceConfig parentConfig) throws CodegeneratorException {
         final String componentName = node.getName();
 
         LOGGER.trace("Generating component for component-node '" + componentName + "' ...");
@@ -54,8 +55,8 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final String packageName = componentGroupId + "." + componentArtifactId;
         componentMainDatamodel.put("packageName", packageName);
         try {
-            final Template template = globalConfig.getFreemarkerConfig().getTemplate("ComponentMain.ftlh");
-            try (final Writer writer = Files.newBufferedWriter(componentMainFile, globalConfig.getCharset())) {
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.MAIN);
+            try (final Writer writer = Files.newBufferedWriter(componentMainFile, GlobalConfig.CHARSET)) {
                 template.process(componentMainDatamodel, writer);
             }
         } catch (IOException | TemplateException e) {
@@ -67,15 +68,15 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         componentLogconfigDatamodel.put("name", componentArtifactId);
         componentLogconfigDatamodel.put("groupId", componentGroupId);
         try {
-            final Template template = globalConfig.getFreemarkerConfig().getTemplate("ComponentLog4j2.ftlh");
-            try (final Writer writer = Files.newBufferedWriter(componentLogconfigFile, globalConfig.getCharset())) {
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.LOG4J2);
+            try (final Writer writer = Files.newBufferedWriter(componentLogconfigFile, GlobalConfig.CHARSET)) {
                 template.process(componentLogconfigDatamodel, writer);
             }
         } catch (IOException | TemplateException e) {
             throw new CodegeneratorException("Failed to generate file '" + componentLogconfigFile + "': " + e.getMessage(), e);
         }
 
-        final Path componentPomTemplateFile = globalConfig.getTemplateFilesDirectory()
+        final Path componentPomTemplateFile = GlobalConfig.DIRECTORY_FILES_TEMPLATES
                 .resolve("component")
                 .resolve("pom.xml");
         final Path componentPomFile = componentDirectory.resolve("pom.xml");
@@ -88,13 +89,13 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final String pathToMainClass = componentGroupId + "." + componentArtifactId + ".Main";
         componentPomDatamodel.put("pathToMainClass", pathToMainClass);
         try {
-            CodefileUtils.processFileTemplate(componentPomTemplateFile, componentPomFile, componentPomDatamodel, globalConfig.getCharset());
+            CodefileUtils.processFileTemplate(componentPomTemplateFile, componentPomFile, componentPomDatamodel, GlobalConfig.CHARSET);
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to generate file '" + componentPomFile + "': " + e.getMessage(), e);
         }
 
         try {
-            CodefileUtils.addMavenModule(componentArtifactId, parentConfig.getServicePomFile(), globalConfig.getCharset());
+            CodefileUtils.addMavenModule(componentArtifactId, parentConfig.getServicePomFile(), GlobalConfig.CHARSET);
         } catch (IOException e) {
             throw new CodegeneratorException(e.getMessage(), e);
         }

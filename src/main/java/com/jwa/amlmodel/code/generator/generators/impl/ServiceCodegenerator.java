@@ -23,7 +23,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceCodegenerator.class);
 
     @Override
-    public final GeneratedServiceConfig generate(final InternalElement node, final GeneratedRootConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
+    public final GeneratedServiceConfig generate(final InternalElement node, final GeneratedRootConfig parentConfig) throws CodegeneratorException {
         final String serviceName = node.getName();
 
         LOGGER.trace("Generating service for service-node '" + serviceName + "' ...");
@@ -47,13 +47,15 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
 
         final String serviceGroupId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_GROUPID).get();
         final String serviceArtifactId = AmlUtil.getAttributeValue(node, AmlmodelConstants.NAME_ATTRIBUTE_SERVICE_ARTIFACTID).get();
-        final Path servicePomTemplateFile = globalConfig.getTemplateFilesDirectory().resolve("service").resolve("pom.xml");
+        final Path servicePomTemplateFile = GlobalConfig.DIRECTORY_FILES_TEMPLATES
+                .resolve("service")
+                .resolve("pom.xml");
         final Path servicePomFile = serviceDirectory.resolve("pom.xml");
         final Map<String, String> serviePomDatamodel = new HashMap<>();
         serviePomDatamodel.put("groupId", serviceGroupId);
         serviePomDatamodel.put("artifactId", serviceArtifactId);
         try {
-            CodefileUtils.processFileTemplate(servicePomTemplateFile, servicePomFile, serviePomDatamodel, globalConfig.getCharset());
+            CodefileUtils.processFileTemplate(servicePomTemplateFile, servicePomFile, serviePomDatamodel, GlobalConfig.CHARSET);
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to generate file '" + servicePomFile + "': " + e.getMessage(), e);
         }

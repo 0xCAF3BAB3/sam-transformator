@@ -1,8 +1,6 @@
 package com.jwa.amlmodel.code.generator.service;
 
-import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
-import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedComponentConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
@@ -18,9 +16,6 @@ import com.jwa.amlmodel.code.generator.generators.impl.PortstyleCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.PorttypeCodegenerator;
 import com.jwa.amlmodel.code.generator.generators.impl.ServiceCodegenerator;
 
-import freemarker.template.Configuration;
-import freemarker.template.TemplateExceptionHandler;
-
 import org.apache.commons.io.FileUtils;
 import org.cdlflex.models.CAEX.CAEXFile;
 import org.cdlflex.models.CAEX.DocumentRoot;
@@ -32,18 +27,10 @@ import org.openengsb.api.serialize.Deserializer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public final class CodegeneratorService {
-    // TODO: the following line is quite hacky
-    private final static String DIRECTORY_TEMPLATES = "src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/";
-    private final static String DIRECTORY_FREEMARKER_TEMPLATES = DIRECTORY_TEMPLATES + "freemarker/";
-    private final static String DIRECTORY_FILES_TEMPLATES = DIRECTORY_TEMPLATES + "files/";
-
     public final void generateCode(final Path amlmodelFile, final Path outputDirectory) throws CodegeneratorServiceException {
         final CAEXFile amlmodel;
         try {
@@ -84,97 +71,76 @@ public final class CodegeneratorService {
         }
     }
 
-    private static GlobalConfig createGlobalConfig() {
-        final Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_26);
-        final Path templateDirectory = Paths.get(DIRECTORY_FREEMARKER_TEMPLATES);
-        try {
-            freemarkerConfig.setDirectoryForTemplateLoading(templateDirectory.toFile());
-        } catch (IOException e) {
-            throw new RuntimeException("Template directory invalid: " + e.getMessage(), e);
-        }
-        freemarkerConfig.setDefaultEncoding("UTF-8");
-        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        freemarkerConfig.setLogTemplateExceptions(false);
-
-        final Path templateFilesDirectory = Paths.get(DIRECTORY_FILES_TEMPLATES);
-
-        final Charset charset = StandardCharsets.UTF_8;
-
-        return new GlobalConfig(freemarkerConfig, templateFilesDirectory, charset);
-    }
-
     private static void generateRecursively(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {
-        GlobalConfig globalConfig = createGlobalConfig();
-
         InstanceHierarchy instanceHierarchy = amlmodel.getInstanceHierarchy().get(0);
         for(InternalElement node : instanceHierarchy.getInternalElement()) {
             boolean isServiceNode = AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_SERVICE);
             if (isServiceNode) {
                 final GeneratedRootConfig rootConfig = new GeneratedRootConfig(outputDirectory);
-                generateRecursively(node, rootConfig, globalConfig);
+                generateRecursively(node, rootConfig);
             }
         }
     }
 
-    private static void generateRecursively(final InternalElement node, final GeneratedRootConfig rootConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        final GeneratedServiceConfig serviceConfig = new ServiceCodegenerator().generate(node, rootConfig, globalConfig);
+    private static void generateRecursively(final InternalElement node, final GeneratedRootConfig rootConfig) throws CodegeneratorException {
+        final GeneratedServiceConfig serviceConfig = new ServiceCodegenerator().generate(node, rootConfig);
         for(InternalElement children : node.getInternalElement()) {
             boolean isComponentNode = AmlUtil.hasRole(children, AmlmodelConstants.NAME_ROLE_COMPONENT);
             if (isComponentNode) {
-                generateRecursively(children, serviceConfig, globalConfig);
+                generateRecursively(children, serviceConfig);
             }
         }
     }
 
-    private static void generateRecursively(final InternalElement node, final GeneratedServiceConfig serviceConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        final GeneratedComponentConfig componentConfig = new ComponentCodegenerator().generate(node, serviceConfig, globalConfig);
+    private static void generateRecursively(final InternalElement node, final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
+        final GeneratedComponentConfig componentConfig = new ComponentCodegenerator().generate(node, serviceConfig);
         for(InternalElement children : node.getInternalElement()) {
             boolean isPortsNode = AmlUtil.hasRole(children, AmlmodelConstants.NAME_ROLE_PORTS);
             if (isPortsNode) {
-                generateRecursively(children, componentConfig, globalConfig);
+                generateRecursively(children, componentConfig);
             }
         }
     }
 
-    private static void generateRecursively(final InternalElement node, final GeneratedComponentConfig componentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        final GeneratedPortsConfig portsConfig = new PortsCodegenerator().generate(node, componentConfig, globalConfig);
+    private static void generateRecursively(final InternalElement node, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
+        final GeneratedPortsConfig portsConfig = new PortsCodegenerator().generate(node, componentConfig);
         for(InternalElement children : node.getInternalElement()) {
             boolean isPortNode = AmlUtil.hasRole(children, AmlmodelConstants.NAME_ROLE_PORT);
             if (isPortNode) {
-                generateRecursively(children, portsConfig, globalConfig);
+                generateRecursively(children, portsConfig);
             }
         }
     }
 
-    private static void generateRecursively(final InternalElement node, final GeneratedPortsConfig portsConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        final GeneratedPortConfig portConfig = new PortCodegenerator().generate(node, portsConfig, globalConfig);
+    private static void generateRecursively(final InternalElement node, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
+        final GeneratedPortConfig portConfig = new PortCodegenerator().generate(node, portsConfig);
         if (AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_PORTSTYLE)) {
-            generatePortstyle(node, portConfig, globalConfig);
+            generatePortstyle(node, portConfig);
         }
         if (AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_PORTPARAMETERS)) {
-            generatePortparameters(node, portConfig, globalConfig);
+            generatePortparameters(node, portConfig);
         }
         if (AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_PORTTYPE)) {
-            generatePorttype(node, portConfig, globalConfig);
+            generatePorttype(node, portConfig);
         }
         if (AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_MESSAGEMODEL)) {
-            generateMessagemodel(node, portConfig, globalConfig);
+            generateMessagemodel(node, portConfig);
         }
     }
 
-    private static void generatePortstyle(final InternalElement node, final GeneratedPortConfig portConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        new PortstyleCodegenerator().generate(node, portConfig, globalConfig);
+    private static void generatePortstyle(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+        new PortstyleCodegenerator().generate(node, portConfig);
     }
 
-    private static void generatePortparameters(final InternalElement node, final GeneratedPortConfig portConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        new PortparametersCodegenerator().generate(node, portConfig, globalConfig);
+    private static void generatePortparameters(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+        new PortparametersCodegenerator().generate(node, portConfig);
     }
 
-    private static void generatePorttype(final InternalElement node, final GeneratedPortConfig portConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        new PorttypeCodegenerator().generate(node, portConfig, globalConfig);
+    private static void generatePorttype(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+        new PorttypeCodegenerator().generate(node, portConfig);
     }
 
-    private static void generateMessagemodel(final InternalElement node, final GeneratedPortConfig portConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
-        new MessagemodelCodegenerator().generate(node, portConfig, globalConfig);
+    private static void generateMessagemodel(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+        new MessagemodelCodegenerator().generate(node, portConfig);
     }
 }

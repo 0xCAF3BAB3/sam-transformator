@@ -5,6 +5,7 @@ import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedComponentConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
+import com.jwa.amlmodel.code.generator.generators.constants.FreemarkerTemplatesConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import freemarker.template.Template;
@@ -27,7 +28,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
     private static final Logger LOGGER = LoggerFactory.getLogger(PortsCodegenerator.class);
 
     @Override
-    public final GeneratedPortsConfig generate(final InternalElement node, final GeneratedComponentConfig parentConfig, final GlobalConfig globalConfig) throws CodegeneratorException {
+    public final GeneratedPortsConfig generate(final InternalElement node, final GeneratedComponentConfig parentConfig) throws CodegeneratorException {
         final String portsName = node.getName();
 
         LOGGER.trace("Generating ports for ports-node '" + portsName + "' ...");
@@ -52,8 +53,8 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         componentCommunicationserviceDatamodel.put("packageName", parentConfig.getComponentGroupId() + "." + parentConfig.getArtifactId());
         componentCommunicationserviceDatamodel.put("communicationPackageName", communicationPackageName);
         try {
-            final Template template = globalConfig.getFreemarkerConfig().getTemplate("ComponentCommunicationservice.ftlh");
-            try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, globalConfig.getCharset())) {
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.COMMSERVICE);
+            try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, GlobalConfig.CHARSET)) {
                 template.process(componentCommunicationserviceDatamodel, writer);
             }
         } catch (IOException | TemplateException e) {
@@ -62,7 +63,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         // Main.java anpassen  Example-Usage des CommunicationService der Methode ‚main’ hinzufügen
         final String snippet;
         try {
-            final Template template = globalConfig.getFreemarkerConfig().getTemplate("ComponentMainCommunicationserviceUsage.ftlh");
+            final Template template = GlobalConfig.getTemplate(FreemarkerTemplatesConstants.MAIN_COMMSERVICEUSAGE_SNIPPET);
             try (final Writer writer = new StringWriter()) {
                 template.process(new HashMap<>(), writer);
                 snippet = writer.toString();
@@ -71,14 +72,14 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
             throw new CodegeneratorException("Failed to generate snippet '" + "ComponentMainCommunicationserviceUsage" + "': " + e.getMessage(), e);
         }
         try {
-            CodefileUtils.addToMethod(snippet, "public static void main(final String[] args) {", parentConfig.getComponentMainFile(), globalConfig.getCharset());
+            CodefileUtils.addToMethod(snippet, "public static void main(final String[] args) {", parentConfig.getComponentMainFile(), GlobalConfig.CHARSET);
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
         }
         // pom.xml anpassen  module ‚communication’ als ‚dependency’ hinzufügen
         final Path componentPomFile = parentConfig.getComponentDirectory().resolve("pom.xml");
         try {
-            CodefileUtils.addMavenDependancy(parentConfig.getComponentGroupId(), communicationModuleName, componentPomFile, globalConfig.getCharset());
+            CodefileUtils.addMavenDependancy(parentConfig.getComponentGroupId(), communicationModuleName, componentPomFile, GlobalConfig.CHARSET);
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to add Maven module '" + communicationModuleName + "' to '" + componentPomFile + "': " + e.getMessage(), e);
         }

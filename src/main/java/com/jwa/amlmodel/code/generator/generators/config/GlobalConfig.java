@@ -1,30 +1,43 @@
 package com.jwa.amlmodel.code.generator.generators.config;
 
-import freemarker.template.Configuration;
+import com.jwa.amlmodel.code.generator.generators.Codegenerator;
+import com.jwa.amlmodel.code.generator.generators.constants.FreemarkerTemplatesConstants;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
+
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public final class GlobalConfig {
-    private final Configuration freemarkerConfig;
-    private final Path templateFilesDirectory;
-    private final Charset charset;
+    public static final Charset CHARSET = StandardCharsets.UTF_8;
+    private static final Path DIRECTORY_TEMPLATES = Paths.get("src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/"); // TODO: this line is quite hacky
+    public static final Path DIRECTORY_FILES_TEMPLATES = DIRECTORY_TEMPLATES.resolve("files/");
+    private static final Path DIRECTORY_FREEMARKER_TEMPLATES = DIRECTORY_TEMPLATES.resolve("freemarker/");
+    private static final Configuration CONFIG_FREEMARKER;
 
-    public GlobalConfig(final Configuration freemarkerConfig, final Path templateFilesDirectory, final Charset charset) {
-        this.freemarkerConfig = freemarkerConfig;
-        this.templateFilesDirectory = templateFilesDirectory;
-        this.charset = charset;
+    static {
+        final Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_26);
+        try {
+            freemarkerConfig.setDirectoryForTemplateLoading(DIRECTORY_FREEMARKER_TEMPLATES.toFile());
+        } catch (IOException e) {
+            throw new RuntimeException("Template directory invalid: " + e.getMessage(), e);
+        }
+        freemarkerConfig.setDefaultEncoding(CHARSET.displayName());
+        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        freemarkerConfig.setLogTemplateExceptions(false);
+        CONFIG_FREEMARKER = freemarkerConfig;
     }
 
-    public final Configuration getFreemarkerConfig() {
-        return freemarkerConfig;
-    }
-
-    public final Path getTemplateFilesDirectory() {
-        return templateFilesDirectory;
-    }
-
-    public final Charset getCharset() {
-        return charset;
+    public static Template getTemplate(final FreemarkerTemplatesConstants templateType) {
+        try {
+            return CONFIG_FREEMARKER.getTemplate(templateType.getFilepath());
+        } catch (IOException e) {
+            throw new RuntimeException("Loading template '" + templateType.getFilepath() + "' failed: " + e.getMessage(), e);
+        }
     }
 }
