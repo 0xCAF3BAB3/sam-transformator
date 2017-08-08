@@ -4,9 +4,8 @@ public enum FreemarkerTemplatesConstants {
     COMMSERVICE_INITIAL(Constants.DIRECTORY_COMPONENT + "CommunicationServiceInitial.java.ftlh"),
     COMMSERVICE_PORT_SNIPPET(Constants.DIRECTORY_COMPONENT + "CommunicationServicePortSnippet.java.ftlh"),
     LOG4J2(Constants.DIRECTORY_COMPONENT + "log4j2.xml.ftlh"),
-    MAIN_INITIAL(Constants.DIRECTORY_COMPONENT + "MainInitial.java.ftlh"),
-    MAIN_COMMSERVICEUSAGE_SNIPPET(Constants.DIRECTORY_COMPONENT + "MainCommunicationServiceUsageSnippet.java.ftlh")
-    ;
+    MAIN_COMMSERVICEUSAGE_SNIPPET(Constants.DIRECTORY_COMPONENT + "MainCommunicationServiceUsageSnippet.java.ftlh"),
+    MAIN_INITIAL(Constants.DIRECTORY_COMPONENT + "MainInitial.java.ftlh");
 
     private final String filepath;
 
@@ -18,7 +17,7 @@ public enum FreemarkerTemplatesConstants {
         return filepath;
     }
 
-    private static class Constants {
+    private static final class Constants {
         private static final String DIRECTORY_COMPONENT = "component/";
     }
 }

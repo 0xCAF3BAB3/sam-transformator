@@ -1,5 +1,8 @@
 package com.jwa.amlmodel.code.generator.generators.constants;
 
+import org.cdlflex.models.CAEX.InternalElement;
+import org.cdlflex.models.CAEX.util.AmlUtil;
+
 public final class AmlmodelConstants {
     // ArchitectureRoleClassLib
     private static final String NAME_ROLECLASSLIB_ARCHITECTURE = "ArchitectureRoleClassLib";
@@ -24,4 +27,60 @@ public final class AmlmodelConstants {
     public static final String NAME_ROLE_PORTTYPE = NAME_ROLECLASSLIB_COMMUNICATION + "/PortType";
 
     private AmlmodelConstants() {}
+
+    public static boolean hasServiceRole(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        return AmlUtil.hasRole(node, NAME_ROLE_SERVICE);
+    }
+
+    public static boolean hasComponentRole(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        return AmlUtil.hasRole(node, NAME_ROLE_COMPONENT);
+    }
+
+    public static boolean hasPortsRole(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        return AmlUtil.hasRole(node, NAME_ROLE_PORTS);
+    }
+
+    public static boolean hasPortRole(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        return AmlUtil.hasRole(node, NAME_ROLE_PORT);
+    }
+
+    public static boolean hasPortstyleRole(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        return AmlUtil.hasRole(node, NAME_ROLE_PORTSTYLE);
+    }
+
+    public static boolean hasPortparametersRole(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        return AmlUtil.hasRole(node, NAME_ROLE_PORTPARAMETERS);
+    }
+
+    public static boolean hasPorttypeRole(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        return AmlUtil.hasRole(node, NAME_ROLE_PORTTYPE);
+    }
+
+    public static boolean hasMessagemodelRole(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        return AmlUtil.hasRole(node, NAME_ROLE_MESSAGEMODEL);
+    }
 }

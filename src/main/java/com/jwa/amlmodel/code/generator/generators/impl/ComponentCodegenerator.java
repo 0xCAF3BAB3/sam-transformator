@@ -29,6 +29,10 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
 
     @Override
     public final GeneratedComponentConfig generate(final InternalElement node, final GeneratedServiceConfig parentConfig) throws CodegeneratorException {
+        if (!AmlmodelConstants.hasComponentRole(node)) {
+            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_COMPONENT + "'");
+        }
+
         final String componentName = node.getName();
 
         LOGGER.trace("Generating component for component-node '" + componentName + "' ...");

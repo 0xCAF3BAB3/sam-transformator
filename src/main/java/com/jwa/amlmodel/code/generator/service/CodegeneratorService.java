@@ -21,7 +21,6 @@ import com.jwa.amlmodel.code.generator.generators.utils.IOUtils;
 import org.cdlflex.models.CAEX.CAEXFile;
 import org.cdlflex.models.CAEX.InstanceHierarchy;
 import org.cdlflex.models.CAEX.InternalElement;
-import org.cdlflex.models.CAEX.util.AmlUtil;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -61,8 +60,7 @@ public final class CodegeneratorService {
     private static void generateRecursively(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {
         InstanceHierarchy instanceHierarchy = amlmodel.getInstanceHierarchy().get(0);
         for(InternalElement node : instanceHierarchy.getInternalElement()) {
-            boolean isServiceNode = AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_SERVICE);
-            if (isServiceNode) {
+            if (AmlmodelConstants.hasServiceRole(node)) {
                 final GeneratedRootConfig rootConfig = new GeneratedRootConfig(outputDirectory);
                 generateRecursively(node, rootConfig);
             }
@@ -72,8 +70,7 @@ public final class CodegeneratorService {
     private static void generateRecursively(final InternalElement node, final GeneratedRootConfig rootConfig) throws CodegeneratorException {
         final GeneratedServiceConfig serviceConfig = new ServiceCodegenerator().generate(node, rootConfig);
         for(InternalElement children : node.getInternalElement()) {
-            boolean isComponentNode = AmlUtil.hasRole(children, AmlmodelConstants.NAME_ROLE_COMPONENT);
-            if (isComponentNode) {
+            if (AmlmodelConstants.hasComponentRole(children)) {
                 generateRecursively(children, serviceConfig);
             }
         }
@@ -82,8 +79,7 @@ public final class CodegeneratorService {
     private static void generateRecursively(final InternalElement node, final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
         final GeneratedComponentConfig componentConfig = new ComponentCodegenerator().generate(node, serviceConfig);
         for(InternalElement children : node.getInternalElement()) {
-            boolean isPortsNode = AmlUtil.hasRole(children, AmlmodelConstants.NAME_ROLE_PORTS);
-            if (isPortsNode) {
+            if (AmlmodelConstants.hasPortsRole(children)) {
                 generateRecursively(children, componentConfig);
             }
         }
@@ -92,8 +88,7 @@ public final class CodegeneratorService {
     private static void generateRecursively(final InternalElement node, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
         final GeneratedPortsConfig portsConfig = new PortsCodegenerator().generate(node, componentConfig);
         for(InternalElement children : node.getInternalElement()) {
-            boolean isPortNode = AmlUtil.hasRole(children, AmlmodelConstants.NAME_ROLE_PORT);
-            if (isPortNode) {
+            if (AmlmodelConstants.hasPortRole(children)) {
                 generateRecursively(children, portsConfig);
             }
         }
@@ -101,16 +96,16 @@ public final class CodegeneratorService {
 
     private static void generateRecursively(final InternalElement node, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
         final GeneratedPortConfig portConfig = new PortCodegenerator().generate(node, portsConfig);
-        if (AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_PORTSTYLE)) {
+        if (AmlmodelConstants.hasPortstyleRole(node)) {
             generatePortstyle(node, portConfig);
         }
-        if (AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_PORTPARAMETERS)) {
+        if (AmlmodelConstants.hasPortparametersRole(node)) {
             generatePortparameters(node, portConfig);
         }
-        if (AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_PORTTYPE)) {
+        if (AmlmodelConstants.hasPorttypeRole(node)) {
             generatePorttype(node, portConfig);
         }
-        if (AmlUtil.hasRole(node, AmlmodelConstants.NAME_ROLE_MESSAGEMODEL)) {
+        if (AmlmodelConstants.hasMessagemodelRole(node)) {
             generateMessagemodel(node, portConfig);
         }
     }

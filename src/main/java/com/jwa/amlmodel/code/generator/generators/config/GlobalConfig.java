@@ -25,7 +25,7 @@ public final class GlobalConfig {
         try {
             freemarkerConfig.setDirectoryForTemplateLoading(DIRECTORY_FREEMARKER_TEMPLATES.toFile());
         } catch (IOException e) {
-            throw new RuntimeException("Template directory invalid: " + e.getMessage(), e);
+            throw new RuntimeException("Freemarker-template directory invalid: " + e.getMessage(), e);
         }
         freemarkerConfig.setDefaultEncoding(CHARSET.displayName());
         freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
@@ -37,7 +37,7 @@ public final class GlobalConfig {
         try {
             return CONFIG_FREEMARKER.getTemplate(templateType.getFilepath());
         } catch (IOException e) {
-            throw new RuntimeException("Loading template '" + templateType.getFilepath() + "' failed: " + e.getMessage(), e);
+            throw new RuntimeException("Loading Freemarker-template '" + templateType.getFilepath() + "' failed: " + e.getMessage(), e);
         }
     }
 }

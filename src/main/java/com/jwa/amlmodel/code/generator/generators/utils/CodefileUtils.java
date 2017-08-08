@@ -130,10 +130,10 @@ public final class CodefileUtils {
 
     public static boolean mavenModuleExists(final String moduleName, final Path projectDirectory) {
         if (moduleName == null || moduleName.isEmpty()) {
-            throw new IllegalArgumentException("...");
+            throw new IllegalArgumentException("Passed module-name is invalid");
         }
-        if (projectDirectory == null || Files.notExists(projectDirectory) || !Files.isDirectory(projectDirectory)) {
-            throw new IllegalArgumentException("...");
+        if (!IOUtils.isValidDirectory(projectDirectory)) {
+            throw new IllegalArgumentException("Passed project-directory '" + projectDirectory + " doesn't exists or is invalid");
         }
         final Path moduleDirectory = projectDirectory.resolve(moduleName);
         return Files.exists(moduleDirectory) && Files.isDirectory(moduleDirectory);
@@ -184,6 +184,7 @@ public final class CodefileUtils {
     }
 
     public static void addToMethod(final String content, final String methodName, final Path file, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
         final List<String> lines = Files.readAllLines(file, charset);
         Integer startIndex = null;
         for (int i = 0; i < lines.size(); i++) {
@@ -212,6 +213,7 @@ public final class CodefileUtils {
     }
 
     public static void addToPortConfig(final String content, final String portName, final Path file, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
         final List<String> lines = Files.readAllLines(file, charset);
         Integer builderStart = null;
         for (int i = 0; i < lines.size(); i++) {
@@ -239,6 +241,7 @@ public final class CodefileUtils {
     }
 
     public static void addImport(final String importStatement, final Path file, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
         final List<String> lines = Files.readAllLines(file, charset);
         final String importStatementFull = "import " + importStatement + ";";
         boolean exists = false;
@@ -264,6 +267,7 @@ public final class CodefileUtils {
     }
 
     public static void addValueToEnum(final String enumValue, final String enumName, final Path file) throws IllegalArgumentException, IOException {
+        // TODO: add more exception-handling and parameter-checks
         if (!isValidJavaIdentifier(enumValue)) {
             throw new IllegalArgumentException("Passed enum-value is not a valid Java identifier");
         }
@@ -300,11 +304,11 @@ public final class CodefileUtils {
         Files.write(file, lines, usedCharset);
     }
 
-    public static boolean isValidJavaIdentifier(final String name) {
+    private static boolean isValidJavaIdentifier(final String name) {
         return name.matches("\\b[_a-zA-Z][_a-zA-Z0-9]*\\b");
     }
 
-    public static String toValidJavaIdentifier(final String name) {
+    private static String toValidJavaIdentifier(final String name) {
         // TODO: implement me
         return name;
     }

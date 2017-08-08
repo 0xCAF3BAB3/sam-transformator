@@ -36,7 +36,7 @@ public final class Main {
         } else if (args.length == 2) {
             for(String arg : args) {
                 if (arg == null || arg.isEmpty()) {
-                    throw new IllegalArgumentException("Passed argument is null or invalid");
+                    throw new IllegalArgumentException("Passed argument is invalid");
                 }
             }
             final String pathToAmlmodelFile = args[0];

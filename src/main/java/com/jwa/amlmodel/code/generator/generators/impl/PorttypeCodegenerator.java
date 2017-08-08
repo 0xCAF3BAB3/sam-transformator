@@ -4,6 +4,7 @@ import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPorttypeConfig;
+import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
@@ -14,6 +15,10 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
 
     @Override
     public final GeneratedPorttypeConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig) throws CodegeneratorException {
+        if (!AmlmodelConstants.hasPorttypeRole(node)) {
+            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_PORTTYPE + "'");
+        }
+
         final String portName = node.getName();
 
         LOGGER.trace("Generating port-type for port-node '" + portName + "' ...");

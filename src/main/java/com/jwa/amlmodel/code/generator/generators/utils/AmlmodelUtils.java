@@ -17,6 +17,9 @@ public final class AmlmodelUtils {
     private AmlmodelUtils() {}
 
     public static CAEXFile deserialize(final Path amlmodelFile) throws IOException {
+        if (!IOUtils.isValidFile(amlmodelFile)) {
+            throw new IllegalArgumentException("Passed amlmodel-file '" + amlmodelFile + "' doesn't exists or is not valid");
+        }
         final Deserializer<DocumentRoot> deserializer = new AmlDeserializer();
         final DocumentRoot documentRoot;
         try (final InputStream in = Files.newInputStream(amlmodelFile)) {
@@ -26,6 +29,12 @@ public final class AmlmodelUtils {
     }
 
     public static boolean hasRoleStartingWith(final InternalElement element, final String roleStartingWith) {
+        if (element == null) {
+            throw new IllegalArgumentException("Passed element is null");
+        }
+        if (roleStartingWith == null) {
+            throw new IllegalArgumentException("Passed role-starting-with is null");
+        }
         final RoleRequirements roleRequirements = element.getRoleRequirements();
         if (roleRequirements != null && roleRequirements.getRefBaseRoleClassPath().startsWith(roleStartingWith)) {
             return true;
@@ -39,6 +48,12 @@ public final class AmlmodelUtils {
     }
 
     public static String getRoleStartingWith(final InternalElement element, final String roleStartingWith) {
+        if (element == null) {
+            throw new IllegalArgumentException("Passed element is null");
+        }
+        if (roleStartingWith == null) {
+            throw new IllegalArgumentException("Passed role-starting-with is null");
+        }
         final RoleRequirements roleRequirements = element.getRoleRequirements();
         if (roleRequirements != null && roleRequirements.getRefBaseRoleClassPath().startsWith(roleStartingWith)) {
             return roleRequirements.getRefBaseRoleClassPath().replace(roleStartingWith, "");

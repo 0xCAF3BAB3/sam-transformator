@@ -5,6 +5,7 @@ import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedComponentConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
+import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.constants.FreemarkerTemplatesConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
@@ -29,6 +30,10 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
 
     @Override
     public final GeneratedPortsConfig generate(final InternalElement node, final GeneratedComponentConfig parentConfig) throws CodegeneratorException {
+        if (!AmlmodelConstants.hasPortsRole(node)) {
+            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_PORTS + "'");
+        }
+
         final String portsName = node.getName();
 
         LOGGER.trace("Generating ports for ports-node '" + portsName + "' ...");
