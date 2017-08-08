@@ -25,7 +25,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
     @Override
     public final GeneratedServiceConfig generate(final InternalElement node, final GeneratedRootConfig parentConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasServiceRole(node)) {
-            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_SERVICE + "'");
+            throw new IllegalArgumentException("Passed node has no service-role");
         }
 
         final String serviceName = node.getName();

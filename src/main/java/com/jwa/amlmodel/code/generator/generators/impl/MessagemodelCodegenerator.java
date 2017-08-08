@@ -16,7 +16,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
     @Override
     public final GeneratedMessagemodelConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasMessagemodelRole(node)) {
-            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_MESSAGEMODEL + "'");
+            throw new IllegalArgumentException("Passed node has no messagemodel-role");
         }
 
         final String portName = node.getName();

@@ -1,5 +1,6 @@
 package com.jwa.amlmodel.code.generator.generators.utils;
 
+import org.cdlflex.models.CAEX.Attribute;
 import org.cdlflex.models.CAEX.CAEXFile;
 import org.cdlflex.models.CAEX.DocumentRoot;
 import org.cdlflex.models.CAEX.InternalElement;
@@ -12,6 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public final class AmlmodelUtils {
     private AmlmodelUtils() {}
@@ -64,5 +68,15 @@ public final class AmlmodelUtils {
             }
         }
         return null;
+    }
+
+    public static List<Attribute> getAttributesStartingWith(final InternalElement element, final String attributeName) {
+        if (element == null) {
+            throw new IllegalArgumentException("Passed element is null");
+        }
+        if (attributeName == null) {
+            throw new IllegalArgumentException("Passed attribute-name is null");
+        }
+        return element.getAttribute().stream().filter((attr) -> attr.getName().startsWith(attributeName)).collect(Collectors.toList());
     }
 }

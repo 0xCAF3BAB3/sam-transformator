@@ -31,7 +31,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
     @Override
     public final GeneratedPortsConfig generate(final InternalElement node, final GeneratedComponentConfig parentConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasPortsRole(node)) {
-            throw new IllegalArgumentException("Passed node has no role '" + AmlmodelConstants.NAME_ROLE_PORTS + "'");
+            throw new IllegalArgumentException("Passed node has no ports-role");
         }
 
         final String portsName = node.getName();
