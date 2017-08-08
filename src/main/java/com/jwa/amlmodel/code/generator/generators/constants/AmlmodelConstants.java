@@ -7,7 +7,6 @@ import org.cdlflex.models.CAEX.InternalElement;
 import org.cdlflex.models.CAEX.util.AmlUtil;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -82,7 +81,7 @@ public final class AmlmodelConstants {
         if (node == null) {
             throw new IllegalArgumentException("Passed node is null");
         }
-        return AmlUtil.hasRole(node, NAME_ROLECLASSLIB_COMMUNICATION + "/" + NAME_ROLE_PORTTYPE);
+        return AmlmodelUtils.hasRoleStartingWith(node, NAME_ROLECLASSLIB_COMMUNICATION + "/" + NAME_ROLE_PORTTYPE + "/");
     }
 
     public static boolean hasMessagemodelRole(final InternalElement node) {
@@ -161,5 +160,18 @@ public final class AmlmodelConstants {
             portparameters.put(attribute.getName().replace(NAME_ROLE_PORTPARAMETERS + ".", ""), attribute.getValue());
         }
         return portparameters;
+    }
+
+    public static String getPorttype(final InternalElement node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Passed node is null");
+        }
+        final String leadingPart = NAME_ROLECLASSLIB_COMMUNICATION + "/" + NAME_ROLE_PORTTYPE + "/";
+        final Optional<String> porttype = AmlmodelUtils.getRoleStartingWith(node, leadingPart);
+        if (porttype.isPresent()) {
+            return porttype.get().replace(leadingPart, "");
+        } else {
+            throw new IllegalArgumentException("Porttype not found");
+        }
     }
 }

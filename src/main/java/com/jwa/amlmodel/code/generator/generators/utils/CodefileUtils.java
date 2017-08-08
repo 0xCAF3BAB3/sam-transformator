@@ -266,11 +266,13 @@ public final class CodefileUtils {
         Files.write(file, lines, charset);
     }
 
-    public static void addValueToEnum(final String enumValue, final String enumName, final Path file) throws IllegalArgumentException, IOException {
+    public static void addValueToEnum(final String enumStatement, final String enumName, final Path file) throws IllegalArgumentException, IOException {
         // TODO: add more exception-handling and parameter-checks
+        /*
         if (!isValidJavaIdentifier(enumValue)) {
             throw new IllegalArgumentException("Passed enum-value is not a valid Java identifier");
         }
+        */
         final Charset usedCharset = StandardCharsets.UTF_8;
         final List<String> lines = Files.readAllLines(file, usedCharset);
         Integer startIndex = null;
@@ -287,7 +289,7 @@ public final class CodefileUtils {
         Integer endIndex = null;
         for (int i = startIndex; i < lines.size(); i++) {
             final String line = lines.get(i);
-            if (line.contains("}")) {
+            if (line.contains(";")) {
                 endIndex = i;
                 break;
             }
@@ -300,16 +302,22 @@ public final class CodefileUtils {
             final int lastElementIndex = endIndex - 1;
             lines.set(lastElementIndex, lines.get(lastElementIndex) + ",");
         }
-        lines.add(endIndex, "        " + enumValue);
+        lines.add(endIndex, "        " + enumStatement);
         Files.write(file, lines, usedCharset);
     }
 
+    /*
+    // TODO:
     private static boolean isValidJavaIdentifier(final String name) {
         return name.matches("\\b[_a-zA-Z][_a-zA-Z0-9]*\\b");
     }
+    */
 
-    private static String toValidJavaIdentifier(final String name) {
+    public static String toValidJavaIdentifier(final String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Passed name is invalid");
+        }
         // TODO: implement me
-        return name;
+        return name.toUpperCase();
     }
 }

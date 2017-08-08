@@ -51,7 +51,7 @@ public final class AmlmodelUtils {
         return false;
     }
 
-    public static String getRoleStartingWith(final InternalElement element, final String roleStartingWith) {
+    public static Optional<String> getRoleStartingWith(final InternalElement element, final String roleStartingWith) {
         if (element == null) {
             throw new IllegalArgumentException("Passed element is null");
         }
@@ -60,14 +60,14 @@ public final class AmlmodelUtils {
         }
         final RoleRequirements roleRequirements = element.getRoleRequirements();
         if (roleRequirements != null && roleRequirements.getRefBaseRoleClassPath().startsWith(roleStartingWith)) {
-            return roleRequirements.getRefBaseRoleClassPath().replace(roleStartingWith, "");
+            return Optional.of(roleRequirements.getRefBaseRoleClassPath().replace(roleStartingWith, ""));
         }
         for(SupportedRoleClass supportedRoleClass : element.getSupportedRoleClass()) {
             if (supportedRoleClass.getRefRoleClassPath().startsWith(roleStartingWith)) {
-                return supportedRoleClass.getRefRoleClassPath().replace(roleStartingWith, "");
+                return Optional.of(supportedRoleClass.getRefRoleClassPath().replace(roleStartingWith, ""));
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public static List<Attribute> getAttributesStartingWith(final InternalElement element, final String attributeName) {
