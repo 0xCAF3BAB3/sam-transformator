@@ -33,7 +33,7 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
         final String porttype = AmlmodelConstants.getPorttype(node);
         try {
             final String porttypeContent = "                        .setType(\"" + porttype + "\")";
-            CodefileUtils.addToPortConfig(porttypeContent, portName, commServiceFile, GlobalConfig.CHARSET);
+            CodefileUtils.addToPortConfig(porttypeContent, portName, commServiceFile, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + commServiceFile + "': " + e.getMessage(), e);
         }
@@ -41,13 +41,13 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
         try {
             final String enumValue = CodefileUtils.toValidJavaIdentifier(portName);
             if (porttype.equals("Receiver")) {
-                CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "Receivers", commServiceFile);
+                CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "Receivers", commServiceFile, GlobalConfig.getCharset());
             } else if (porttype.startsWith("Sender/")) {
-                CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "Senders", commServiceFile);
+                CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "Senders", commServiceFile, GlobalConfig.getCharset());
                 if (porttype.equals("Sender/SynchronousSender")) {
-                    CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "SynchronousSenders", commServiceFile);
+                    CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "SynchronousSenders", commServiceFile, GlobalConfig.getCharset());
                 } else if (porttype.equals("Sender/AsynchronousSender")) {
-                    CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "AsynchronousSenders", commServiceFile);
+                    CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "AsynchronousSenders", commServiceFile, GlobalConfig.getCharset());
                 }
             }
         } catch (IOException e) {

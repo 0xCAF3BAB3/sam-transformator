@@ -303,15 +303,14 @@ public final class CodefileUtils {
         Files.write(file, lines, charset);
     }
 
-    public static void addValueToEnum(final String enumStatement, final String enumName, final Path file) throws IllegalArgumentException, IOException {
+    public static void addValueToEnum(final String enumStatement, final String enumName, final Path file, final Charset charset) throws IllegalArgumentException, IOException {
         // TODO: add more exception-handling and parameter-checks
         /*
         if (!isValidJavaIdentifier(enumValue)) {
             throw new IllegalArgumentException("Passed enum-value is not a valid Java identifier");
         }
         */
-        final Charset usedCharset = StandardCharsets.UTF_8;
-        final List<String> lines = Files.readAllLines(file, usedCharset);
+        final List<String> lines = Files.readAllLines(file, charset);
         Integer startIndex = null;
         for (int i = 0; i < lines.size(); i++) {
             final String line = lines.get(i);
@@ -340,7 +339,7 @@ public final class CodefileUtils {
             lines.set(lastElementIndex, lines.get(lastElementIndex) + ",");
         }
         lines.add(endIndex, "        " + enumStatement);
-        Files.write(file, lines, usedCharset);
+        Files.write(file, lines, charset);
     }
 
     public static void adaptPackageAndImportNames(final Path baseDirectory, final String oldPackageName, final String newPackageName, Charset charset) throws IOException {

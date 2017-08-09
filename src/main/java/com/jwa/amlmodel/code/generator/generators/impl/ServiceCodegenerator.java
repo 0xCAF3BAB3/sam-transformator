@@ -57,7 +57,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
         serviePomDatamodel.put("groupId", serviceGroupId);
         serviePomDatamodel.put("artifactId", serviceArtifactId);
         try {
-            CodefileUtils.processFileTemplate(servicePomTemplateFile, servicePomFile, serviePomDatamodel, GlobalConfig.CHARSET);
+            CodefileUtils.processFileTemplate(servicePomTemplateFile, servicePomFile, serviePomDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to generate file '" + servicePomFile + "': " + e.getMessage(), e);
         }

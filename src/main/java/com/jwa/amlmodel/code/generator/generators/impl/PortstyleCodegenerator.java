@@ -30,7 +30,7 @@ public final class PortstyleCodegenerator implements Codegenerator<GeneratedPort
         final String portstyleStyle = AmlmodelConstants.getPortstyleStyle(node);
         try {
             final String portstyleContent = "                        .setStyle(\"" + portstyleStyle + "\")";
-            CodefileUtils.addToPortConfig(portstyleContent, portName, parentConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.CHARSET);
+            CodefileUtils.addToPortConfig(portstyleContent, portName, parentConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getPortsConfig().getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }

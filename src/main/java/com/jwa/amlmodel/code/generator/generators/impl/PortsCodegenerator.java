@@ -53,7 +53,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                 pomFileContentDatamodel.put("groupId", parentConfig.getComponentGroupId());
                 pomFileContentDatamodel.put("artifactId", communicationModuleName);
                 try {
-                    pomFileContent = CodefileUtils.processFileTemplate(pomFileTemplate, pomFileContentDatamodel, GlobalConfig.CHARSET);
+                    pomFileContent = CodefileUtils.processFileTemplate(pomFileTemplate, pomFileContentDatamodel, GlobalConfig.getCharset());
                 } catch (IOException e) {
                     throw new CodegeneratorException("Failed to generate snippet '" + "pomFileContent" + "': " + e.getMessage(), e);
                 }
@@ -70,12 +70,12 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                 } catch (IOException | TemplateException e) {
                     throw new CodegeneratorException("Failed to generate snippet '" + "logconfigFileContent" + "': " + e.getMessage(), e);
                 }
-                CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(parentConfig.getComponentGroupId(), communicationModuleName, parentConfig.getServiceConfig().getServiceDirectory(), pomFileContent, logconfigFileContent, GlobalConfig.CHARSET);
+                CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(parentConfig.getComponentGroupId(), communicationModuleName, parentConfig.getServiceConfig().getServiceDirectory(), pomFileContent, logconfigFileContent, GlobalConfig.getCharset());
                 // copy components into mavenModuleStructure.getCodeDirectory()
                 final Path communicationFilesDirectory = GlobalConfig.getFiles(com.jwa.amlmodel.code.generator.generators.config.Files.COMMUNICATION);
                 FileUtils.copyDirectory(communicationFilesDirectory.toFile(), mavenModuleStructure.getCodeDirectory().toFile());
                 // adapt components: package-name and imports
-                CodefileUtils.adaptPackageAndImportNames(mavenModuleStructure.getCodeDirectory(), "com.jwa.pushlistener.code.architecture.communication", communicationPackageName, GlobalConfig.CHARSET);
+                CodefileUtils.adaptPackageAndImportNames(mavenModuleStructure.getCodeDirectory(), "com.jwa.pushlistener.code.architecture.communication", communicationPackageName, GlobalConfig.getCharset());
             } catch (IOException e) {
                 throw new CodegeneratorException("Failed to generate Maven module '" + communicationModuleName + "': " + e.getMessage(), e);
             }
@@ -89,7 +89,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         componentCommunicationserviceDatamodel.put("communicationPackageName", communicationPackageName);
         try {
             final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_INITIAL);
-            try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, GlobalConfig.CHARSET)) {
+            try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, GlobalConfig.getCharset())) {
                 template.process(componentCommunicationserviceDatamodel, writer);
             }
         } catch (IOException | TemplateException e) {
@@ -107,7 +107,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
             throw new CodegeneratorException("Failed to generate snippet '" + "ComponentMainCommunicationserviceUsage" + "': " + e.getMessage(), e);
         }
         try {
-            CodefileUtils.addToMethod(snippet, "main", parentConfig.getComponentMainFile(), GlobalConfig.CHARSET);
+            CodefileUtils.addToMethod(snippet, "main", parentConfig.getComponentMainFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
         }
@@ -118,7 +118,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         };
         for(String importStatement : importStatements) {
             try {
-                CodefileUtils.addImport(importStatement, parentConfig.getComponentMainFile(), GlobalConfig.CHARSET);
+                CodefileUtils.addImport(importStatement, parentConfig.getComponentMainFile(), GlobalConfig.getCharset());
             } catch (IOException e) {
                 throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
             }
@@ -126,7 +126,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         // pom.xml anpassen  module ‚communication’ als ‚dependency’ hinzufügen
         final Path componentPomFile = parentConfig.getComponentDirectory().resolve("pom.xml");
         try {
-            CodefileUtils.addMavenDependancy(parentConfig.getComponentGroupId(), communicationModuleName, componentPomFile, GlobalConfig.CHARSET);
+            CodefileUtils.addMavenDependancy(parentConfig.getComponentGroupId(), communicationModuleName, componentPomFile, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to add Maven module '" + communicationModuleName + "' to '" + componentPomFile + "': " + e.getMessage(), e);
         }

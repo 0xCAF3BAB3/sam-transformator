@@ -36,7 +36,7 @@ public final class PortparametersCodegenerator implements Codegenerator<Generate
                     portparametersContent += "                        .setParameter(\"" + portparameter.getKey() + "\", \"" + portparameter.getValue() + "\")" + "\n";
                 }
                 portparametersContent = portparametersContent.substring(0, portparametersContent.length() - 1);
-                CodefileUtils.addToPortConfig(portparametersContent, portName, parentConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.CHARSET);
+                CodefileUtils.addToPortConfig(portparametersContent, portName, parentConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
             } catch (IOException e) {
                 throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getPortsConfig().getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
             }

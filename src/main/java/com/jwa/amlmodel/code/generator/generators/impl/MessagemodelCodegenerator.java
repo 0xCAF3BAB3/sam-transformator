@@ -57,7 +57,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
                 pomFileContentDatamodel.put("dependencyCommunicationGroupId", parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId());
                 pomFileContentDatamodel.put("dependencyCommunicationArtifactId", parentConfig.getPortsConfig().getCommunicationModuleName());
                 try {
-                    pomFileContent = CodefileUtils.processFileTemplate(pomFileTemplate, pomFileContentDatamodel, GlobalConfig.CHARSET);
+                    pomFileContent = CodefileUtils.processFileTemplate(pomFileTemplate, pomFileContentDatamodel, GlobalConfig.getCharset());
                 } catch (IOException e) {
                     throw new CodegeneratorException("Failed to generate snippet '" + "pomFileContent" + "': " + e.getMessage(), e);
                 }
@@ -74,14 +74,14 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
                 } catch (IOException | TemplateException e) {
                     throw new CodegeneratorException("Failed to generate snippet '" + "logconfigFileContent" + "': " + e.getMessage(), e);
                 }
-                final CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, serviceDirectory, pomFileContent, logconfigFileContent, GlobalConfig.CHARSET);
+                final CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, serviceDirectory, pomFileContent, logconfigFileContent, GlobalConfig.getCharset());
                 final Path messagemodelFile = mavenModuleStructure.getCodeDirectory().resolve("MessageModel.java");
                 final Map<String, String> messagemodelDatamodel = new HashMap<>();
                 messagemodelDatamodel.put("packageName", packageName);
                 messagemodelDatamodel.put("communicationPackageName", parentConfig.getPortsConfig().getCommunicationPackageName());
                 try {
                     final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MESSAGEMODEL);
-                    try (final Writer writer = Files.newBufferedWriter(messagemodelFile, GlobalConfig.CHARSET)) {
+                    try (final Writer writer = Files.newBufferedWriter(messagemodelFile, GlobalConfig.getCharset())) {
                         template.process(messagemodelDatamodel, writer);
                     }
                 } catch (IOException | TemplateException e) {
@@ -95,8 +95,8 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         // add dependency to messagemodel-module to component (if not already added)
         final Path componentPomFile = parentConfig.getPortsConfig().getComponentConfig().getComponentPomFile();
         try {
-            if (!CodefileUtils.hasMavenDependancy(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, componentPomFile, GlobalConfig.CHARSET)) {
-                CodefileUtils.addMavenDependancy(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, componentPomFile, GlobalConfig.CHARSET);
+            if (!CodefileUtils.hasMavenDependancy(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, componentPomFile, GlobalConfig.getCharset())) {
+                CodefileUtils.addMavenDependancy(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, componentPomFile, GlobalConfig.getCharset());
             }
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to check/add Maven module '" + messagemodelModuleName + "' to '" + componentPomFile + "': " + e.getMessage(), e);
@@ -112,7 +112,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
             messagemodelDatamodel.put("messagemodelName", messagemodelName);
             try {
                 final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MESSAGE);
-                try (final Writer writer = Files.newBufferedWriter(messagemodelFile, GlobalConfig.CHARSET)) {
+                try (final Writer writer = Files.newBufferedWriter(messagemodelFile, GlobalConfig.getCharset())) {
                     template.process(messagemodelDatamodel, writer);
                 }
             } catch (IOException | TemplateException e) {

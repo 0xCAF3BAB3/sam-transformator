@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public final class GlobalConfig {
-    public static final Charset CHARSET = StandardCharsets.UTF_8;
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final Path DIRECTORY_CODEFILES = Paths.get("codefiles/");
     private static final Path DIRECTORY_FILES = DIRECTORY_CODEFILES.resolve("files/");
     private static final Path DIRECTORY_TEMPLATES = DIRECTORY_CODEFILES.resolve("templates/");
@@ -35,6 +35,10 @@ public final class GlobalConfig {
     }
 
     private GlobalConfig() {}
+
+    public static Charset getCharset() {
+        return CHARSET;
+    }
 
     public static Path getFiles(final Files files) {
         if (files == null) {

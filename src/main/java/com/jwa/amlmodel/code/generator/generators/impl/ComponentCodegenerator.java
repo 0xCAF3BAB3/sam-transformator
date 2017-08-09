@@ -60,7 +60,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         componentMainDatamodel.put("packageName", packageName);
         try {
             final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_INITIAL);
-            try (final Writer writer = Files.newBufferedWriter(componentMainFile, GlobalConfig.CHARSET)) {
+            try (final Writer writer = Files.newBufferedWriter(componentMainFile, GlobalConfig.getCharset())) {
                 template.process(componentMainDatamodel, writer);
             }
         } catch (IOException | TemplateException e) {
@@ -73,7 +73,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         componentLogconfigDatamodel.put("groupId", componentGroupId);
         try {
             final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
-            try (final Writer writer = Files.newBufferedWriter(componentLogconfigFile, GlobalConfig.CHARSET)) {
+            try (final Writer writer = Files.newBufferedWriter(componentLogconfigFile, GlobalConfig.getCharset())) {
                 template.process(componentLogconfigDatamodel, writer);
             }
         } catch (IOException | TemplateException e) {
@@ -91,13 +91,13 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final String pathToMainClass = componentGroupId + "." + componentArtifactId + ".Main";
         componentPomDatamodel.put("pathToMainClass", pathToMainClass);
         try {
-            CodefileUtils.processFileTemplate(componentPomTemplateFile, componentPomFile, componentPomDatamodel, GlobalConfig.CHARSET);
+            CodefileUtils.processFileTemplate(componentPomTemplateFile, componentPomFile, componentPomDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to generate file '" + componentPomFile + "': " + e.getMessage(), e);
         }
 
         try {
-            CodefileUtils.addMavenModule(componentArtifactId, parentConfig.getServicePomFile(), GlobalConfig.CHARSET);
+            CodefileUtils.addMavenModule(componentArtifactId, parentConfig.getServicePomFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException(e.getMessage(), e);
         }

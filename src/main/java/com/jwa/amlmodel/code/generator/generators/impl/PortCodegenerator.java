@@ -49,14 +49,14 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
             throw new CodegeneratorException("Failed to generate snippet '" + "component/CommunicationservicePortsnippet" + "': " + e.getMessage(), e);
         }
         try {
-            CodefileUtils.addToMethod(portsnippet, "init", parentConfig.getComponentCommunicationserviceFile(), GlobalConfig.CHARSET);
+            CodefileUtils.addToMethod(portsnippet, "init", parentConfig.getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }
         // add import-statement: port.config.PortConfigBuilder
         final String importStatement = parentConfig.getCommunicationPackageName() + ".port.config.PortConfigBuilder";
         try {
-            CodefileUtils.addImport(importStatement, parentConfig.getComponentCommunicationserviceFile(), GlobalConfig.CHARSET);
+            CodefileUtils.addImport(importStatement, parentConfig.getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }
