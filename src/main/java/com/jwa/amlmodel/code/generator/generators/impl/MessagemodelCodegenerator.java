@@ -73,8 +73,20 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
                 } catch (IOException | TemplateException e) {
                     throw new CodegeneratorException("Failed to generate snippet '" + "logconfigFileContent" + "': " + e.getMessage(), e);
                 }
-                CodefileUtils.createMavenModule(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, serviceDirectory, pomFileContent, logconfigFileContent, GlobalConfig.CHARSET);
-                // TODO: copy MessageModel.java into mavenModuleStructure.getCodeDirectory()
+                final CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, serviceDirectory, pomFileContent, logconfigFileContent, GlobalConfig.CHARSET);
+                final Path messagemodelFile = mavenModuleStructure.getCodeDirectory().resolve("MessageModel.java");
+                final Map<String, String> messagemodelDatamodel = new HashMap<>();
+                final String packageName = parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId() + "." + messagemodelModuleName;
+                messagemodelDatamodel.put("packageName", packageName);
+                messagemodelDatamodel.put("communicationPackage", parentConfig.getPortsConfig().getCommunicationPackageName());
+                try {
+                    final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MESSAGEMODEL);
+                    try (final Writer writer = Files.newBufferedWriter(messagemodelFile, GlobalConfig.CHARSET)) {
+                        template.process(messagemodelDatamodel, writer);
+                    }
+                } catch (IOException | TemplateException e) {
+                    throw new CodegeneratorException("Failed to generate file '" + messagemodelFile + "': " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new CodegeneratorException("Failed to generate Maven module '" + messagemodelModuleName + "': " + e.getMessage(), e);
             }

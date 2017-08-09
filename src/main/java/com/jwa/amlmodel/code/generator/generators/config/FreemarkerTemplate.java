@@ -6,7 +6,8 @@ public enum FreemarkerTemplate {
     LOG4J2("log4j2.xml.ftlh"),
     MAIN_COMMSERVICEUSAGE_SNIPPET(Constants.DIRECTORY_COMPONENT + "MainCommunicationServiceUsageSnippet.java.ftlh"),
     MAIN_INITIAL(Constants.DIRECTORY_COMPONENT + "MainInitial.java.ftlh"),
-    MESSAGE(Constants.DIRECTORY_MESSAGEMODEL + "Message.java.ftlh");
+    MESSAGE(Constants.DIRECTORY_MESSAGEMODEL + "Message.java.ftlh"),
+    MESSAGEMODEL(Constants.DIRECTORY_MESSAGEMODEL + "MessageModel.java.ftlh");
 
     private final String filepath;
 
