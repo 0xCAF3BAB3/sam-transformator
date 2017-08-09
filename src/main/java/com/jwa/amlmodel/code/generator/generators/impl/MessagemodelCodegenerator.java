@@ -43,6 +43,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
 
         final String messagemodelModuleName = "messagemodel";
         final Path serviceDirectory = parentConfig.getPortsConfig().getComponentConfig().getServiceConfig().getServiceDirectory();
+        final String packageName = parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId() + "." + messagemodelModuleName;
         if (!CodefileUtils.mavenModuleExists(messagemodelModuleName, serviceDirectory)) {
             try {
                 final String pomFileContent;
@@ -76,9 +77,8 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
                 final CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, serviceDirectory, pomFileContent, logconfigFileContent, GlobalConfig.CHARSET);
                 final Path messagemodelFile = mavenModuleStructure.getCodeDirectory().resolve("MessageModel.java");
                 final Map<String, String> messagemodelDatamodel = new HashMap<>();
-                final String packageName = parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId() + "." + messagemodelModuleName;
                 messagemodelDatamodel.put("packageName", packageName);
-                messagemodelDatamodel.put("communicationPackage", parentConfig.getPortsConfig().getCommunicationPackageName());
+                messagemodelDatamodel.put("communicationPackageName", parentConfig.getPortsConfig().getCommunicationPackageName());
                 try {
                     final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MESSAGEMODEL);
                     try (final Writer writer = Files.newBufferedWriter(messagemodelFile, GlobalConfig.CHARSET)) {
@@ -108,6 +108,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         final Path messagemodelFile = messagemodelMavenCodeDirectory.resolve(messagemodelName + ".java");
         if (!IOUtils.isValidFile(messagemodelFile)) {
             final Map<String, String> messagemodelDatamodel = new HashMap<>();
+            messagemodelDatamodel.put("packageName", packageName);
             messagemodelDatamodel.put("messagemodelName", messagemodelName);
             try {
                 final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MESSAGE);

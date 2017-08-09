@@ -53,7 +53,6 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }
-
         // add import-statement: port.config.PortConfigBuilder
         final String importStatement = parentConfig.getCommunicationPackageName() + ".port.config.PortConfigBuilder";
         try {

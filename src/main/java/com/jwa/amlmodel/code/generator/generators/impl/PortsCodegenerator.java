@@ -107,6 +107,18 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
         }
+        // adapt Main.java: add imports
+        final String[] importStatements = {
+                communicationPackageName + ".ports.PortsService",
+                communicationPackageName + ".ports.PortsServiceException"
+        };
+        for(String importStatement : importStatements) {
+            try {
+                CodefileUtils.addImport(importStatement, parentConfig.getComponentMainFile(), GlobalConfig.CHARSET);
+            } catch (IOException e) {
+                throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
+            }
+        }
         // pom.xml anpassen  module ‚communication’ als ‚dependency’ hinzufügen
         final Path componentPomFile = parentConfig.getComponentDirectory().resolve("pom.xml");
         try {
