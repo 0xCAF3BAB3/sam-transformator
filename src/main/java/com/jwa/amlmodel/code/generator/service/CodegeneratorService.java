@@ -55,6 +55,8 @@ public final class CodegeneratorService {
         if (amlmodel.getInstanceHierarchy().size() != 1) {
             throw new CodegeneratorServiceException("Aml-model not valid: " + "exactly one instance-hierarchy expected");
         }
+
+        // TODO: also check that a component's groupId matches its service: componentGroupId == serviceGroupId + "." + serviceArtifactId
     }
 
     private static void generateRecursively(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {

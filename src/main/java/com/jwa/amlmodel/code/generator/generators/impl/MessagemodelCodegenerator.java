@@ -2,10 +2,12 @@ package com.jwa.amlmodel.code.generator.generators.impl;
 
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
+import com.jwa.amlmodel.code.generator.generators.config.FileTemplate;
 import com.jwa.amlmodel.code.generator.generators.config.FreemarkerTemplate;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedMessagemodelConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
+import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedServiceConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 import com.jwa.amlmodel.code.generator.generators.utils.IOUtils;
@@ -18,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,8 +45,35 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         final Path serviceDirectory = parentConfig.getPortsConfig().getComponentConfig().getServiceConfig().getServiceDirectory();
         if (!CodefileUtils.mavenModuleExists(messagemodelModuleName, serviceDirectory)) {
             try {
-                // TODO: fix parameters ... to real parameters
-                CodefileUtils.createMavenModule(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, serviceDirectory, "...", "...", StandardCharsets.UTF_8);
+                final String pomFileContent;
+                final Path pomFileTemplate = GlobalConfig.getTemplate(FileTemplate.POM_MESSAGEMODEL);
+                final Map<String, String> pomFileContentDatamodel = new HashMap<>();
+                final GeneratedServiceConfig serviceConfig = parentConfig.getPortsConfig().getComponentConfig().getServiceConfig();
+                pomFileContentDatamodel.put("parentGroupId", serviceConfig.getServiceGroupId());
+                pomFileContentDatamodel.put("parentArtifactId", serviceConfig.getServiceArtifactId());
+                pomFileContentDatamodel.put("groupId", parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId());
+                pomFileContentDatamodel.put("artifactId", messagemodelModuleName);
+                pomFileContentDatamodel.put("dependencyCommunicationGroupId", parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId());
+                pomFileContentDatamodel.put("dependencyCommunicationArtifactId", parentConfig.getPortsConfig().getCommunicationModuleName());
+                try {
+                    pomFileContent = CodefileUtils.processFileTemplate(pomFileTemplate, pomFileContentDatamodel, GlobalConfig.CHARSET);
+                } catch (IOException e) {
+                    throw new CodegeneratorException("Failed to generate snippet '" + "pomFileContent" + "': " + e.getMessage(), e);
+                }
+                final String logconfigFileContent;
+                final Map<String, String> logconfigDatamodel = new HashMap<>();
+                logconfigDatamodel.put("name", messagemodelModuleName);
+                logconfigDatamodel.put("groupId", parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId());
+                try {
+                    final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
+                    try (final Writer writer = new StringWriter()) {
+                        template.process(logconfigDatamodel, writer);
+                        logconfigFileContent = writer.toString();
+                    }
+                } catch (IOException | TemplateException e) {
+                    throw new CodegeneratorException("Failed to generate snippet '" + "logconfigFileContent" + "': " + e.getMessage(), e);
+                }
+                CodefileUtils.createMavenModule(parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId(), messagemodelModuleName, serviceDirectory, pomFileContent, logconfigFileContent, GlobalConfig.CHARSET);
                 // TODO: copy MessageModel.java into mavenModuleStructure.getCodeDirectory()
             } catch (IOException e) {
                 throw new CodegeneratorException("Failed to generate Maven module '" + messagemodelModuleName + "': " + e.getMessage(), e);

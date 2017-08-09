@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 
 public final class GlobalConfig {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
-    private static final Path DIRECTORY_TEMPLATES = Paths.get("src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/"); // TODO: this line is quite hacky
+    private static final Path DIRECTORY_TEMPLATES = Paths.get("src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/");
     private static final Path DIRECTORY_FILE_TEMPLATES = DIRECTORY_TEMPLATES.resolve("file/");
     private static final Path DIRECTORY_FREEMARKER_TEMPLATES = DIRECTORY_TEMPLATES.resolve("freemarker/");
     private static final Configuration CONFIG_FREEMARKER;

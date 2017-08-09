@@ -3,7 +3,7 @@ package com.jwa.amlmodel.code.generator.generators.config;
 public enum FreemarkerTemplate {
     COMMSERVICE_INITIAL(Constants.DIRECTORY_COMPONENT + "CommunicationServiceInitial.java.ftlh"),
     COMMSERVICE_PORT_SNIPPET(Constants.DIRECTORY_COMPONENT + "CommunicationServicePortSnippet.java.ftlh"),
-    LOG4J2(Constants.DIRECTORY_COMPONENT + "log4j2.xml.ftlh"),
+    LOG4J2("log4j2.xml.ftlh"),
     MAIN_COMMSERVICEUSAGE_SNIPPET(Constants.DIRECTORY_COMPONENT + "MainCommunicationServiceUsageSnippet.java.ftlh"),
     MAIN_INITIAL(Constants.DIRECTORY_COMPONENT + "MainInitial.java.ftlh"),
     MESSAGE(Constants.DIRECTORY_MESSAGEMODEL + "Message.java.ftlh");

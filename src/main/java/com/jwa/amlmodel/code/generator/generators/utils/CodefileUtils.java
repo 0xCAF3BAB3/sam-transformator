@@ -37,6 +37,16 @@ public final class CodefileUtils {
         Files.write(outputFile, content.getBytes(charset));
     }
 
+    public static String processFileTemplate(final Path templateFile, final Map<String, String> datamodel, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
+        String content = new String(Files.readAllBytes(templateFile), charset);
+        for(Map.Entry<String, String> entry : datamodel.entrySet()) {
+            final String placeholder = "{{" + entry.getKey() + "}}";
+            content = content.replace(placeholder, entry.getValue());
+        }
+        return content;
+    }
+
     public static class MavenDirectoryStructure {
         private final Path codeDirectory;
         private final Path resourcesDirectory;
