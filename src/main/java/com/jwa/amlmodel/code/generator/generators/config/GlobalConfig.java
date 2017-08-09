@@ -34,6 +34,8 @@ public final class GlobalConfig {
         CONFIG_FREEMARKER = freemarkerConfig;
     }
 
+    private GlobalConfig() {}
+
     public static Path getFiles(final Files files) {
         if (files == null) {
             throw new IllegalArgumentException("Passed files is null");
