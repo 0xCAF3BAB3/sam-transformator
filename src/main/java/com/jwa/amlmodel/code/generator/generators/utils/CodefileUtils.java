@@ -8,8 +8,13 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -338,6 +343,34 @@ public final class CodefileUtils {
         }
         lines.add(endIndex, "        " + enumStatement);
         Files.write(file, lines, usedCharset);
+    }
+
+    public static void adaptPackageAndImportNames(final Path baseDirectory, final String oldPackageName, final String newPackageName, Charset charset) throws IOException {
+        Files.walkFileTree(baseDirectory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(final Path path, final BasicFileAttributes mainAtts) throws IOException {
+                final List<String> lines = Files.readAllLines(path, charset);
+                for (int i = 0; i < lines.size(); i++) {
+                    final String line = lines.get(i);
+                    if (line.startsWith("package " + oldPackageName)) {
+                        lines.set(i, line.replace(oldPackageName, newPackageName));
+                        break; // there should exists only one package-statement
+                    }
+                }
+                for (int i = 0; i < lines.size(); i++) {
+                    final String line = lines.get(i);
+                    if (line.startsWith("import " + oldPackageName)) {
+                        lines.set(i, line.replace(oldPackageName, newPackageName));
+                    }
+                }
+                Files.write(path, lines, charset);
+                return FileVisitResult.CONTINUE;
+            }
+            @Override
+            public FileVisitResult visitFileFailed(final Path path, final IOException exc) throws IOException {
+                return FileVisitResult.TERMINATE;
+            }
+        });
     }
 
     /*

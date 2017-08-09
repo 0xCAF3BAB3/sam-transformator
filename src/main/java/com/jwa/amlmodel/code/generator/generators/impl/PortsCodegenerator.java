@@ -14,6 +14,7 @@ import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+import org.apache.commons.io.FileUtils;
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         LOGGER.trace("Generating ports for ports-node '" + portsName + "' ...");
 
         final String communicationModuleName = "communication";
+        final String communicationPackageName = parentConfig.getComponentGroupId() + "." + communicationModuleName;
         if (!CodefileUtils.mavenModuleExists(communicationModuleName, parentConfig.getServiceConfig().getServiceDirectory())) {
             try {
                 final String pomFileContent;
@@ -69,13 +71,15 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                     throw new CodegeneratorException("Failed to generate snippet '" + "logconfigFileContent" + "': " + e.getMessage(), e);
                 }
                 CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(parentConfig.getComponentGroupId(), communicationModuleName, parentConfig.getServiceConfig().getServiceDirectory(), pomFileContent, logconfigFileContent, GlobalConfig.CHARSET);
-                // TODO: copy components into mavenModuleStructure.getCodeDirectory()
+                // copy components into mavenModuleStructure.getCodeDirectory()
+                final Path communicationFilesDirectory = GlobalConfig.getFiles(com.jwa.amlmodel.code.generator.generators.config.Files.COMMUNICATION);
+                FileUtils.copyDirectory(communicationFilesDirectory.toFile(), mavenModuleStructure.getCodeDirectory().toFile());
+                // adapt components: package-name and imports
+                CodefileUtils.adaptPackageAndImportNames(mavenModuleStructure.getCodeDirectory(), "com.jwa.pushlistener.code.architecture.communication", communicationPackageName, GlobalConfig.CHARSET);
             } catch (IOException e) {
                 throw new CodegeneratorException("Failed to generate Maven module '" + communicationModuleName + "': " + e.getMessage(), e);
             }
         }
-
-        final String communicationPackageName = parentConfig.getComponentGroupId() + "." + communicationModuleName;
 
         // adapt Maven module component:
         // CommunicationService.java anlegen  hat initial noch keine Ports zugewiesen

@@ -1,6 +1,5 @@
 package com.jwa.amlmodel.code.generator.generators.config;
 
-import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.utils.IOUtils;
 
 import freemarker.template.Configuration;
@@ -15,7 +14,9 @@ import java.nio.file.Paths;
 
 public final class GlobalConfig {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
-    private static final Path DIRECTORY_TEMPLATES = Paths.get("src/main/java/" + Codegenerator.class.getPackage().getName().replace(".", "/") + "/templates/");
+    private static final Path DIRECTORY_CODEFILES = Paths.get("codefiles/");
+    private static final Path DIRECTORY_FILES = DIRECTORY_CODEFILES.resolve("files/");
+    private static final Path DIRECTORY_TEMPLATES = DIRECTORY_CODEFILES.resolve("templates/");
     private static final Path DIRECTORY_FILE_TEMPLATES = DIRECTORY_TEMPLATES.resolve("file/");
     private static final Path DIRECTORY_FREEMARKER_TEMPLATES = DIRECTORY_TEMPLATES.resolve("freemarker/");
     private static final Configuration CONFIG_FREEMARKER;
@@ -31,6 +32,17 @@ public final class GlobalConfig {
         freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         freemarkerConfig.setLogTemplateExceptions(false);
         CONFIG_FREEMARKER = freemarkerConfig;
+    }
+
+    public static Path getFiles(final Files files) {
+        if (files == null) {
+            throw new IllegalArgumentException("Passed files is null");
+        }
+        final Path path = DIRECTORY_FILES.resolve(files.getDirectoryPath());
+        if (!IOUtils.isValidDirectory(path)) {
+            throw new RuntimeException("Loading files '" + path + "' failed: " + "Directory doesn't exists or is invalid");
+        }
+        return path;
     }
 
     public static Template getTemplate(final FreemarkerTemplate template) {
