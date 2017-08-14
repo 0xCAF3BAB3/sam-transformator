@@ -23,8 +23,6 @@ e.g.
  * `mvn exec:java -P generator -Dexec.args="'code-input/PushListener.aml' 'code-output/'"`
  * `mvn exec:java -P generator -Dexec.args="'https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml' 'code-output/'"`
 
-Attention: currently the AutomationML file is not validated (= if the model elements are used correctly).
-
 ##### 1.1.2.3. Execute generated code
 
 ###### 1.1.2.3.1. Import code in IDE
@@ -56,6 +54,9 @@ portsService.setReceiverHandler(
 
 ### 1.2. More infos on the 'AutomationML model elements to code-artefacts' transformation
 The [transformation document][Transformation document directory] describes, which code-artefacts are generated for which AutomationML model element.
+
+### 1.3. To-Dos
+ * Currently the passed AutomationML file is not validated (= check, if the model elements are used correctly). Implementation should be done in method `validate` in `com.jwa.amlmodel.code.generator.service.CodegeneratorService`.
 
 ## 2. About
 This repository is part of the bachelor thesis of JWa in the year 2017.

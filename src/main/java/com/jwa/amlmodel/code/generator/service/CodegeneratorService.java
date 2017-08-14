@@ -34,12 +34,16 @@ public final class CodegeneratorService {
             throw new CodegeneratorServiceException("Deserialization of aml-model file '" + amlmodelFile + "' failed: " + e.getMessage(), e);
         }
 
-        validate(amlmodel);
+        try {
+            validate(amlmodel);
+        } catch (IllegalArgumentException e) {
+            throw new CodegeneratorServiceException("AML-model not valid: " + e.getMessage(), e);
+        }
 
         try {
             IOUtils.clearDirectory(outputDirectory);
         } catch (IOException e) {
-            throw new CodegeneratorServiceException(e);
+            throw new CodegeneratorServiceException("Clearing output-directory failed: " + e.getMessage(), e);
         }
 
         try {
@@ -49,14 +53,16 @@ public final class CodegeneratorService {
         }
     }
 
-    private static void validate(final CAEXFile amlmodel) throws CodegeneratorServiceException {
-        // TODO validate document
-
+    private static void validate(final CAEXFile amlmodel) throws IllegalArgumentException {
         if (amlmodel.getInstanceHierarchy().size() != 1) {
-            throw new CodegeneratorServiceException("Aml-model not valid: " + "exactly one instance-hierarchy expected");
+            throw new IllegalArgumentException("Exactly one instance-hierarchy expected");
         }
-
-        // TODO: also check that a component's groupId matches its service: componentGroupId == serviceGroupId + "." + serviceArtifactId
+        // TODO: implement me
+        /*
+         * check that the AML model elements are used correctly (e.g. no service below a port)
+         * check that a component's groupId matches its service: componentGroupId == serviceGroupId + "." + serviceArtifactId
+         * ...
+         */
     }
 
     private static void generateRecursively(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {

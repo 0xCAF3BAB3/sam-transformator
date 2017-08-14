@@ -46,10 +46,12 @@ public final class Main {
         if (!IOUtils.isValidFile(amlmodelFile)) {
             throw new IllegalArgumentException("File '" + amlmodelFile + "' doesn't exists or is not a valid file");
         }
+        LOGGER.trace("File '" + amlmodelFile + "' is used as AML-model file");
 
         if (!IOUtils.isValidDirectory(outputDirectory)) {
             throw new IllegalArgumentException("Directory '" + outputDirectory + "' doesn't exists or is not a valid directory");
         }
+        LOGGER.trace("Directory '" + outputDirectory + "' is used as output-directory");
 
         LOGGER.info("Generator is now running ...");
         try {
@@ -65,7 +67,9 @@ public final class Main {
         try {
             final URL url = new URL(fileUrl);
             final Path file = Paths.get("code-input/PushListener.aml");
-            return IOUtils.downloadFile(url, file);
+            final Path downloadedFile = IOUtils.downloadFile(url, file);
+            LOGGER.trace("File '" + fileUrl + "' was downloaded to '" + file + "'");
+            return downloadedFile;
         } catch (IOException e) {
             throw new IllegalArgumentException("Downloading file failed: " + e.getMessage(), e);
         }
