@@ -58,8 +58,8 @@ The [transformation document][Transformation document directory] describes, whic
 ## 2. About
 This repository is part of the bachelor thesis of JWa in the year 2017.
 The following repositories also belong to it:
- * [pushlistener-amlmodel][pushlistener-amlmodel repository]
- * [pushlistener-code-architecture][pushlistener-code-architecture repository]
+* [pushlistener-amlmodel][pushlistener-amlmodel repository]
+* [pushlistener-code-architecture][pushlistener-code-architecture repository]
 
 
 [Transformation document directory]: src/master/docs/AmlmodelToCodeTransformation/
