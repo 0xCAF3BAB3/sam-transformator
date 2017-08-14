@@ -60,11 +60,11 @@ public final class AmlmodelUtils {
         }
         final RoleRequirements roleRequirements = element.getRoleRequirements();
         if (roleRequirements != null && roleRequirements.getRefBaseRoleClassPath().startsWith(roleStartingWith)) {
-            return Optional.of(roleRequirements.getRefBaseRoleClassPath().replace(roleStartingWith, ""));
+            return Optional.of(roleRequirements.getRefBaseRoleClassPath());
         }
         for(SupportedRoleClass supportedRoleClass : element.getSupportedRoleClass()) {
             if (supportedRoleClass.getRefRoleClassPath().startsWith(roleStartingWith)) {
-                return Optional.of(supportedRoleClass.getRefRoleClassPath().replace(roleStartingWith, ""));
+                return Optional.of(supportedRoleClass.getRefRoleClassPath());
             }
         }
         return Optional.empty();

@@ -97,11 +97,7 @@ public final class AmlmodelConstants {
             throw new IllegalArgumentException("Passed node has no service-role");
         }
         final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_SERVICE + "." + NAME_ATTRIBUTE_SERVICE_ARTIFACTID);
-        if (value.isPresent()) {
-            return value.get();
-        } else {
-            throw new IllegalArgumentException("Attribute not found");
-        }
+        return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
     }
 
     public static String getServiceGroupId(final InternalElement node) {
@@ -109,11 +105,7 @@ public final class AmlmodelConstants {
             throw new IllegalArgumentException("Passed node has no service-role");
         }
         final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_SERVICE + "." + NAME_ATTRIBUTE_SERVICE_GROUPID);
-        if (value.isPresent()) {
-            return value.get();
-        } else {
-            throw new IllegalArgumentException("Attribute not found");
-        }
+        return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
     }
 
     public static String getComponentArtifactId(final InternalElement node) {
@@ -121,11 +113,7 @@ public final class AmlmodelConstants {
             throw new IllegalArgumentException("Passed node has no component-role");
         }
         final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_COMPONENT + "." + NAME_ATTRIBUTE_COMPONENT_ARTIFACTID);
-        if (value.isPresent()) {
-            return value.get();
-        } else {
-            throw new IllegalArgumentException("Attribute not found");
-        }
+        return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
     }
 
     public static String getComponentGroupId(final InternalElement node) {
@@ -133,11 +121,7 @@ public final class AmlmodelConstants {
             throw new IllegalArgumentException("Passed node has no component-role");
         }
         final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_COMPONENT + "." + NAME_ATTRIBUTE_COMPONENT_GROUPID);
-        if (value.isPresent()) {
-            return value.get();
-        } else {
-            throw new IllegalArgumentException("Attribute not found");
-        }
+        return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
     }
 
     public static String getPortstyleStyle(final InternalElement node) {
@@ -145,11 +129,7 @@ public final class AmlmodelConstants {
             throw new IllegalArgumentException("Passed node has no portstyle-role");
         }
         final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_PORTSTYLE + "." + NAME_ATTRIBUTE_PORTSTYLE_STYLE);
-        if (value.isPresent()) {
-            return value.get();
-        } else {
-            throw new IllegalArgumentException("Attribute not found");
-        }
+        return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
     }
 
     public static Map<String, String> getPortparameters(final InternalElement node) {
@@ -169,11 +149,7 @@ public final class AmlmodelConstants {
         }
         final String leadingPart = NAME_ROLECLASSLIB_COMMUNICATION + "/" + NAME_ROLE_PORTTYPE + "/";
         final Optional<String> porttype = AmlmodelUtils.getRoleStartingWith(node, leadingPart);
-        if (porttype.isPresent()) {
-            return porttype.get().replace(leadingPart, "");
-        } else {
-            throw new IllegalArgumentException("Porttype not found");
-        }
+        return porttype.map(ptype -> ptype.replace(leadingPart, "")).orElseThrow(() -> new IllegalArgumentException("Porttype not found"));
     }
 
     public static String getMessagemodelName(final InternalElement node) {
@@ -181,10 +157,6 @@ public final class AmlmodelConstants {
             throw new IllegalArgumentException("Passed node has no messagemodel-role");
         }
         final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_MESSAGEMODEL + "." + NAME_ATTRIBUTE_MESSAGEMODEL_NAME);
-        if (value.isPresent()) {
-            return value.get();
-        } else {
-            throw new IllegalArgumentException("Attribute not found");
-        }
+        return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
     }
 }

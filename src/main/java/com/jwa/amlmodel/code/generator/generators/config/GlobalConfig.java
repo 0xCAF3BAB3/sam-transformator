@@ -26,9 +26,9 @@ public final class GlobalConfig {
         try {
             freemarkerConfig.setDirectoryForTemplateLoading(DIRECTORY_FREEMARKER_TEMPLATES.toFile());
         } catch (IOException e) {
-            throw new RuntimeException("Freemarker-template directory invalid: " + e.getMessage(), e);
+            throw new RuntimeException("Setting Freemarker directory for template-loading failed: " + e.getMessage(), e);
         }
-        freemarkerConfig.setDefaultEncoding(CHARSET.displayName());
+        freemarkerConfig.setDefaultEncoding(CHARSET.name());
         freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         freemarkerConfig.setLogTemplateExceptions(false);
         CONFIG_FREEMARKER = freemarkerConfig;

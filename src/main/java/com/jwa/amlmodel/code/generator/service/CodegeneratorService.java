@@ -57,7 +57,7 @@ public final class CodegeneratorService {
         if (amlmodel.getInstanceHierarchy().size() != 1) {
             throw new IllegalArgumentException("Exactly one instance-hierarchy expected");
         }
-        // TODO: implement me
+        // TODO: implement validation of passed AML-model
         /*
          * check that the AML model elements are used correctly (e.g. no service below a port)
          * check that a component's groupId matches its service: componentGroupId == serviceGroupId + "." + serviceArtifactId

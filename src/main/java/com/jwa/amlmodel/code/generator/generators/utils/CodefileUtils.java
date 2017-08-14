@@ -98,7 +98,7 @@ public final class CodefileUtils {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             transformerFactory.setAttribute("indent-number", 4);
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, charset.displayName()); // TODO: displayname?
+            transformer.setOutputProperty(OutputKeys.ENCODING, charset.name());
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             transformer.transform(new DOMSource(document), new StreamResult(pomFile.toFile()));
@@ -154,7 +154,7 @@ public final class CodefileUtils {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             transformerFactory.setAttribute("indent-number", 4);
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, charset.displayName()); // TODO: displayname?
+            transformer.setOutputProperty(OutputKeys.ENCODING, charset.name());
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             transformer.transform(new DOMSource(document), new StreamResult(pomFile.toFile()));
