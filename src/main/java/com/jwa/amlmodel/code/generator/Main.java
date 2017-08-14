@@ -66,10 +66,10 @@ public final class Main {
     private static Path downloadFile(final String fileUrl) {
         try {
             final URL url = new URL(fileUrl);
-            final Path file = Paths.get("code-input/PushListener.aml");
-            final Path downloadedFile = IOUtils.downloadFile(url, file);
+            final Path file = Paths.get("code-input/AMLmodel.aml");
+            IOUtils.downloadFile(url, file);
             LOGGER.trace("File '" + fileUrl + "' was downloaded to '" + file + "'");
-            return downloadedFile;
+            return file;
         } catch (IOException e) {
             throw new IllegalArgumentException("Downloading file failed: " + e.getMessage(), e);
         }
