@@ -3,17 +3,22 @@ package com.jwa.amlmodel.code.generator.generators.impl;
 import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
 import com.jwa.amlmodel.code.generator.generators.config.FileTemplate;
+import com.jwa.amlmodel.code.generator.generators.config.FreemarkerTemplate;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedRootConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedServiceConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -39,14 +44,14 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
             throw new CodegeneratorException("Failed to create directory '" + serviceDirectory + "': " + e.getMessage(), e);
         }
 
-        final String[] textfiles = {"LICENCE.txt", "NOTICE.txt", "README.txt"};
-        for(String textfile : textfiles) {
-            final Path textfilePath = serviceDirectory.resolve(textfile);
-            try {
-                Files.createFile(textfilePath);
-            } catch (IOException e) {
-                throw new CodegeneratorException("Failed to generate file '" + textfilePath + "': " + e.getMessage(), e);
-            }
+        final Path readmeFile = serviceDirectory.resolve("README.md");
+        final Map<String, String> readmeDatamodel = new HashMap<>();
+        readmeDatamodel.put("serviceName", serviceName);
+        final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.README_SERVICE);
+        try (final Writer writer = Files.newBufferedWriter(readmeFile, GlobalConfig.getCharset())) {
+            template.process(readmeDatamodel, writer);
+        } catch (IOException | TemplateException e) {
+            throw new CodegeneratorException("Failed to generate file '" + readmeFile + "': " + e.getMessage(), e);
         }
 
         final String serviceGroupId = AmlmodelConstants.getServiceGroupId(node);

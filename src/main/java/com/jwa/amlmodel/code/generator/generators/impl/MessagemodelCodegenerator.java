@@ -65,12 +65,10 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
                 final Map<String, String> logconfigDatamodel = new HashMap<>();
                 logconfigDatamodel.put("name", messagemodelModuleName);
                 logconfigDatamodel.put("groupId", parentConfig.getPortsConfig().getComponentConfig().getComponentGroupId());
-                try {
-                    final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
-                    try (final Writer writer = new StringWriter()) {
-                        template.process(logconfigDatamodel, writer);
-                        logconfigFileContent = writer.toString();
-                    }
+                final Template logconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
+                try (final Writer writer = new StringWriter()) {
+                    logconfigTemplate.process(logconfigDatamodel, writer);
+                    logconfigFileContent = writer.toString();
                 } catch (IOException | TemplateException e) {
                     throw new CodegeneratorException("Failed to generate snippet '" + "logconfigFileContent" + "': " + e.getMessage(), e);
                 }
@@ -79,11 +77,9 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
                 final Map<String, String> messagemodelDatamodel = new HashMap<>();
                 messagemodelDatamodel.put("packageName", packageName);
                 messagemodelDatamodel.put("communicationPackageName", parentConfig.getPortsConfig().getCommunicationPackageName());
-                try {
-                    final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MESSAGEMODEL);
-                    try (final Writer writer = Files.newBufferedWriter(messagemodelFile, GlobalConfig.getCharset())) {
-                        template.process(messagemodelDatamodel, writer);
-                    }
+                final Template messagemodelTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.MESSAGEMODEL);
+                try (final Writer writer = Files.newBufferedWriter(messagemodelFile, GlobalConfig.getCharset())) {
+                    messagemodelTemplate.process(messagemodelDatamodel, writer);
                 } catch (IOException | TemplateException e) {
                     throw new CodegeneratorException("Failed to generate file '" + messagemodelFile + "': " + e.getMessage(), e);
                 }

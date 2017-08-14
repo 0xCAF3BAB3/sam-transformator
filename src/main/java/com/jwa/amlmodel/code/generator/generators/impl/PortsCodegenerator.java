@@ -61,12 +61,10 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                 final Map<String, String> logconfigDatamodel = new HashMap<>();
                 logconfigDatamodel.put("name", communicationModuleName);
                 logconfigDatamodel.put("groupId", parentConfig.getComponentGroupId());
-                try {
-                    final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
-                    try (final Writer writer = new StringWriter()) {
-                        template.process(logconfigDatamodel, writer);
-                        logconfigFileContent = writer.toString();
-                    }
+                final Template logconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
+                try (final Writer writer = new StringWriter()) {
+                    logconfigTemplate.process(logconfigDatamodel, writer);
+                    logconfigFileContent = writer.toString();
                 } catch (IOException | TemplateException e) {
                     throw new CodegeneratorException("Failed to generate snippet '" + "logconfigFileContent" + "': " + e.getMessage(), e);
                 }
@@ -87,22 +85,18 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         final Map<String, String> componentCommunicationserviceDatamodel = new HashMap<>();
         componentCommunicationserviceDatamodel.put("packageName", parentConfig.getComponentGroupId() + "." + parentConfig.getComponentArtifactId());
         componentCommunicationserviceDatamodel.put("communicationPackageName", communicationPackageName);
-        try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_INITIAL);
-            try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, GlobalConfig.getCharset())) {
-                template.process(componentCommunicationserviceDatamodel, writer);
-            }
+        final Template componentCommunicationserviceTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_INITIAL);
+        try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, GlobalConfig.getCharset())) {
+            componentCommunicationserviceTemplate.process(componentCommunicationserviceDatamodel, writer);
         } catch (IOException | TemplateException e) {
             throw new CodegeneratorException("Failed to generate file '" + componentCommunicationserviceFile + "': " + e.getMessage(), e);
         }
         // Main.java anpassen  Example-Usage des CommunicationService der Methode ‚main’ hinzufügen
         final String snippet;
-        try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_COMMSERVICEUSAGE_SNIPPET);
-            try (final Writer writer = new StringWriter()) {
-                template.process(new HashMap<>(), writer);
-                snippet = writer.toString();
-            }
+        final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_COMMSERVICEUSAGE_SNIPPET);
+        try (final Writer writer = new StringWriter()) {
+            template.process(new HashMap<>(), writer);
+            snippet = writer.toString();
         } catch (IOException | TemplateException e) {
             throw new CodegeneratorException("Failed to generate snippet '" + "ComponentMainCommunicationserviceUsage" + "': " + e.getMessage(), e);
         }

@@ -1,6 +1,7 @@
 package com.jwa.amlmodel.code.generator.generators.config;
 
 public enum FreemarkerTemplate {
+    README_SERVICE(Constants.DIRECTORY_SERVICE + "README.md.ftlh"),
     COMMSERVICE_INITIAL(Constants.DIRECTORY_COMPONENT + "CommunicationServiceInitial.java.ftlh"),
     COMMSERVICE_PORT_SNIPPET(Constants.DIRECTORY_COMPONENT + "CommunicationServicePortSnippet.java.ftlh"),
     LOG4J2("log4j2.xml.ftlh"),
@@ -22,5 +23,6 @@ public enum FreemarkerTemplate {
     private static final class Constants {
         private static final String DIRECTORY_COMPONENT = "component/";
         private static final String DIRECTORY_MESSAGEMODEL = "messagemodel/";
+        private static final String DIRECTORY_SERVICE = "service/";
     }
 }

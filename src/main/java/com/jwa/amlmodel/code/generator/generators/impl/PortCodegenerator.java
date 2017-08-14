@@ -39,12 +39,10 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
         final String portsnippet;
         final Map<String, String> portsnippetDatamodel = new HashMap<>();
         portsnippetDatamodel.put("portName", portName);
-        try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_PORT_SNIPPET);
-            try (final Writer writer = new StringWriter()) {
-                template.process(portsnippetDatamodel, writer);
-                portsnippet = writer.toString();
-            }
+        final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_PORT_SNIPPET);
+        try (final Writer writer = new StringWriter()) {
+            template.process(portsnippetDatamodel, writer);
+            portsnippet = writer.toString();
         } catch (IOException | TemplateException e) {
             throw new CodegeneratorException("Failed to generate snippet '" + "component/CommunicationservicePortsnippet" + "': " + e.getMessage(), e);
         }

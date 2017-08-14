@@ -58,11 +58,9 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final Map<String, String> componentMainDatamodel = new HashMap<>();
         final String packageName = componentGroupId + "." + componentArtifactId;
         componentMainDatamodel.put("packageName", packageName);
-        try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_INITIAL);
-            try (final Writer writer = Files.newBufferedWriter(componentMainFile, GlobalConfig.getCharset())) {
-                template.process(componentMainDatamodel, writer);
-            }
+        final Template componentMainTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_INITIAL);
+        try (final Writer writer = Files.newBufferedWriter(componentMainFile, GlobalConfig.getCharset())) {
+            componentMainTemplate.process(componentMainDatamodel, writer);
         } catch (IOException | TemplateException e) {
             throw new CodegeneratorException("Failed to generate file '" + componentMainFile + "': " + e.getMessage(), e);
         }
@@ -71,11 +69,9 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final Map<String, String> componentLogconfigDatamodel = new HashMap<>();
         componentLogconfigDatamodel.put("name", componentArtifactId);
         componentLogconfigDatamodel.put("groupId", componentGroupId);
-        try {
-            final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
-            try (final Writer writer = Files.newBufferedWriter(componentLogconfigFile, GlobalConfig.getCharset())) {
-                template.process(componentLogconfigDatamodel, writer);
-            }
+        final Template componentLogconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
+        try (final Writer writer = Files.newBufferedWriter(componentLogconfigFile, GlobalConfig.getCharset())) {
+            componentLogconfigTemplate.process(componentLogconfigDatamodel, writer);
         } catch (IOException | TemplateException e) {
             throw new CodegeneratorException("Failed to generate file '" + componentLogconfigFile + "': " + e.getMessage(), e);
         }
