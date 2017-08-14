@@ -16,7 +16,7 @@ Contains the generator, which generates valid Maven/Java projects for [Automatio
 
 ##### 1.1.2.2. Execute project (= generate code for AutomationML file)
  * `mvn exec:java -P generator` generates code for [this][PushListener file] AutomationML file in the output-directory `code-output/`
- * or `mvn exec:java -P generator -Dexec.args="'<local path or URL (starting with http[s]) to AutomationML file>' '<local path to directory, in which the generated code should be placed>'"`
+ * or specify other AutomationML file and output-directory: `mvn exec:java -P generator -Dexec.args="'<local path or URL (starting with http[s]) to AutomationML file>' '<local path to directory, in which the generated code should be placed>'"`
 
 e.g.
 
@@ -32,7 +32,7 @@ Attention: currently the AutomationML file is not validated (= if the model elem
  2. Import a generated service into your favored IDE as a Maven project.
 
 ###### 1.1.2.3.2. Implement business logic
-Implement the logic for the communication events of the ports of the components in the generated `Main.java` class.
+Implement the logic for the communication events of the ports of the components in the generated `Main` class.
 Please take a look at the generated comments, which explain how and where to
 
  * add receiver-handlers
@@ -65,7 +65,7 @@ The following repositories also belong to it:
  * [pushlistener-code-architecture][pushlistener-code-architecture repository]
 
 
-[Transformation document directory]: src/master/docs/AmlmodelToCodeTransformation/
+[Transformation document directory]: https://bitbucket.org/0xCAF3BAB3/amlmodel-code-generator/src/master/docs/AmlmodelToCodeTransformation/
 [PushListener file]: https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml
 [pushlistener-amlmodel repository]: https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/
 [pushlistener-code-architecture repository]: https://bitbucket.org/0xCAF3BAB3/pushlistener-code-architecture/
