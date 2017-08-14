@@ -1,7 +1,7 @@
-package com.jwa.pushlistener.code.architecture.communication.port.factory;
+package {{communicationPackageName}}.port.factory;
 
-import com.jwa.pushlistener.code.architecture.communication.port.Port;
-import com.jwa.pushlistener.code.architecture.communication.port.config.PortConfig;
+import {{communicationPackageName}}.port.Port;
+import {{communicationPackageName}}.port.config.PortConfig;
 
 public interface AbstractPortFactory {
     Port createPort(final PortConfig portConfig) throws IllegalArgumentException;

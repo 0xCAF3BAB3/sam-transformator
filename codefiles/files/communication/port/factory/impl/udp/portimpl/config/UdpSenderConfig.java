@@ -1,4 +1,4 @@
-package com.jwa.pushlistener.code.architecture.communication.port.factory.impl.udp.portimpl.config;
+package {{communicationPackageName}}.port.factory.impl.udp.portimpl.config;
 
 public final class UdpSenderConfig extends AbstractUdpConfig {
     private final String hostname;

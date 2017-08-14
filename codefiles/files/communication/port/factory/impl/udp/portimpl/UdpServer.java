@@ -1,10 +1,10 @@
-package com.jwa.pushlistener.code.architecture.communication.port.factory.impl.udp.portimpl;
+package {{communicationPackageName}}.port.factory.impl.udp.portimpl;
 
 import com.google.common.base.Optional;
 
-import com.jwa.pushlistener.code.architecture.communication.Message;
-import com.jwa.pushlistener.code.architecture.communication.port.AsynchronousSenderCallback;
-import com.jwa.pushlistener.code.architecture.communication.port.ReceiverHandler;
+import {{communicationPackageName}}.Message;
+import {{communicationPackageName}}.port.AsynchronousSenderCallback;
+import {{communicationPackageName}}.port.ReceiverHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

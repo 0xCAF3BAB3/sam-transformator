@@ -1,13 +1,13 @@
-package com.jwa.pushlistener.code.architecture.communication.port.factory.impl.rmi;
+package {{communicationPackageName}}.port.factory.impl.rmi;
 
-import com.jwa.pushlistener.code.architecture.communication.port.Port;
-import com.jwa.pushlistener.code.architecture.communication.port.factory.AbstractPortFactory;
-import com.jwa.pushlistener.code.architecture.communication.port.config.PortConfig;
-import com.jwa.pushlistener.code.architecture.communication.port.factory.PortFactorySupportedPortStyle;
-import com.jwa.pushlistener.code.architecture.communication.port.factory.impl.rmi.portimpl.RmiReceiver;
-import com.jwa.pushlistener.code.architecture.communication.port.factory.impl.rmi.portimpl.RmiSynchronousSender;
-import com.jwa.pushlistener.code.architecture.communication.port.factory.impl.rmi.portimpl.config.RmiReceiverConfig;
-import com.jwa.pushlistener.code.architecture.communication.port.factory.impl.rmi.portimpl.config.RmiSenderConfig;
+import {{communicationPackageName}}.port.Port;
+import {{communicationPackageName}}.port.factory.AbstractPortFactory;
+import {{communicationPackageName}}.port.config.PortConfig;
+import {{communicationPackageName}}.port.factory.PortFactorySupportedPortStyle;
+import {{communicationPackageName}}.port.factory.impl.rmi.portimpl.RmiReceiver;
+import {{communicationPackageName}}.port.factory.impl.rmi.portimpl.RmiSynchronousSender;
+import {{communicationPackageName}}.port.factory.impl.rmi.portimpl.config.RmiReceiverConfig;
+import {{communicationPackageName}}.port.factory.impl.rmi.portimpl.config.RmiSenderConfig;
 
 @PortFactorySupportedPortStyle(name = "Rmi")
 public final class RmiPortFactory implements AbstractPortFactory {

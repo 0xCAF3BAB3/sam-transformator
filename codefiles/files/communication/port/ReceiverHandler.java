@@ -1,8 +1,8 @@
-package com.jwa.pushlistener.code.architecture.communication.port;
+package {{communicationPackageName}}.port;
 
 import com.google.common.base.Optional;
 
-import com.jwa.pushlistener.code.architecture.communication.Message;
+import {{communicationPackageName}}.Message;
 
 public interface ReceiverHandler {
     /**

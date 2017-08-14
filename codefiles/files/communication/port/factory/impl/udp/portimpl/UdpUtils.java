@@ -1,6 +1,6 @@
-package com.jwa.pushlistener.code.architecture.communication.port.factory.impl.udp.portimpl;
+package {{communicationPackageName}}.port.factory.impl.udp.portimpl;
 
-import com.jwa.pushlistener.code.architecture.communication.Message;
+import {{communicationPackageName}}.Message;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

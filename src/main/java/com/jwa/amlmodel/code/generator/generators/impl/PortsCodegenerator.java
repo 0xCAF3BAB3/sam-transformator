@@ -75,7 +75,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                 final Path communicationFilesDirectory = GlobalConfig.getFiles(com.jwa.amlmodel.code.generator.generators.config.Files.COMMUNICATION);
                 FileUtils.copyDirectory(communicationFilesDirectory.toFile(), mavenModuleStructure.getCodeDirectory().toFile());
                 // adapt components: package-name and imports
-                CodefileUtils.adaptPackageAndImportNames(mavenModuleStructure.getCodeDirectory(), "com.jwa.pushlistener.code.architecture.communication", communicationPackageName, GlobalConfig.getCharset());
+                CodefileUtils.adaptPackageAndImportNames(mavenModuleStructure.getCodeDirectory(), "{{communicationPackageName}}", communicationPackageName, GlobalConfig.getCharset());
             } catch (IOException e) {
                 throw new CodegeneratorException("Failed to generate Maven module '" + communicationModuleName + "': " + e.getMessage(), e);
             }

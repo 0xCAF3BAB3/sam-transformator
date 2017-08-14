@@ -1,4 +1,4 @@
-package com.jwa.pushlistener.code.architecture.communication.port.factory.impl.rmi.portimpl.config;
+package {{communicationPackageName}}.port.factory.impl.rmi.portimpl.config;
 
 abstract class AbstractRmiConfig {
     private final int portRegistry;

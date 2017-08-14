@@ -1,8 +1,8 @@
-package com.jwa.pushlistener.code.architecture.communication.port.factory.impl.rmi.portimpl;
+package {{communicationPackageName}}.port.factory.impl.rmi.portimpl;
 
 import com.google.common.base.Optional;
 
-import com.jwa.pushlistener.code.architecture.communication.Message;
+import {{communicationPackageName}}.Message;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

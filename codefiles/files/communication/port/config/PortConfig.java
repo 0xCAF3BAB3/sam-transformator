@@ -1,4 +1,4 @@
-package com.jwa.pushlistener.code.architecture.communication.port.config;
+package {{communicationPackageName}}.port.config;
 
 import java.util.Map;
 

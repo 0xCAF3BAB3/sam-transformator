@@ -1,4 +1,4 @@
-package com.jwa.pushlistener.code.architecture.communication;
+package {{communicationPackageName}};
 
 public interface Message extends java.io.Serializable {
 }

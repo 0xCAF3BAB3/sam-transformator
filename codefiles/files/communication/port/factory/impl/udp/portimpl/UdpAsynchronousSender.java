@@ -1,12 +1,12 @@
-package com.jwa.pushlistener.code.architecture.communication.port.factory.impl.udp.portimpl;
+package {{communicationPackageName}}.port.factory.impl.udp.portimpl;
 
 import com.google.common.base.Optional;
 
-import com.jwa.pushlistener.code.architecture.communication.Message;
-import com.jwa.pushlistener.code.architecture.communication.port.PortException;
-import com.jwa.pushlistener.code.architecture.communication.port.AsynchronousSender;
-import com.jwa.pushlistener.code.architecture.communication.port.AsynchronousSenderCallback;
-import com.jwa.pushlistener.code.architecture.communication.port.factory.impl.udp.portimpl.config.UdpSenderConfig;
+import {{communicationPackageName}}.Message;
+import {{communicationPackageName}}.port.PortException;
+import {{communicationPackageName}}.port.AsynchronousSender;
+import {{communicationPackageName}}.port.AsynchronousSenderCallback;
+import {{communicationPackageName}}.port.factory.impl.udp.portimpl.config.UdpSenderConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

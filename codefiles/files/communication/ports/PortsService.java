@@ -1,17 +1,17 @@
-package com.jwa.pushlistener.code.architecture.communication.ports;
+package {{communicationPackageName}}.ports;
 
 import com.google.common.base.Optional;
 
-import com.jwa.pushlistener.code.architecture.communication.port.config.PortConfig;
-import com.jwa.pushlistener.code.architecture.communication.port.factory.PortFactory;
-import com.jwa.pushlistener.code.architecture.communication.Message;
-import com.jwa.pushlistener.code.architecture.communication.port.AsynchronousSender;
-import com.jwa.pushlistener.code.architecture.communication.port.AsynchronousSenderCallback;
-import com.jwa.pushlistener.code.architecture.communication.port.Port;
-import com.jwa.pushlistener.code.architecture.communication.port.PortException;
-import com.jwa.pushlistener.code.architecture.communication.port.Receiver;
-import com.jwa.pushlistener.code.architecture.communication.port.ReceiverHandler;
-import com.jwa.pushlistener.code.architecture.communication.port.Sender;
+import {{communicationPackageName}}.port.config.PortConfig;
+import {{communicationPackageName}}.port.factory.PortFactory;
+import {{communicationPackageName}}.Message;
+import {{communicationPackageName}}.port.AsynchronousSender;
+import {{communicationPackageName}}.port.AsynchronousSenderCallback;
+import {{communicationPackageName}}.port.Port;
+import {{communicationPackageName}}.port.PortException;
+import {{communicationPackageName}}.port.Receiver;
+import {{communicationPackageName}}.port.ReceiverHandler;
+import {{communicationPackageName}}.port.Sender;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

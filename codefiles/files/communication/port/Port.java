@@ -1,4 +1,4 @@
-package com.jwa.pushlistener.code.architecture.communication.port;
+package {{communicationPackageName}}.port;
 
 public interface Port {
 }
