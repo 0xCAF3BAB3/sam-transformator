@@ -14,25 +14,18 @@ import java.nio.file.Paths;
 
 public final class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    private static final Path PATH_DOWLOADEDFILE = Paths.get("code-input/PushListener.aml");
 
-    /**
-     * Usage:
-     * java Main
-     * or
-     * java Main <local path or URL to AML-model file> <local path to folder, in which the generated code should be placed>
-     */
     public static void main(final String[] args) throws IllegalArgumentException {
         final Path amlmodelFile;
         final Path outputDirectory;
         if (args.length == 0) {
-            try {
-                final URL url = new URL("https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml");
-                amlmodelFile = IOUtils.downloadFile(url, PATH_DOWLOADEDFILE);
-            } catch (IOException e) {
-                throw new IllegalArgumentException(e);
-            }
+            amlmodelFile = downloadFile("https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml");
             outputDirectory = Paths.get("code-output/");
+            try {
+                IOUtils.createDirectoryIfNotExists(outputDirectory);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Creating output-directory failed: " + e.getMessage(), e);
+            }
         } else if (args.length == 2) {
             for(String arg : args) {
                 if (arg == null || arg.isEmpty()) {
@@ -40,13 +33,8 @@ public final class Main {
                 }
             }
             final String pathToAmlmodelFile = args[0];
-            if (IOUtils.isUrl(pathToAmlmodelFile)) {
-                try {
-                    final URL url = new URL(pathToAmlmodelFile);
-                    amlmodelFile = IOUtils.downloadFile(url, PATH_DOWLOADEDFILE);
-                } catch (IOException e) {
-                    throw new IllegalArgumentException(e);
-                }
+            if (pathToAmlmodelFile.startsWith("http")) {
+                amlmodelFile = downloadFile(pathToAmlmodelFile);
             } else {
                 amlmodelFile = Paths.get(pathToAmlmodelFile);
             }
@@ -71,5 +59,15 @@ public final class Main {
             return;
         }
         LOGGER.info("Generator finished");
+    }
+
+    private static Path downloadFile(final String fileUrl) {
+        try {
+            final URL url = new URL(fileUrl);
+            final Path file = Paths.get("code-input/PushListener.aml");
+            return IOUtils.downloadFile(url, file);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Downloading file failed: " + e.getMessage(), e);
+        }
     }
 }

@@ -4,7 +4,6 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,13 +20,20 @@ public final class IOUtils {
             throw new IllegalArgumentException("Passed destination-file is null");
         }
         if (Files.notExists(destinationFile)) {
-            Files.createDirectories(destinationFile.getParent());
+            createDirectoryIfNotExists(destinationFile.getParent());
             Files.createFile(destinationFile);
         }
         try (InputStream in = urlFile.openStream()) {
             Files.copy(in, destinationFile, StandardCopyOption.REPLACE_EXISTING);
         }
         return destinationFile;
+    }
+
+    public static void createDirectoryIfNotExists(final Path directory) throws IOException {
+        if (directory == null) {
+            throw new IllegalArgumentException("Passed directory is null");
+        }
+        Files.createDirectories(directory);
     }
 
     public static void clearDirectory(final Path directory) throws IOException {
@@ -43,15 +49,5 @@ public final class IOUtils {
 
     public static boolean isValidFile(final Path file) {
         return file != null && Files.exists(file) && Files.isRegularFile(file);
-    }
-
-    public static boolean isUrl(final String url) {
-        if (url != null) {
-            try {
-                new URL(url);
-                return true;
-            } catch (MalformedURLException ignored) {}
-        }
-        return false;
     }
 }
