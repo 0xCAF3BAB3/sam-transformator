@@ -5,7 +5,6 @@ import freemarker.template.TemplateException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -33,17 +32,6 @@ import javax.xml.transform.stream.StreamResult;
 
 public final class CodefileUtils {
     private CodefileUtils() {}
-
-    public static Path processFileTemplate(final Path templateFile, final Path outputFile, final Map<String, String> datamodel, final Charset charset) throws IOException {
-        // TODO: add more exception-handling and parameter-checks
-        String content = new String(Files.readAllBytes(templateFile), charset);
-        for(Map.Entry<String, String> entry : datamodel.entrySet()) {
-            final String placeholder = "{{" + entry.getKey() + "}}";
-            content = content.replace(placeholder, entry.getValue());
-        }
-        Files.write(outputFile, content.getBytes(charset));
-        return outputFile;
-    }
 
     public static String processFileTemplate(final Path templateFile, final Map<String, String> datamodel, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
@@ -75,49 +63,7 @@ public final class CodefileUtils {
         }
     }
 
-    /*
-    public static MavenModuleInfo generateMavenJavaDirectoryStructure(Path moduleDirectory, String groupId, String artifactId) throws IOException {
-        // TODO: add more exception-handling and parameter-checks
-        final Path mainDirectory = moduleDirectory.resolve("src").resolve("main");
-
-        Path codeDirectory = mainDirectory.resolve("java");
-        for(String groupIdPart : groupId.split(Pattern.quote("."))) {
-            codeDirectory = codeDirectory.resolve(groupIdPart);
-        }
-        codeDirectory = codeDirectory.resolve(artifactId); // TODO: can an artifact-id have multiple parts?
-        Files.createDirectories(codeDirectory);
-
-        final Path resourcesDirectory = mainDirectory.resolve("resources");
-        Files.createDirectories(resourcesDirectory);
-
-        return new MavenModuleInfo(codeDirectory, resourcesDirectory);
-    }
-    */
-
-    public static boolean hasMavenDependancy(final String groupId, final String artifactId, final Path pomFile, final Charset charset) throws IOException {
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(pomFile.toFile());
-            NodeList nodes = document.getElementsByTagName("dependency");
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Element dependency = (Element) nodes.item(i);
-                final String dependencyGroupId = dependency.getElementsByTagName("groupId").item(0).getTextContent();
-                if (dependencyGroupId.equals(groupId)) {
-                    final String dependencyArtifactId = dependency.getElementsByTagName("artifactId").item(0).getTextContent();
-                    if (dependencyArtifactId.equals(artifactId)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        } catch (SAXException | ParserConfigurationException e) {
-            throw new IOException(e);
-            // TODO: create a good exception-message
-        }
-    }
-
-    public static void addMavenDependancy(final MavenModuleInfo dependency, final MavenModuleInfo module, final Charset charset) throws IOException {
+    public static void addMavenDependency(final MavenModuleInfo dependency, final MavenModuleInfo module, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
         final Path modulePomFile = module.getPomFile();
         try {

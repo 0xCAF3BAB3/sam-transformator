@@ -39,20 +39,20 @@ public final class PortparametersCodegenerator implements Codegenerator<Generate
     }
 
     private static void addParametersToPortInComponentCommunicationserviceClass(final Map<String, String> portParameters, final String portName, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
-        if (!portParameters.isEmpty()) {
-            final Path communicationserviceClassFile = portsConfig.getComponentCommunicationserviceClassFile();
-            try {
-                String portparametersContent = "";
-                for(Map.Entry<String, String> portparameter : portParameters.entrySet()) {
-                    portparametersContent += "                        .setParameter(\"" + portparameter.getKey() + "\", \"" + portparameter.getValue() + "\")" + "\n";
-                }
-                portparametersContent = portparametersContent.substring(0, portparametersContent.length() - 1);
-                CodefileUtils.addToPortConfig(portparametersContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
-            } catch (IOException e) {
-                throw new CodegeneratorException("Failed to adapt file '" + communicationserviceClassFile + "': " + e.getMessage(), e);
+        if (portParameters.isEmpty()) {
+            LOGGER.trace("No port-parameters found and set on port-node");
+            return;
+        }
+        final Path communicationserviceClassFile = portsConfig.getComponentCommunicationserviceClassFile();
+        try {
+            String portparametersContent = "";
+            for(Map.Entry<String, String> portparameter : portParameters.entrySet()) {
+                portparametersContent += "                        .setParameter(\"" + portparameter.getKey() + "\", \"" + portparameter.getValue() + "\")" + "\n";
             }
-        } else {
-            LOGGER.trace("No port-parameters set on port-node");
+            portparametersContent = portparametersContent.substring(0, portparametersContent.length() - 1);
+            CodefileUtils.addToPortConfig(portparametersContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException("Adapting file '" + communicationserviceClassFile + "' failed: " + e.getMessage(), e);
         }
     }
 }

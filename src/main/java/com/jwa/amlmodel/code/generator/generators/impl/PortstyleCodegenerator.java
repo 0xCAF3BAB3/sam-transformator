@@ -43,7 +43,7 @@ public final class PortstyleCodegenerator implements Codegenerator<GeneratedPort
             final String portstyleContent = "                        .setStyle(\"" + portStyle + "\")";
             CodefileUtils.addToPortConfig(portstyleContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + communicationserviceClassFile + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Adapting file '" + communicationserviceClassFile + "' failed: " + e.getMessage(), e);
         }
     }
 }

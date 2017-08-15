@@ -48,7 +48,7 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
         try {
             portContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate port-content: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating port-content failed: " + e.getMessage(), e);
         }
 
         final Path communicationserviceClassFile = portsConfig.getComponentCommunicationserviceClassFile();
@@ -58,7 +58,7 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
             final String importStatement = communicationMavenModulePackageName + ".port.config.PortConfigBuilder";
             CodefileUtils.addImport(importStatement, communicationserviceClassFile, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + communicationserviceClassFile + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Adapting file '" + communicationserviceClassFile + "' failed: " + e.getMessage(), e);
         }
     }
 }

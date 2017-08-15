@@ -78,7 +78,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         try {
             pomFileContent = CodefileUtils.processFileTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate pom-file-content: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating POM file-content failed: " + e.getMessage(), e);
         }
 
         final String logconfigFileContent;
@@ -89,7 +89,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         try {
             logconfigFileContent = CodefileUtils.processTemplate(logconfigTemplate, logconfigDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate logconfig-file-content: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating Log-Config file-content failed: " + e.getMessage(), e);
         }
 
         try {
@@ -101,8 +101,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
                     GlobalConfig.getCharset()
             );
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Creating Maven module failed: " + e.getMessage(), e);
         }
     }
 
@@ -115,17 +114,15 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         try {
             CodefileUtils.processTemplate(template, datamodel, file, GlobalConfig.getCharset());
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Copying MessageModel class failed: " + e.getMessage(), e);
         }
     }
 
     private static void addComponentMessagemodelDependency(final MavenModuleInfo messagemodelMavenModuleInfo, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
         try {
-            CodefileUtils.addMavenDependancy(messagemodelMavenModuleInfo, componentConfig.getComponentMavenModuleInfo(), GlobalConfig.getCharset());
+            CodefileUtils.addMavenDependency(messagemodelMavenModuleInfo, componentConfig.getComponentMavenModuleInfo(), GlobalConfig.getCharset());
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Adding Maven dependency failed: " + e.getMessage(), e);
         }
     }
 
@@ -142,8 +139,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         try {
             CodefileUtils.processTemplate(template, datamodel, file, GlobalConfig.getCharset());
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Creating " + messagemodelName + " class failed: " + e.getMessage(), e);
         }
     }
 }

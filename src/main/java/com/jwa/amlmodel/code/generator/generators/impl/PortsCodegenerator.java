@@ -72,7 +72,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         try {
             pomFileContent = CodefileUtils.processFileTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate pom-file-content: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating POM file-content failed: " + e.getMessage(), e);
         }
 
         final String logconfigFileContent;
@@ -83,7 +83,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         try {
             logconfigFileContent = CodefileUtils.processTemplate(logconfigTemplate, logconfigDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate logconfig-file-content: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating Log-Config file-content failed: " + e.getMessage(), e);
         }
 
         try {
@@ -95,8 +95,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                     GlobalConfig.getCharset()
             );
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Creating Maven module failed: " + e.getMessage(), e);
         }
     }
 
@@ -105,23 +104,20 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         try {
             IOUtils.copyDirectory(communicationFilesDirectory, communicationMavenModuleInfo.getCodeDirectory());
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Copying directory failed: " + e.getMessage(), e);
         }
         try {
             CodefileUtils.adaptPackageAndImportNames(communicationMavenModuleInfo.getCodeDirectory(), "{{communicationPackageName}}", communicationMavenModuleInfo.getGroupAndArtifactId(), GlobalConfig.getCharset());
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Adapting package- and import-names failed: " + e.getMessage(), e);
         }
     }
 
     private static void addComponentCommunicationDependency(final MavenModuleInfo communicationMavenModuleInfo, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
         try {
-            CodefileUtils.addMavenDependancy(communicationMavenModuleInfo, componentConfig.getComponentMavenModuleInfo(), GlobalConfig.getCharset());
+            CodefileUtils.addMavenDependency(communicationMavenModuleInfo, componentConfig.getComponentMavenModuleInfo(), GlobalConfig.getCharset());
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Adding Maven dependency failed: " + e.getMessage(), e);
         }
     }
 
@@ -134,8 +130,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         try {
             return CodefileUtils.processTemplate(template, datamodel, file, GlobalConfig.getCharset());
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Creating CommunicationService class failed: " + e.getMessage(), e);
         }
     }
 
@@ -146,7 +141,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         try {
             commServiceUsageContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate comm-service-usage-content: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating CommunicationService-usage content failed: " + e.getMessage(), e);
         }
 
         final Path mainClassFile = componentConfig.getComponentMainClassFile();
@@ -160,7 +155,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                 CodefileUtils.addImport(importStatement, mainClassFile, GlobalConfig.getCharset());
             }
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + mainClassFile + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Adapting file '" + mainClassFile + "' failed: " + e.getMessage(), e);
         }
     }
 }

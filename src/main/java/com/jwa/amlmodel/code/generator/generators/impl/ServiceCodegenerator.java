@@ -55,7 +55,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
         try {
             pomFileContent = CodefileUtils.processFileTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate pom-file-content: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating POM file-content failed: " + e.getMessage(), e);
         }
 
         try {
@@ -67,8 +67,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
                     GlobalConfig.getCharset()
             );
         } catch (IOException e) {
-            // TODO: throw better exception
-            throw new CodegeneratorException(e.getMessage(), e);
+            throw new CodegeneratorException("Creating Maven project failed: " + e.getMessage(), e);
         }
     }
 
@@ -80,7 +79,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
         try {
             CodefileUtils.processTemplate(readmeTemplate, readmeDatamodel, readmeFile, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate file '" + readmeFile + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Creating Readme failed: " + e.getMessage(), e);
         }
     }
 }
