@@ -9,17 +9,15 @@ import com.jwa.amlmodel.code.generator.generators.config.generated.impl.Generate
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedServiceConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
+import com.jwa.amlmodel.code.generator.generators.utils.MavenModuleInfo;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +26,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
     private static final Logger LOGGER = LoggerFactory.getLogger(ComponentCodegenerator.class);
 
     @Override
-    public final GeneratedComponentConfig generate(final InternalElement node, final GeneratedServiceConfig parentConfig) throws CodegeneratorException {
+    public final GeneratedComponentConfig generate(final InternalElement node, final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasComponentRole(node)) {
             throw new IllegalArgumentException("Passed node has no component-role");
         }
@@ -38,68 +36,67 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         LOGGER.trace("Generating component for component-node '" + componentName + "' ...");
 
         final String componentArtifactId = AmlmodelConstants.getComponentArtifactId(node);
-        final Path componentDirectory = parentConfig.getServiceDirectory().resolve(componentArtifactId);
-        try {
-            Files.createDirectories(componentDirectory);
-        } catch (IOException e) {
-            throw new CodegeneratorException("Failed to create directory '" + componentDirectory + "': " + e.getMessage(), e);
-        }
+        MavenModuleInfo componentMavenModuleInfo = createComponentMavenModule(componentArtifactId, serviceConfig);
 
-        final String componentGroupId = AmlmodelConstants.getComponentGroupId(node);
-
-        final CodefileUtils.MavenDirectoryStructure componentMavenDirectoryStructure;
-        try {
-            componentMavenDirectoryStructure = CodefileUtils.generateMavenJavaDirectoryStructure(componentDirectory, componentGroupId, componentArtifactId);
-        } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate Maven directory-structure in directory '" + componentDirectory + "': " + e.getMessage(), e);
-        }
-
-        final Path componentMainFile = componentMavenDirectoryStructure.getCodeDirectory().resolve("Main.java");
-        final Map<String, String> componentMainDatamodel = new HashMap<>();
-        final String packageName = componentGroupId + "." + componentArtifactId;
-        componentMainDatamodel.put("packageName", packageName);
-        final Template componentMainTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_INITIAL);
-        try (final Writer writer = Files.newBufferedWriter(componentMainFile, GlobalConfig.getCharset())) {
-            componentMainTemplate.process(componentMainDatamodel, writer);
-        } catch (IOException | TemplateException e) {
-            throw new CodegeneratorException("Failed to generate file '" + componentMainFile + "': " + e.getMessage(), e);
-        }
-
-        final Path componentLogconfigFile = componentMavenDirectoryStructure.getResourcesDirectory().resolve("log4j2.xml");
-        final Map<String, String> componentLogconfigDatamodel = new HashMap<>();
-        componentLogconfigDatamodel.put("name", componentArtifactId);
-        componentLogconfigDatamodel.put("groupId", componentGroupId);
-        final Template componentLogconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
-        try (final Writer writer = Files.newBufferedWriter(componentLogconfigFile, GlobalConfig.getCharset())) {
-            componentLogconfigTemplate.process(componentLogconfigDatamodel, writer);
-        } catch (IOException | TemplateException e) {
-            throw new CodegeneratorException("Failed to generate file '" + componentLogconfigFile + "': " + e.getMessage(), e);
-        }
-
-        final Path componentPomTemplateFile = GlobalConfig.getTemplate(FileTemplate.POM_COMPONENT);
-        final Path componentPomFile = componentDirectory.resolve("pom.xml");
-        final Map<String, String> componentPomDatamodel = new HashMap<>();
-        componentPomDatamodel.put("parentGroupId", parentConfig.getServiceGroupId());
-        componentPomDatamodel.put("parentArtifactId", parentConfig.getServiceArtifactId());
-        componentPomDatamodel.put("groupId", componentGroupId);
-        componentPomDatamodel.put("artifactId", componentArtifactId);
-        componentPomDatamodel.put("profileId", componentArtifactId);
-        final String pathToMainClass = componentGroupId + "." + componentArtifactId + ".Main";
-        componentPomDatamodel.put("pathToMainClass", pathToMainClass);
-        try {
-            CodefileUtils.processFileTemplate(componentPomTemplateFile, componentPomFile, componentPomDatamodel, GlobalConfig.getCharset());
-        } catch (IOException e) {
-            throw new CodegeneratorException("Failed to generate file '" + componentPomFile + "': " + e.getMessage(), e);
-        }
-
-        try {
-            CodefileUtils.addMavenModule(componentArtifactId, parentConfig.getServicePomFile(), GlobalConfig.getCharset());
-        } catch (IOException e) {
-            throw new CodegeneratorException(e.getMessage(), e);
-        }
+        final Path componentMainClassFile = createMainClass(componentMavenModuleInfo);
 
         LOGGER.trace("Generating component for component-node '" + componentName + "' finished");
 
-        return new GeneratedComponentConfig(parentConfig, componentGroupId, componentArtifactId, componentDirectory, componentMainFile, componentPomFile);
+        return new GeneratedComponentConfig(componentMavenModuleInfo, componentMainClassFile, serviceConfig);
+    }
+
+    private static MavenModuleInfo createComponentMavenModule(final String componentArtifactId, final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
+        final String pomFileContent;
+        final Path pomTemplate = GlobalConfig.getTemplate(FileTemplate.POM_COMPONENT);
+        final Map<String, String> pomDatamodel = new HashMap<>();
+        pomDatamodel.put("parentGroupId", serviceConfig.getServiceMavenProjectInfo().getGroupId());
+        pomDatamodel.put("parentArtifactId", serviceConfig.getServiceMavenProjectInfo().getArtifactId());
+        final String componentGroupId = serviceConfig.getServiceMavenProjectInfo().getGroupAndArtifactId();
+        pomDatamodel.put("groupId", componentGroupId);
+        pomDatamodel.put("artifactId", componentArtifactId);
+        pomDatamodel.put("profileId", componentArtifactId);
+        final String pathToMainClass = componentGroupId + "." + componentArtifactId + ".Main";
+        pomDatamodel.put("pathToMainClass", pathToMainClass);
+        try {
+            pomFileContent = CodefileUtils.processFileTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to generate pom-file-content: " + e.getMessage(), e);
+        }
+
+        final String logconfigFileContent;
+        final Template logconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
+        final Map<String, String> logconfigDatamodel = new HashMap<>();
+        logconfigDatamodel.put("name", componentArtifactId);
+        logconfigDatamodel.put("groupId", componentGroupId);
+        try {
+            logconfigFileContent = CodefileUtils.processTemplate(logconfigTemplate, logconfigDatamodel, GlobalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to generate logconfig-file-content: " + e.getMessage(), e);
+        }
+
+        try {
+            return CodefileUtils.createMavenModule(
+                    componentArtifactId,
+                    serviceConfig.getServiceMavenProjectInfo(),
+                    pomFileContent,
+                    logconfigFileContent,
+                    GlobalConfig.getCharset()
+            );
+        } catch (IOException e) {
+            throw new CodegeneratorException(e.getMessage(), e);
+        }
+    }
+
+    private static Path createMainClass(final MavenModuleInfo componentMavenModuleInfo) throws CodegeneratorException {
+        final Template mainTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_INITIAL);
+        final Map<String, String> mainDatamodel = new HashMap<>();
+        final String mainPackageName = componentMavenModuleInfo.getGroupAndArtifactId();
+        mainDatamodel.put("packageName", mainPackageName);
+        final Path mainFile = componentMavenModuleInfo.getCodeDirectory().resolve("Main.java");
+        try {
+            return CodefileUtils.processTemplate(mainTemplate, mainDatamodel, mainFile, GlobalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException(e.getMessage(), e);
+        }
     }
 }

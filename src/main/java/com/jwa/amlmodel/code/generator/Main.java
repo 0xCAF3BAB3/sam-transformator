@@ -20,9 +20,8 @@ public final class Main {
         final Path outputDirectory;
         if (args.length == 0) {
             amlmodelFile = downloadFile("https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml");
-            outputDirectory = Paths.get("code-output/");
             try {
-                IOUtils.createDirectoryIfNotExists(outputDirectory);
+                outputDirectory = IOUtils.createDirectoryIfNotExists(Paths.get("code-output/"));
             } catch (IOException e) {
                 throw new IllegalArgumentException("Creating output-directory failed: " + e.getMessage(), e);
             }
@@ -66,8 +65,7 @@ public final class Main {
     private static Path downloadFile(final String fileUrl) {
         try {
             final URL url = new URL(fileUrl);
-            final Path file = Paths.get("code-input/AMLmodel.aml");
-            IOUtils.downloadFile(url, file);
+            final Path file = IOUtils.downloadFile(url, Paths.get("code-input/AMLmodel.aml"));
             LOGGER.trace("File '" + fileUrl + "' was downloaded to '" + file + "'");
             return file;
         } catch (IOException e) {

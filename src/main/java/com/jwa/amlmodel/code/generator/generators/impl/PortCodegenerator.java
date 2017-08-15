@@ -26,7 +26,7 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
     private static final Logger LOGGER = LoggerFactory.getLogger(PortCodegenerator.class);
 
     @Override
-    public final GeneratedPortConfig generate(final InternalElement node, final GeneratedPortsConfig parentConfig) throws CodegeneratorException {
+    public final GeneratedPortConfig generate(final InternalElement node, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasPortRole(node)) {
             throw new IllegalArgumentException("Passed node has no port-role");
         }
@@ -47,20 +47,20 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
             throw new CodegeneratorException("Failed to generate snippet '" + "component/CommunicationservicePortsnippet" + "': " + e.getMessage(), e);
         }
         try {
-            CodefileUtils.addToMethod(portsnippet, "init", parentConfig.getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
+            CodefileUtils.addToMethod(portsnippet, "init", portsConfig.getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Failed to adapt file '" + portsConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }
         // add import-statement: port.config.PortConfigBuilder
-        final String importStatement = parentConfig.getCommunicationPackageName() + ".port.config.PortConfigBuilder";
+        final String importStatement = portsConfig.getCommunicationPackageName() + ".port.config.PortConfigBuilder";
         try {
-            CodefileUtils.addImport(importStatement, parentConfig.getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
+            CodefileUtils.addImport(importStatement, portsConfig.getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Failed to adapt file '" + portsConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }
 
         LOGGER.trace("Generating port for port-node '" + portName + "' finished");
 
-        return new GeneratedPortConfig(parentConfig);
+        return new GeneratedPortConfig(portsConfig);
     }
 }

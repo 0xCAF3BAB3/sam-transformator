@@ -58,11 +58,7 @@ public final class CodegeneratorService {
             throw new IllegalArgumentException("Exactly one instance-hierarchy expected");
         }
         // TODO: implement validation of passed AML-model
-        /*
-         * check that the AML model elements are used correctly (e.g. no service below a port)
-         * check that a component's groupId matches its service: componentGroupId == serviceGroupId + "." + serviceArtifactId
-         * ...
-         */
+        // e.g. check that the AML model elements are used correctly (e.g. no service below a port)
     }
 
     private static void generateRecursively(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {

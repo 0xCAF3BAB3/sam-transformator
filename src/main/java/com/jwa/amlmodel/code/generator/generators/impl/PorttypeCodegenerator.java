@@ -19,7 +19,7 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
     private static final Logger LOGGER = LoggerFactory.getLogger(PorttypeCodegenerator.class);
 
     @Override
-    public final GeneratedPorttypeConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig) throws CodegeneratorException {
+    public final GeneratedPorttypeConfig generate(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasPorttypeRole(node)) {
             throw new IllegalArgumentException("Passed node has no porttype-role");
         }
@@ -28,7 +28,7 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
 
         LOGGER.trace("Generating port-type for port-node '" + portName + "' ...");
 
-        final Path commServiceFile = parentConfig.getPortsConfig().getComponentCommunicationserviceFile();
+        final Path commServiceFile = portConfig.getPortsConfig().getComponentCommunicationserviceFile();
 
         final String porttype = AmlmodelConstants.getPorttype(node);
         try {

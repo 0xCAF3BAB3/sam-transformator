@@ -18,7 +18,7 @@ public final class PortstyleCodegenerator implements Codegenerator<GeneratedPort
     private static final Logger LOGGER = LoggerFactory.getLogger(PortstyleCodegenerator.class);
 
     @Override
-    public final GeneratedPortstyleConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig) throws CodegeneratorException {
+    public final GeneratedPortstyleConfig generate(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasPortstyleRole(node)) {
             throw new IllegalArgumentException("Passed node has no portstyle-role");
         }
@@ -30,9 +30,9 @@ public final class PortstyleCodegenerator implements Codegenerator<GeneratedPort
         final String portstyleStyle = AmlmodelConstants.getPortstyleStyle(node);
         try {
             final String portstyleContent = "                        .setStyle(\"" + portstyleStyle + "\")";
-            CodefileUtils.addToPortConfig(portstyleContent, portName, parentConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
+            CodefileUtils.addToPortConfig(portstyleContent, portName, portConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getPortsConfig().getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Failed to adapt file '" + portConfig.getPortsConfig().getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
         }
 
         LOGGER.trace("Generating port-style for port-node '" + portName + "' finished");

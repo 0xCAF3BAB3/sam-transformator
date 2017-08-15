@@ -31,7 +31,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
     private static final Logger LOGGER = LoggerFactory.getLogger(PortsCodegenerator.class);
 
     @Override
-    public final GeneratedPortsConfig generate(final InternalElement node, final GeneratedComponentConfig parentConfig) throws CodegeneratorException {
+    public final GeneratedPortsConfig generate(final InternalElement node, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasPortsRole(node)) {
             throw new IllegalArgumentException("Passed node has no ports-role");
         }
@@ -41,16 +41,16 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         LOGGER.trace("Generating ports for ports-node '" + portsName + "' ...");
 
         final String communicationModuleName = "communication";
-        final String communicationPackageName = parentConfig.getComponentGroupId() + "." + communicationModuleName;
-        if (!CodefileUtils.mavenModuleExists(communicationModuleName, parentConfig.getServiceConfig().getServiceDirectory())) {
+        final String communicationPackageName = componentConfig.getComponentGroupId() + "." + communicationModuleName;
+        if (!CodefileUtils.mavenModuleExists(communicationModuleName, componentConfig.getServiceConfig().getServiceDirectory())) {
             try {
                 final String pomFileContent;
                 final Path pomFileTemplate = GlobalConfig.getTemplate(FileTemplate.POM_COMMUNICATION);
                 final Map<String, String> pomFileContentDatamodel = new HashMap<>();
-                final GeneratedServiceConfig serviceConfig = parentConfig.getServiceConfig();
+                final GeneratedServiceConfig serviceConfig = componentConfig.getServiceConfig();
                 pomFileContentDatamodel.put("parentGroupId", serviceConfig.getServiceGroupId());
                 pomFileContentDatamodel.put("parentArtifactId", serviceConfig.getServiceArtifactId());
-                pomFileContentDatamodel.put("groupId", parentConfig.getComponentGroupId());
+                pomFileContentDatamodel.put("groupId", componentConfig.getComponentGroupId());
                 pomFileContentDatamodel.put("artifactId", communicationModuleName);
                 try {
                     pomFileContent = CodefileUtils.processFileTemplate(pomFileTemplate, pomFileContentDatamodel, GlobalConfig.getCharset());
@@ -60,7 +60,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                 final String logconfigFileContent;
                 final Map<String, String> logconfigDatamodel = new HashMap<>();
                 logconfigDatamodel.put("name", communicationModuleName);
-                logconfigDatamodel.put("groupId", parentConfig.getComponentGroupId());
+                logconfigDatamodel.put("groupId", componentConfig.getComponentGroupId());
                 final Template logconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
                 try (final Writer writer = new StringWriter()) {
                     logconfigTemplate.process(logconfigDatamodel, writer);
@@ -68,7 +68,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
                 } catch (IOException | TemplateException e) {
                     throw new CodegeneratorException("Failed to generate snippet '" + "logconfigFileContent" + "': " + e.getMessage(), e);
                 }
-                CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(parentConfig.getComponentGroupId(), communicationModuleName, parentConfig.getServiceConfig().getServiceDirectory(), pomFileContent, logconfigFileContent, GlobalConfig.getCharset());
+                CodefileUtils.MavenModuleStructure mavenModuleStructure = CodefileUtils.createMavenModule(componentConfig.getComponentGroupId(), communicationModuleName, componentConfig.getServiceConfig().getServiceDirectory(), pomFileContent, logconfigFileContent, GlobalConfig.getCharset());
                 // copy components into mavenModuleStructure.getCodeDirectory()
                 final Path communicationFilesDirectory = GlobalConfig.getFiles(com.jwa.amlmodel.code.generator.generators.config.Files.COMMUNICATION);
                 FileUtils.copyDirectory(communicationFilesDirectory.toFile(), mavenModuleStructure.getCodeDirectory().toFile());
@@ -81,9 +81,9 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
 
         // adapt Maven module component:
         // CommunicationService.java anlegen  hat initial noch keine Ports zugewiesen
-        Path componentCommunicationserviceFile = parentConfig.getComponentMainFile().getParent().resolve("CommunicationService.java");
+        Path componentCommunicationserviceFile = componentConfig.getComponentMainFile().getParent().resolve("CommunicationService.java");
         final Map<String, String> componentCommunicationserviceDatamodel = new HashMap<>();
-        componentCommunicationserviceDatamodel.put("packageName", parentConfig.getComponentGroupId() + "." + parentConfig.getComponentArtifactId());
+        componentCommunicationserviceDatamodel.put("packageName", componentConfig.getComponentGroupId() + "." + componentConfig.getComponentArtifactId());
         componentCommunicationserviceDatamodel.put("communicationPackageName", communicationPackageName);
         final Template componentCommunicationserviceTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_INITIAL);
         try (final Writer writer = Files.newBufferedWriter(componentCommunicationserviceFile, GlobalConfig.getCharset())) {
@@ -101,9 +101,9 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
             throw new CodegeneratorException("Failed to generate snippet '" + "ComponentMainCommunicationserviceUsage" + "': " + e.getMessage(), e);
         }
         try {
-            CodefileUtils.addToMethod(snippet, "main", parentConfig.getComponentMainFile(), GlobalConfig.getCharset());
+            CodefileUtils.addToMethod(snippet, "main", componentConfig.getComponentMainFile(), GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
+            throw new CodegeneratorException("Failed to adapt file '" + componentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
         }
         // adapt Main.java: add imports
         final String[] importStatements = {
@@ -112,21 +112,21 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         };
         for(String importStatement : importStatements) {
             try {
-                CodefileUtils.addImport(importStatement, parentConfig.getComponentMainFile(), GlobalConfig.getCharset());
+                CodefileUtils.addImport(importStatement, componentConfig.getComponentMainFile(), GlobalConfig.getCharset());
             } catch (IOException e) {
-                throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
+                throw new CodegeneratorException("Failed to adapt file '" + componentConfig.getComponentMainFile() + "': " + e.getMessage(), e);
             }
         }
         // pom.xml anpassen  module ‚communication’ als ‚dependency’ hinzufügen
-        final Path componentPomFile = parentConfig.getComponentDirectory().resolve("pom.xml");
+        final Path componentPomFile = componentConfig.getComponentDirectory().resolve("pom.xml");
         try {
-            CodefileUtils.addMavenDependancy(parentConfig.getComponentGroupId(), communicationModuleName, componentPomFile, GlobalConfig.getCharset());
+            CodefileUtils.addMavenDependancy(componentConfig.getComponentGroupId(), communicationModuleName, componentPomFile, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Failed to add Maven module '" + communicationModuleName + "' to '" + componentPomFile + "': " + e.getMessage(), e);
         }
 
         LOGGER.trace("Generating ports for ports-node '" + portsName + "' finished");
 
-        return new GeneratedPortsConfig(parentConfig, componentCommunicationserviceFile, communicationPackageName, communicationModuleName);
+        return new GeneratedPortsConfig(componentConfig, componentCommunicationserviceFile, communicationPackageName, communicationModuleName);
     }
 }

@@ -1,17 +1,27 @@
 package com.jwa.amlmodel.code.generator.generators.utils;
 
+import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
+import com.jwa.amlmodel.code.generator.generators.config.FileTemplate;
+import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
+
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -29,7 +39,7 @@ import javax.xml.transform.stream.StreamResult;
 public final class CodefileUtils {
     private CodefileUtils() {}
 
-    public static void processFileTemplate(final Path templateFile, final Path outputFile, final Map<String, String> datamodel, final Charset charset) throws IOException {
+    public static Path processFileTemplate(final Path templateFile, final Path outputFile, final Map<String, String> datamodel, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
         String content = new String(Files.readAllBytes(templateFile), charset);
         for(Map.Entry<String, String> entry : datamodel.entrySet()) {
@@ -37,6 +47,7 @@ public final class CodefileUtils {
             content = content.replace(placeholder, entry.getValue());
         }
         Files.write(outputFile, content.getBytes(charset));
+        return outputFile;
     }
 
     public static String processFileTemplate(final Path templateFile, final Map<String, String> datamodel, final Charset charset) throws IOException {
@@ -49,24 +60,28 @@ public final class CodefileUtils {
         return content;
     }
 
-    public static class MavenDirectoryStructure {
-        private final Path codeDirectory;
-        private final Path resourcesDirectory;
-
-        public MavenDirectoryStructure(final Path codeDirectory, final Path resourcesDirectory) {
-            this.codeDirectory = codeDirectory;
-            this.resourcesDirectory = resourcesDirectory;
-        }
-
-        public final Path getCodeDirectory() {
-            return codeDirectory;
-        }
-
-        public final Path getResourcesDirectory() {
-            return resourcesDirectory;
+    public static Path processTemplate(final Template template, final Map<String, String> datamodel, final Path file, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
+        try (final Writer writer = Files.newBufferedWriter(file, charset)) {
+            template.process(datamodel, writer);
+            return file;
+        } catch (IOException | TemplateException e) {
+            throw new IOException("Failed to generate file '" + file + "': " + e.getMessage(), e);
         }
     }
-    public static MavenDirectoryStructure generateMavenJavaDirectoryStructure(Path moduleDirectory, String groupId, String artifactId) throws IOException {
+
+    public static String processTemplate(final Template template, final Map<String, String> datamodel, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
+        try (final Writer writer = new StringWriter()) {
+            template.process(datamodel, writer);
+            return writer.toString();
+        } catch (IOException | TemplateException e) {
+            throw new IOException("Failed to generate content from template: " + e.getMessage(), e);
+        }
+    }
+
+    /*
+    public static MavenModuleInfo generateMavenJavaDirectoryStructure(Path moduleDirectory, String groupId, String artifactId) throws IOException {
         // TODO: add more exception-handling and parameter-checks
         final Path mainDirectory = moduleDirectory.resolve("src").resolve("main");
 
@@ -80,33 +95,9 @@ public final class CodefileUtils {
         final Path resourcesDirectory = mainDirectory.resolve("resources");
         Files.createDirectories(resourcesDirectory);
 
-        return new MavenDirectoryStructure(codeDirectory, resourcesDirectory);
+        return new MavenModuleInfo(codeDirectory, resourcesDirectory);
     }
-
-    public static void addMavenModule(final String moduleName, final Path pomFile, final Charset charset) throws IOException {
-        // TODO: add more exception-handling and parameter-checks
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(pomFile.toFile());
-            final Element modules = (Element) document.getElementsByTagName("modules").item(0);
-
-            final Element newModule = document.createElement("module");
-            newModule.setTextContent(moduleName);
-            modules.appendChild(newModule);
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute("indent-number", 4);
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, charset.name());
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-            transformer.transform(new DOMSource(document), new StreamResult(pomFile.toFile()));
-        } catch (TransformerException | SAXException | ParserConfigurationException e) {
-            throw new IOException(e);
-            // TODO: create a good exception-message
-        }
-    }
+    */
 
     public static boolean hasMavenDependancy(final String groupId, final String artifactId, final Path pomFile, final Charset charset) throws IOException {
         try {
@@ -175,35 +166,28 @@ public final class CodefileUtils {
         return Files.exists(moduleDirectory) && Files.isDirectory(moduleDirectory);
     }
 
-    public static class MavenModuleStructure {
-        private final Path directory;
-        private final Path codeDirectory;
-
-        public MavenModuleStructure(final Path directory, final Path codeDirectory) {
-            this.directory = directory;
-            this.codeDirectory = codeDirectory;
-        }
-
-        public final Path getDirectory() {
-            return directory;
-        }
-
-        public final Path getCodeDirectory() {
-            return codeDirectory;
-        }
-    }
-    public static MavenModuleStructure createMavenModule(final String groupId, final String artifactId, final Path projectDirectory, final String pomFileContent, final String logconfigFileContent, final Charset charset) throws IOException {
+    public static MavenProjectInfo createMavenProject(final String groupId, final String artifactId, final Path projectDirectory, final String pomFileContent, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
-        // create module directory
-        final Path moduleDirectory = projectDirectory.resolve(artifactId);
-        Files.createDirectory(moduleDirectory);
-        // create module pom.xml
-        final Path pomFile = moduleDirectory.resolve("pom.xml");
+        // create directory
+        Files.createDirectory(projectDirectory);
+        // create pom.xml
+        final Path pomFile = projectDirectory.resolve("pom.xml");
+        Files.write(pomFile, pomFileContent.getBytes(charset));
+        return new MavenProjectInfo(groupId, artifactId, projectDirectory, pomFile);
+    }
+
+    public static MavenModuleInfo createMavenModule(final String artifactId, final MavenProjectInfo mavenProjectInfo, final String pomFileContent, final String logconfigFileContent, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
+        // create directory
+        final Path directory = mavenProjectInfo.getDirectory().resolve(artifactId);
+        Files.createDirectory(directory);
+        // create pom.xml
+        final Path pomFile = directory.resolve("pom.xml");
         Files.write(pomFile, pomFileContent.getBytes(charset));
         // generate code-folder
-        final Path mainDirectory = moduleDirectory.resolve("src").resolve("main");
+        final Path mainDirectory = directory.resolve("src").resolve("main");
         Path codeDirectory = mainDirectory.resolve("java");
-        for(String groupIdPart : groupId.split(Pattern.quote("."))) {
+        for(String groupIdPart : mavenProjectInfo.getGroupAndArtifactId().split(Pattern.quote("."))) {
             codeDirectory = codeDirectory.resolve(groupIdPart);
         }
         codeDirectory = codeDirectory.resolve(artifactId); // TODO: can an artifact-id have multiple parts?
@@ -213,10 +197,35 @@ public final class CodefileUtils {
         Files.createDirectories(resourcesDirectory);
         final Path logconfigFile = resourcesDirectory.resolve("log4j2.xml");
         Files.write(logconfigFile, logconfigFileContent.getBytes(charset));
-        // add module to project pom.xml
-        final Path projectPomFile = projectDirectory.resolve("pom.xml");
-        addMavenModule(artifactId, projectPomFile, charset);
-        return new MavenModuleStructure(moduleDirectory, codeDirectory);
+        MavenModuleInfo mavenModuleInfo = new MavenModuleInfo(mavenProjectInfo, artifactId, directory, pomFile, codeDirectory, resourcesDirectory);
+        addMavenModuleToProject(mavenModuleInfo, charset);
+        return mavenModuleInfo;
+    }
+
+    private static void addMavenModuleToProject(final MavenModuleInfo mavenModuleInfo, final Charset charset) throws IOException {
+        // TODO: add more exception-handling and parameter-checks
+        final Path projectPomFile = mavenModuleInfo.getMavenProjectInfo().getPomFile();
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(projectPomFile.toFile());
+            final Element modules = (Element) document.getElementsByTagName("modules").item(0);
+
+            final Element newModule = document.createElement("module");
+            newModule.setTextContent(mavenModuleInfo.getArtifactId());
+            modules.appendChild(newModule);
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setAttribute("indent-number", 4);
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, charset.name());
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.transform(new DOMSource(document), new StreamResult(projectPomFile.toFile()));
+        } catch (TransformerException | SAXException | ParserConfigurationException e) {
+            throw new IOException(e);
+            // TODO: create a good exception-message
+        }
     }
 
     public static void addToMethod(final String statements, final String methodName, final Path file, final Charset charset) throws IOException {

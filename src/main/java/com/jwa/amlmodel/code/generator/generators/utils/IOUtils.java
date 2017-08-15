@@ -10,7 +10,7 @@ import java.nio.file.Path;
 public final class IOUtils {
     private IOUtils() {}
 
-    public static void downloadFile(final URL urlFile, final Path destinationFile) throws IOException {
+    public static Path downloadFile(final URL urlFile, final Path destinationFile) throws IOException {
         if (urlFile == null) {
             throw new IllegalArgumentException("Passed url-file is null");
         }
@@ -18,13 +18,15 @@ public final class IOUtils {
             throw new IllegalArgumentException("Passed destination-file is null");
         }
         FileUtils.copyURLToFile(urlFile, destinationFile.toFile(), 5000, 10000);
+        return destinationFile;
     }
 
-    public static void createDirectoryIfNotExists(final Path directory) throws IOException {
+    public static Path createDirectoryIfNotExists(final Path directory) throws IOException {
         if (directory == null) {
             throw new IllegalArgumentException("Passed directory is null");
         }
         Files.createDirectories(directory);
+        return directory;
     }
 
     public static void clearDirectory(final Path directory) throws IOException {

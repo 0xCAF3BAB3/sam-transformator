@@ -19,7 +19,7 @@ public final class PortparametersCodegenerator implements Codegenerator<Generate
     private static final Logger LOGGER = LoggerFactory.getLogger(PortparametersCodegenerator.class);
 
     @Override
-    public final GeneratedPortparametersConfig generate(final InternalElement node, final GeneratedPortConfig parentConfig) throws CodegeneratorException {
+    public final GeneratedPortparametersConfig generate(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
         if (!AmlmodelConstants.hasPortparametersRole(node)) {
             throw new IllegalArgumentException("Passed node has no portparameters-role");
         }
@@ -36,9 +36,9 @@ public final class PortparametersCodegenerator implements Codegenerator<Generate
                     portparametersContent += "                        .setParameter(\"" + portparameter.getKey() + "\", \"" + portparameter.getValue() + "\")" + "\n";
                 }
                 portparametersContent = portparametersContent.substring(0, portparametersContent.length() - 1);
-                CodefileUtils.addToPortConfig(portparametersContent, portName, parentConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
+                CodefileUtils.addToPortConfig(portparametersContent, portName, portConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
             } catch (IOException e) {
-                throw new CodegeneratorException("Failed to adapt file '" + parentConfig.getPortsConfig().getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
+                throw new CodegeneratorException("Failed to adapt file '" + portConfig.getPortsConfig().getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
             }
         } else {
             LOGGER.trace("No port-parameters set on port-node");
