@@ -19,7 +19,8 @@
                     CommunicationService.AsynchronousSenders.PORTX.getName(),
                     msg -> {
                         ...
-                    });
+                    }
+            );
             */
             portsService.startReceiverPorts();
             /*
