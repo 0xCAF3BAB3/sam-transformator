@@ -14,10 +14,11 @@ public final class AmlmodelConstants {
     // ArchitectureRoleClassLib
     private static final String NAME_ROLECLASSLIB_ARCHITECTURE = "ArchitectureRoleClassLib";
     private static final String NAME_ROLE_COMPONENT = "Component";
+    private static final String NAME_ATTRIBUTE_COMPONENT_GROUPID = "groupId";
     private static final String NAME_ATTRIBUTE_COMPONENT_ARTIFACTID = "artifactId";
     private static final String NAME_ROLE_SERVICE = "Service";
-    private static final String NAME_ATTRIBUTE_SERVICE_ARTIFACTID = "artifactId";
     private static final String NAME_ATTRIBUTE_SERVICE_GROUPID = "groupId";
+    private static final String NAME_ATTRIBUTE_SERVICE_ARTIFACTID = "artifactId";
 
     // DomainModelRoleClassLib
     private static final String NAME_ROLECLASSLIB_DOMAINMODEL = "DomainModelRoleClassLib";
@@ -91,6 +92,14 @@ public final class AmlmodelConstants {
         return AmlUtil.hasRole(node, NAME_ROLECLASSLIB_DOMAINMODEL + "/" + NAME_ROLE_MESSAGEMODEL);
     }
 
+    public static String getServiceGroupId(final InternalElement node) {
+        if (!hasServiceRole(node)) {
+            throw new IllegalArgumentException("Passed node has no service-role");
+        }
+        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_SERVICE + "." + NAME_ATTRIBUTE_SERVICE_GROUPID);
+        return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
+    }
+
     public static String getServiceArtifactId(final InternalElement node) {
         if (!hasServiceRole(node)) {
             throw new IllegalArgumentException("Passed node has no service-role");
@@ -99,11 +108,11 @@ public final class AmlmodelConstants {
         return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
     }
 
-    public static String getServiceGroupId(final InternalElement node) {
-        if (!hasServiceRole(node)) {
-            throw new IllegalArgumentException("Passed node has no service-role");
+    public static String getComponentGroupId(final InternalElement node) {
+        if (!hasComponentRole(node)) {
+            throw new IllegalArgumentException("Passed node has no component-role");
         }
-        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_SERVICE + "." + NAME_ATTRIBUTE_SERVICE_GROUPID);
+        final Optional<String> value = AmlUtil.getAttributeValue(node, NAME_ROLE_COMPONENT + "." + NAME_ATTRIBUTE_COMPONENT_GROUPID);
         return value.orElseThrow(() -> new IllegalArgumentException("Attribute not found"));
     }
 
