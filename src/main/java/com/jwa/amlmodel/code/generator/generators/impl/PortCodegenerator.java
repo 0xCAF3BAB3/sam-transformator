@@ -10,15 +10,13 @@ import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,32 +33,32 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
 
         LOGGER.trace("Generating port for port-node '" + portName + "' ...");
 
-        // CommunicationService.java anpassen  Port zu Methode ‚init’ hinzufügen, Parameter ‚portName’ = IE-Name
-        final String portsnippet;
-        final Map<String, String> portsnippetDatamodel = new HashMap<>();
-        portsnippetDatamodel.put("portName", portName);
-        final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_PORT_SNIPPET);
-        try (final Writer writer = new StringWriter()) {
-            template.process(portsnippetDatamodel, writer);
-            portsnippet = writer.toString();
-        } catch (IOException | TemplateException e) {
-            throw new CodegeneratorException("Failed to generate snippet '" + "component/CommunicationservicePortsnippet" + "': " + e.getMessage(), e);
-        }
-        try {
-            CodefileUtils.addToMethod(portsnippet, "init", portsConfig.getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
-        } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + portsConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
-        }
-        // add import-statement: port.config.PortConfigBuilder
-        final String importStatement = portsConfig.getCommunicationPackageName() + ".port.config.PortConfigBuilder";
-        try {
-            CodefileUtils.addImport(importStatement, portsConfig.getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
-        } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + portsConfig.getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
-        }
+        addPortToComponentCommunicationserviceClass(portName, portsConfig);
 
         LOGGER.trace("Generating port for port-node '" + portName + "' finished");
 
         return new GeneratedPortConfig(portsConfig);
+    }
+
+    private static void addPortToComponentCommunicationserviceClass(final String portName, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
+        final String portContent;
+        final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_PORT_SNIPPET);
+        final Map<String, String> datamodel = new HashMap<>();
+        datamodel.put("portName", portName);
+        try {
+            portContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to generate port-content: " + e.getMessage(), e);
+        }
+
+        final Path communicationserviceClassFile = portsConfig.getComponentCommunicationserviceClassFile();
+        try {
+            CodefileUtils.addToMethod(portContent, "init", communicationserviceClassFile, GlobalConfig.getCharset());
+            final String communicationMavenModulePackageName = portsConfig.getComponentConfig().getServiceConfig().getCommunicationMavenModuleInfo().getGroupAndArtifactId();
+            final String importStatement = communicationMavenModulePackageName + ".port.config.PortConfigBuilder";
+            CodefileUtils.addImport(importStatement, communicationserviceClassFile, GlobalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to adapt file '" + communicationserviceClassFile + "': " + e.getMessage(), e);
+        }
     }
 }

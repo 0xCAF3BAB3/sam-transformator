@@ -122,18 +122,19 @@ public final class CodefileUtils {
         }
     }
 
-    public static void addMavenDependancy(final String groupId, final String artifactId, final Path pomFile, final Charset charset) throws IOException {
+    public static void addMavenDependancy(final MavenModuleInfo dependency, final MavenModuleInfo module, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
+        final Path modulePomFile = module.getPomFile();
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(pomFile.toFile());
+            Document document = documentBuilder.parse(modulePomFile.toFile());
             Element dependencies = (Element) document.getElementsByTagName("dependencies").item(0);
 
             final Element newGroupId = document.createElement("groupId");
-            newGroupId.setTextContent(groupId);
+            newGroupId.setTextContent(dependency.getGroupAndArtifactId());
             final Element newArtifactId = document.createElement("artifactId");
-            newArtifactId.setTextContent(artifactId);
+            newArtifactId.setTextContent(dependency.getArtifactId());
             final Element newVersion = document.createElement("version");
             newVersion.setTextContent("${project.version}");
             Element newDependency = document.createElement("dependency");
@@ -148,22 +149,11 @@ public final class CodefileUtils {
             transformer.setOutputProperty(OutputKeys.ENCODING, charset.name());
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-            transformer.transform(new DOMSource(document), new StreamResult(pomFile.toFile()));
+            transformer.transform(new DOMSource(document), new StreamResult(modulePomFile.toFile()));
         } catch (TransformerException | SAXException | ParserConfigurationException e) {
             throw new IOException(e);
             // TODO: create a good exception-message
         }
-    }
-
-    public static boolean mavenModuleExists(final String moduleName, final Path projectDirectory) {
-        if (moduleName == null || moduleName.isEmpty()) {
-            throw new IllegalArgumentException("Passed module-name is invalid");
-        }
-        if (!IOUtils.isValidDirectory(projectDirectory)) {
-            throw new IllegalArgumentException("Passed project-directory '" + projectDirectory + " doesn't exists or is invalid");
-        }
-        final Path moduleDirectory = projectDirectory.resolve(moduleName);
-        return Files.exists(moduleDirectory) && Files.isDirectory(moduleDirectory);
     }
 
     public static MavenProjectInfo createMavenProject(final String groupId, final String artifactId, final Path projectDirectory, final String pomFileContent, final Charset charset) throws IOException {
@@ -178,6 +168,9 @@ public final class CodefileUtils {
 
     public static MavenModuleInfo createMavenModule(final String artifactId, final MavenProjectInfo mavenProjectInfo, final String pomFileContent, final String logconfigFileContent, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
+        if (isMavenModuleExisting(artifactId, mavenProjectInfo)) {
+            throw new IllegalArgumentException("Module already existing");
+        }
         // create directory
         final Path directory = mavenProjectInfo.getDirectory().resolve(artifactId);
         Files.createDirectory(directory);
@@ -200,6 +193,17 @@ public final class CodefileUtils {
         MavenModuleInfo mavenModuleInfo = new MavenModuleInfo(mavenProjectInfo, artifactId, directory, pomFile, codeDirectory, resourcesDirectory);
         addMavenModuleToProject(mavenModuleInfo, charset);
         return mavenModuleInfo;
+    }
+
+    private static boolean isMavenModuleExisting(final String moduleName, final MavenProjectInfo mavenProjectInfo) {
+        if (moduleName == null || moduleName.isEmpty()) {
+            throw new IllegalArgumentException("Passed module-name is invalid");
+        }
+        if (mavenProjectInfo == null) {
+            throw new IllegalArgumentException("Passed maven-project-info is invalid");
+        }
+        final Path moduleDirectory = mavenProjectInfo.getDirectory().resolve(moduleName);
+        return Files.exists(moduleDirectory) && Files.isDirectory(moduleDirectory);
     }
 
     private static void addMavenModuleToProject(final MavenModuleInfo mavenModuleInfo, final Charset charset) throws IOException {
@@ -257,6 +261,7 @@ public final class CodefileUtils {
         Files.write(file, lines, charset);
     }
 
+    // TODO: refactor this method (port should not be part of its name)
     public static void addToPortConfig(final String content, final String portName, final Path file, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
         final List<String> lines = Files.readAllLines(file, charset);

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 
 public final class PortparametersCodegenerator implements Codegenerator<GeneratedPortConfig, GeneratedPortparametersConfig> {
@@ -28,24 +29,29 @@ public final class PortparametersCodegenerator implements Codegenerator<Generate
 
         LOGGER.trace("Generating port-parameters for port-node '" + portName + "' ...");
 
-        final Map<String, String> portparameters = AmlmodelConstants.getPortparameters(node);
-        if (!portparameters.isEmpty()) {
-            try {
-                String portparametersContent = "";
-                for(Map.Entry<String, String> portparameter : portparameters.entrySet()) {
-                    portparametersContent += "                        .setParameter(\"" + portparameter.getKey() + "\", \"" + portparameter.getValue() + "\")" + "\n";
-                }
-                portparametersContent = portparametersContent.substring(0, portparametersContent.length() - 1);
-                CodefileUtils.addToPortConfig(portparametersContent, portName, portConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
-            } catch (IOException e) {
-                throw new CodegeneratorException("Failed to adapt file '" + portConfig.getPortsConfig().getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
-            }
-        } else {
-            LOGGER.trace("No port-parameters set on port-node");
-        }
+        final Map<String, String> portParameters = AmlmodelConstants.getPortparameters(node);
+        addParametersToPortInComponentCommunicationserviceClass(portParameters, portName, portConfig);
 
         LOGGER.trace("Generating port-parameters for port-node '" + portName + "' finished");
 
         return new GeneratedPortparametersConfig();
+    }
+
+    private static void addParametersToPortInComponentCommunicationserviceClass(final Map<String, String> portParameters, final String portName, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+        if (!portParameters.isEmpty()) {
+            final Path communicationserviceClassFile = portConfig.getPortsConfig().getComponentCommunicationserviceClassFile();
+            try {
+                String portparametersContent = "";
+                for(Map.Entry<String, String> portparameter : portParameters.entrySet()) {
+                    portparametersContent += "                        .setParameter(\"" + portparameter.getKey() + "\", \"" + portparameter.getValue() + "\")" + "\n";
+                }
+                portparametersContent = portparametersContent.substring(0, portparametersContent.length() - 1);
+                CodefileUtils.addToPortConfig(portparametersContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
+            } catch (IOException e) {
+                throw new CodegeneratorException("Failed to adapt file '" + communicationserviceClassFile + "': " + e.getMessage(), e);
+            }
+        } else {
+            LOGGER.trace("No port-parameters set on port-node");
+        }
     }
 }

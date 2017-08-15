@@ -28,34 +28,32 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
 
         LOGGER.trace("Generating port-type for port-node '" + portName + "' ...");
 
-        final Path commServiceFile = portConfig.getPortsConfig().getComponentCommunicationserviceFile();
-
-        final String porttype = AmlmodelConstants.getPorttype(node);
-        try {
-            final String porttypeContent = "                        .setType(\"" + porttype + "\")";
-            CodefileUtils.addToPortConfig(porttypeContent, portName, commServiceFile, GlobalConfig.getCharset());
-        } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + commServiceFile + "': " + e.getMessage(), e);
-        }
-
-        try {
-            final String enumValue = CodefileUtils.toValidJavaIdentifier(portName);
-            if (porttype.equals("Receiver")) {
-                CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "Receivers", commServiceFile, GlobalConfig.getCharset());
-            } else if (porttype.startsWith("Sender/")) {
-                CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "Senders", commServiceFile, GlobalConfig.getCharset());
-                if (porttype.equals("Sender/SynchronousSender")) {
-                    CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "SynchronousSenders", commServiceFile, GlobalConfig.getCharset());
-                } else if (porttype.equals("Sender/AsynchronousSender")) {
-                    CodefileUtils.addValueToEnum(enumValue + "(\"" + portName + "\")", "AsynchronousSenders", commServiceFile, GlobalConfig.getCharset());
-                }
-            }
-        } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + commServiceFile + "': " + e.getMessage(), e);
-        }
+        final String portType = AmlmodelConstants.getPorttype(node);
+        addTypeToPortInComponentCommunicationserviceClass(portType, portName, portConfig);
 
         LOGGER.trace("Generating port-type for port-node '" + portName + "' finished");
 
         return new GeneratedPorttypeConfig();
+    }
+
+    private static void addTypeToPortInComponentCommunicationserviceClass(final String portType, final String portName, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+        final Path communicationserviceClassFile = portConfig.getPortsConfig().getComponentCommunicationserviceClassFile();
+        try {
+            final String porttypeContent = "                        .setType(\"" + portType + "\")";
+            CodefileUtils.addToPortConfig(porttypeContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
+            final String enumStatement = CodefileUtils.toValidJavaIdentifier(portName) + "(\"" + portName + "\")";
+            if (portType.equals("Receiver")) {
+                CodefileUtils.addValueToEnum(enumStatement, "Receivers", communicationserviceClassFile, GlobalConfig.getCharset());
+            } else if (portType.startsWith("Sender/")) {
+                CodefileUtils.addValueToEnum(enumStatement, "Senders", communicationserviceClassFile, GlobalConfig.getCharset());
+                if (portType.equals("Sender/SynchronousSender")) {
+                    CodefileUtils.addValueToEnum(enumStatement, "SynchronousSenders", communicationserviceClassFile, GlobalConfig.getCharset());
+                } else if (portType.equals("Sender/AsynchronousSender")) {
+                    CodefileUtils.addValueToEnum(enumStatement, "AsynchronousSenders", communicationserviceClassFile, GlobalConfig.getCharset());
+                }
+            }
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to adapt file '" + communicationserviceClassFile + "': " + e.getMessage(), e);
+        }
     }
 }

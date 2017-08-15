@@ -36,6 +36,10 @@ public final class IOUtils {
         FileUtils.cleanDirectory(directory.toFile());
     }
 
+    public static void copyDirectory(final Path sourceDirectory, final Path destinationDirectory) throws IOException {
+        FileUtils.copyDirectory(sourceDirectory.toFile(), destinationDirectory.toFile());
+    }
+
     public static boolean isValidDirectory(final Path directory) {
         return directory != null && Files.exists(directory) && Files.isDirectory(directory);
     }

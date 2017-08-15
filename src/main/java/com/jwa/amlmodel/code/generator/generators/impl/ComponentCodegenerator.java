@@ -45,17 +45,17 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         return new GeneratedComponentConfig(componentMavenModuleInfo, componentMainClassFile, serviceConfig);
     }
 
-    private static MavenModuleInfo createComponentMavenModule(final String componentArtifactId, final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
+    private static MavenModuleInfo createComponentMavenModule(final String artifactId, final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
         final String pomFileContent;
         final Path pomTemplate = GlobalConfig.getTemplate(FileTemplate.POM_COMPONENT);
         final Map<String, String> pomDatamodel = new HashMap<>();
         pomDatamodel.put("parentGroupId", serviceConfig.getServiceMavenProjectInfo().getGroupId());
         pomDatamodel.put("parentArtifactId", serviceConfig.getServiceMavenProjectInfo().getArtifactId());
-        final String componentGroupId = serviceConfig.getServiceMavenProjectInfo().getGroupAndArtifactId();
-        pomDatamodel.put("groupId", componentGroupId);
-        pomDatamodel.put("artifactId", componentArtifactId);
-        pomDatamodel.put("profileId", componentArtifactId);
-        final String pathToMainClass = componentGroupId + "." + componentArtifactId + ".Main";
+        final String groupId = serviceConfig.getServiceMavenProjectInfo().getGroupAndArtifactId();
+        pomDatamodel.put("groupId", groupId);
+        pomDatamodel.put("artifactId", artifactId);
+        pomDatamodel.put("profileId", artifactId);
+        final String pathToMainClass = groupId + "." + artifactId + ".Main";
         pomDatamodel.put("pathToMainClass", pathToMainClass);
         try {
             pomFileContent = CodefileUtils.processFileTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
@@ -66,8 +66,8 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final String logconfigFileContent;
         final Template logconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
         final Map<String, String> logconfigDatamodel = new HashMap<>();
-        logconfigDatamodel.put("name", componentArtifactId);
-        logconfigDatamodel.put("groupId", componentGroupId);
+        logconfigDatamodel.put("name", artifactId);
+        logconfigDatamodel.put("groupId", groupId);
         try {
             logconfigFileContent = CodefileUtils.processTemplate(logconfigTemplate, logconfigDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
@@ -76,26 +76,28 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
 
         try {
             return CodefileUtils.createMavenModule(
-                    componentArtifactId,
+                    artifactId,
                     serviceConfig.getServiceMavenProjectInfo(),
                     pomFileContent,
                     logconfigFileContent,
                     GlobalConfig.getCharset()
             );
         } catch (IOException e) {
+            // TODO: throw better exception
             throw new CodegeneratorException(e.getMessage(), e);
         }
     }
 
     private static Path createMainClass(final MavenModuleInfo componentMavenModuleInfo) throws CodegeneratorException {
-        final Template mainTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_INITIAL);
-        final Map<String, String> mainDatamodel = new HashMap<>();
-        final String mainPackageName = componentMavenModuleInfo.getGroupAndArtifactId();
-        mainDatamodel.put("packageName", mainPackageName);
-        final Path mainFile = componentMavenModuleInfo.getCodeDirectory().resolve("Main.java");
+        final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_INITIAL);
+        final Map<String, String> datamodel = new HashMap<>();
+        final String packageName = componentMavenModuleInfo.getGroupAndArtifactId();
+        datamodel.put("packageName", packageName);
+        final Path file = componentMavenModuleInfo.getCodeDirectory().resolve("Main.java");
         try {
-            return CodefileUtils.processTemplate(mainTemplate, mainDatamodel, mainFile, GlobalConfig.getCharset());
+            return CodefileUtils.processTemplate(template, datamodel, file, GlobalConfig.getCharset());
         } catch (IOException e) {
+            // TODO: throw better exception
             throw new CodegeneratorException(e.getMessage(), e);
         }
     }

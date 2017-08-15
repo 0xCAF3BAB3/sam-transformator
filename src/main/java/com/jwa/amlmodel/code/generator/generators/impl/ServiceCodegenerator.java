@@ -67,6 +67,7 @@ public final class ServiceCodegenerator implements Codegenerator<GeneratedRootCo
                     GlobalConfig.getCharset()
             );
         } catch (IOException e) {
+            // TODO: throw better exception
             throw new CodegeneratorException(e.getMessage(), e);
         }
     }

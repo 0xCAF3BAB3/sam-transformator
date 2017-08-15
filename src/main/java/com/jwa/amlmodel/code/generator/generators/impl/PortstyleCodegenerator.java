@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 public final class PortstyleCodegenerator implements Codegenerator<GeneratedPortConfig, GeneratedPortstyleConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PortstyleCodegenerator.class);
@@ -27,16 +28,21 @@ public final class PortstyleCodegenerator implements Codegenerator<GeneratedPort
 
         LOGGER.trace("Generating port-style for port-node '" + portName + "' ...");
 
-        final String portstyleStyle = AmlmodelConstants.getPortstyleStyle(node);
-        try {
-            final String portstyleContent = "                        .setStyle(\"" + portstyleStyle + "\")";
-            CodefileUtils.addToPortConfig(portstyleContent, portName, portConfig.getPortsConfig().getComponentCommunicationserviceFile(), GlobalConfig.getCharset());
-        } catch (IOException e) {
-            throw new CodegeneratorException("Failed to adapt file '" + portConfig.getPortsConfig().getComponentCommunicationserviceFile() + "': " + e.getMessage(), e);
-        }
+        final String portStyle = AmlmodelConstants.getPortstyleStyle(node);
+        addStyleToPortInComponentCommunicationserviceClass(portStyle, portName, portConfig);
 
         LOGGER.trace("Generating port-style for port-node '" + portName + "' finished");
 
         return new GeneratedPortstyleConfig();
+    }
+
+    private static void addStyleToPortInComponentCommunicationserviceClass(final String portStyle, final String portName, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+        final Path communicationserviceClassFile = portConfig.getPortsConfig().getComponentCommunicationserviceClassFile();
+        try {
+            final String portstyleContent = "                        .setStyle(\"" + portStyle + "\")";
+            CodefileUtils.addToPortConfig(portstyleContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
+        } catch (IOException e) {
+            throw new CodegeneratorException("Failed to adapt file '" + communicationserviceClassFile + "': " + e.getMessage(), e);
+        }
     }
 }

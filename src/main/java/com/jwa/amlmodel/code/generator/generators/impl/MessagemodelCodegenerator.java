@@ -13,18 +13,13 @@ import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
 import com.jwa.amlmodel.code.generator.generators.utils.IOUtils;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 import org.cdlflex.models.CAEX.InternalElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
