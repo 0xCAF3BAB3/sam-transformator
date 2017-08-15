@@ -7,6 +7,7 @@ import com.jwa.amlmodel.code.generator.generators.utils.MavenProjectInfo;
 public final class GeneratedServiceConfig implements GeneratedConfig {
     private final MavenProjectInfo serviceMavenProjectInfo;
     private MavenModuleInfo communicationMavenModuleInfo;
+    private MavenModuleInfo messagemodelMavenModuleInfo;
     private final GeneratedRootConfig rootConfig;
 
     public GeneratedServiceConfig(final MavenProjectInfo serviceMavenProjectInfo, final GeneratedRootConfig rootConfig) {
@@ -24,6 +25,14 @@ public final class GeneratedServiceConfig implements GeneratedConfig {
 
     public final void setCommunicationMavenModuleInfo(MavenModuleInfo communicationMavenModuleInfo) {
         this.communicationMavenModuleInfo = communicationMavenModuleInfo;
+    }
+
+    public final MavenModuleInfo getMessagemodelMavenModuleInfo() {
+        return messagemodelMavenModuleInfo;
+    }
+
+    public final void setMessagemodelMavenModuleInfo(MavenModuleInfo messagemodelMavenModuleInfo) {
+        this.messagemodelMavenModuleInfo = messagemodelMavenModuleInfo;
     }
 
     public final GeneratedRootConfig getRootConfig() {

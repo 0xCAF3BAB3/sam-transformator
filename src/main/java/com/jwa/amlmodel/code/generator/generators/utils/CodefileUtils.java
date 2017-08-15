@@ -1,9 +1,5 @@
 package com.jwa.amlmodel.code.generator.generators.utils;
 
-import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
-import com.jwa.amlmodel.code.generator.generators.config.FileTemplate;
-import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
-
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -21,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -132,7 +127,7 @@ public final class CodefileUtils {
             Element dependencies = (Element) document.getElementsByTagName("dependencies").item(0);
 
             final Element newGroupId = document.createElement("groupId");
-            newGroupId.setTextContent(dependency.getGroupAndArtifactId());
+            newGroupId.setTextContent(dependency.getMavenProjectInfo().getGroupAndArtifactId());
             final Element newArtifactId = document.createElement("artifactId");
             newArtifactId.setTextContent(dependency.getArtifactId());
             final Element newVersion = document.createElement("version");

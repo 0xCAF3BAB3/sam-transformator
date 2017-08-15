@@ -8,6 +8,7 @@ import java.nio.file.Path;
 public final class GeneratedComponentConfig implements GeneratedConfig {
     private final MavenModuleInfo componentMavenModuleInfo;
     private final Path componentMainClassFile;
+    private boolean isMessagemodelDependencySet = false;
     private final GeneratedServiceConfig serviceConfig;
 
     public GeneratedComponentConfig(final MavenModuleInfo componentMavenModuleInfo, final Path componentMainClassFile, final GeneratedServiceConfig serviceConfig) {
@@ -22,6 +23,14 @@ public final class GeneratedComponentConfig implements GeneratedConfig {
 
     public final Path getComponentMainClassFile() {
         return componentMainClassFile;
+    }
+
+    public final boolean isMessagemodelDependencySet() {
+        return isMessagemodelDependencySet;
+    }
+
+    public void setMessagemodelDependencySet() {
+        isMessagemodelDependencySet = true;
     }
 
     public final GeneratedServiceConfig getServiceConfig() {

@@ -41,8 +41,8 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         final GeneratedServiceConfig serviceConfig = componentConfig.getServiceConfig();
         MavenModuleInfo communicationMavenModule = serviceConfig.getCommunicationMavenModuleInfo();
         if (communicationMavenModule == null) {
-            MavenModuleInfo communicationMavenModuleInfo = createCommunicationMavenModule(componentConfig);
-            copyComponentFilesToComponentMavenModule(communicationMavenModuleInfo);
+            MavenModuleInfo communicationMavenModuleInfo = createCommunicationMavenModule(serviceConfig);
+            copyCommunicationFilesToCommunicationMavenModule(communicationMavenModuleInfo);
             serviceConfig.setCommunicationMavenModuleInfo(communicationMavenModuleInfo);
             communicationMavenModule = serviceConfig.getCommunicationMavenModuleInfo();
         }
@@ -58,13 +58,12 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         return new GeneratedPortsConfig(componentCommunicationserviceClassFile, componentConfig);
     }
 
-    private static MavenModuleInfo createCommunicationMavenModule(final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
+    private static MavenModuleInfo createCommunicationMavenModule(final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
         final String artifactId = "communication";
 
         final String pomFileContent;
         final Path pomTemplate = GlobalConfig.getTemplate(FileTemplate.POM_COMMUNICATION);
         final Map<String, String> pomDatamodel = new HashMap<>();
-        final GeneratedServiceConfig serviceConfig = componentConfig.getServiceConfig();
         pomDatamodel.put("parentGroupId", serviceConfig.getServiceMavenProjectInfo().getGroupId());
         pomDatamodel.put("parentArtifactId", serviceConfig.getServiceMavenProjectInfo().getArtifactId());
         final String groupId = serviceConfig.getServiceMavenProjectInfo().getGroupAndArtifactId();
@@ -101,7 +100,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         }
     }
 
-    private static void copyComponentFilesToComponentMavenModule(final MavenModuleInfo communicationMavenModuleInfo) throws CodegeneratorException {
+    private static void copyCommunicationFilesToCommunicationMavenModule(final MavenModuleInfo communicationMavenModuleInfo) throws CodegeneratorException {
         final Path communicationFilesDirectory = GlobalConfig.getFiles(Files.COMMUNICATION);
         try {
             IOUtils.copyDirectory(communicationFilesDirectory, communicationMavenModuleInfo.getCodeDirectory());

@@ -4,6 +4,7 @@ import com.jwa.amlmodel.code.generator.generators.Codegenerator;
 import com.jwa.amlmodel.code.generator.generators.CodegeneratorException;
 import com.jwa.amlmodel.code.generator.generators.config.GlobalConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortConfig;
+import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortsConfig;
 import com.jwa.amlmodel.code.generator.generators.config.generated.impl.GeneratedPortstyleConfig;
 import com.jwa.amlmodel.code.generator.generators.constants.AmlmodelConstants;
 import com.jwa.amlmodel.code.generator.generators.utils.CodefileUtils;
@@ -29,15 +30,15 @@ public final class PortstyleCodegenerator implements Codegenerator<GeneratedPort
         LOGGER.trace("Generating port-style for port-node '" + portName + "' ...");
 
         final String portStyle = AmlmodelConstants.getPortstyleStyle(node);
-        addStyleToPortInComponentCommunicationserviceClass(portStyle, portName, portConfig);
+        addStyleToPortInComponentCommunicationserviceClass(portStyle, portName, portConfig.getPortsConfig());
 
         LOGGER.trace("Generating port-style for port-node '" + portName + "' finished");
 
         return new GeneratedPortstyleConfig();
     }
 
-    private static void addStyleToPortInComponentCommunicationserviceClass(final String portStyle, final String portName, final GeneratedPortConfig portConfig) throws CodegeneratorException {
-        final Path communicationserviceClassFile = portConfig.getPortsConfig().getComponentCommunicationserviceClassFile();
+    private static void addStyleToPortInComponentCommunicationserviceClass(final String portStyle, final String portName, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
+        final Path communicationserviceClassFile = portsConfig.getComponentCommunicationserviceClassFile();
         try {
             final String portstyleContent = "                        .setStyle(\"" + portStyle + "\")";
             CodefileUtils.addToPortConfig(portstyleContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
