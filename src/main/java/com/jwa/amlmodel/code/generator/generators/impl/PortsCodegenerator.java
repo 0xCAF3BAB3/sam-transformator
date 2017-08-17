@@ -70,7 +70,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
         pomDatamodel.put("groupId", groupId);
         pomDatamodel.put("artifactId", artifactId);
         try {
-            pomFileContent = CodefileUtils.processFileTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
+            pomFileContent = CodefileUtils.processTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Generating POM file-content failed: " + e.getMessage(), e);
         }
@@ -146,13 +146,13 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
 
         final Path mainClassFile = componentConfig.getComponentMainClassFile();
         try {
-            CodefileUtils.addToMethod(commServiceUsageContent, "main", mainClassFile, GlobalConfig.getCharset());
+            CodefileUtils.appendStatementsToMethod(commServiceUsageContent, "main", mainClassFile, GlobalConfig.getCharset());
             final String[] importStatements = {
                     communicationMavenModuleInfo.getGroupAndArtifactId() + ".ports.PortsService",
                     communicationMavenModuleInfo.getGroupAndArtifactId() + ".ports.PortsServiceException"
             };
             for(String importStatement : importStatements) {
-                CodefileUtils.addImport(importStatement, mainClassFile, GlobalConfig.getCharset());
+                CodefileUtils.addImportStatement(importStatement, mainClassFile, GlobalConfig.getCharset());
             }
         } catch (IOException e) {
             throw new CodegeneratorException("Adapting file '" + mainClassFile + "' failed: " + e.getMessage(), e);

@@ -58,7 +58,7 @@ public final class ComponentCodegenerator implements Codegenerator<GeneratedServ
         final String pathToMainClass = groupId + "." + artifactId + ".Main";
         pomDatamodel.put("pathToMainClass", pathToMainClass);
         try {
-            pomFileContent = CodefileUtils.processFileTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
+            pomFileContent = CodefileUtils.processTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Generating POM file-content failed: " + e.getMessage(), e);
         }

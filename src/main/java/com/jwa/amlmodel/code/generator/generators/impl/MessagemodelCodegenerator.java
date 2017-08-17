@@ -76,7 +76,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
         pomDatamodel.put("dependencyCommunicationGroupId", serviceConfig.getServiceMavenProjectInfo().getGroupAndArtifactId());
         pomDatamodel.put("dependencyCommunicationArtifactId", serviceConfig.getCommunicationMavenModuleInfo().getArtifactId());
         try {
-            pomFileContent = CodefileUtils.processFileTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
+            pomFileContent = CodefileUtils.processTemplate(pomTemplate, pomDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Generating POM file-content failed: " + e.getMessage(), e);
         }

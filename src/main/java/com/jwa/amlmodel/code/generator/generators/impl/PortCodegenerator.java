@@ -53,10 +53,10 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
 
         final Path communicationserviceClassFile = portsConfig.getComponentCommunicationserviceClassFile();
         try {
-            CodefileUtils.addToMethod(portContent, "init", communicationserviceClassFile, GlobalConfig.getCharset());
+            CodefileUtils.appendStatementsToMethod(portContent, "init", communicationserviceClassFile, GlobalConfig.getCharset());
             final String communicationMavenModulePackageName = portsConfig.getComponentConfig().getServiceConfig().getCommunicationMavenModuleInfo().getGroupAndArtifactId();
             final String importStatement = communicationMavenModulePackageName + ".port.config.PortConfigBuilder";
-            CodefileUtils.addImport(importStatement, communicationserviceClassFile, GlobalConfig.getCharset());
+            CodefileUtils.addImportStatement(importStatement, communicationserviceClassFile, GlobalConfig.getCharset());
         } catch (IOException e) {
             throw new CodegeneratorException("Adapting file '" + communicationserviceClassFile + "' failed: " + e.getMessage(), e);
         }
