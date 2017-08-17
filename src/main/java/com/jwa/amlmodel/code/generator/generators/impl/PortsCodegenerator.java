@@ -77,7 +77,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
 
         final String logconfigFileContent;
         final Template logconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
-        final Map<String, String> logconfigDatamodel = new HashMap<>();
+        final Map<String, Object> logconfigDatamodel = new HashMap<>();
         logconfigDatamodel.put("name", artifactId);
         logconfigDatamodel.put("groupId", groupId);
         try {
@@ -137,7 +137,7 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
     private static void adaptComponentMainClass(final MavenModuleInfo communicationMavenModuleInfo, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
         final String commServiceUsageContent;
         final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_COMMSERVICEUSAGE_SNIPPET);
-        final Map<String, String> datamodel = new HashMap<>();
+        final Map<String, Object> datamodel = new HashMap<>();
         try {
             commServiceUsageContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
         } catch (IOException e) {

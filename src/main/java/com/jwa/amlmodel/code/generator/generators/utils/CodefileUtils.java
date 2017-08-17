@@ -53,7 +53,7 @@ public final class CodefileUtils {
         }
     }
 
-    public static String processTemplate(final Template template, final Map<String, String> datamodel, final Charset charset) throws IOException {
+    public static String processTemplate(final Template template, final Map<String, Object> datamodel, final Charset charset) throws IOException {
         // TODO: add more exception-handling and parameter-checks
         try (final Writer writer = new StringWriter()) {
             template.process(datamodel, writer);
@@ -61,6 +61,17 @@ public final class CodefileUtils {
         } catch (IOException | TemplateException e) {
             throw new IOException("Failed to generate content from template: " + e.getMessage(), e);
         }
+    }
+
+    public static String rtrim(final String s) {
+        if (s == null) {
+            throw new IllegalArgumentException("Passed String instance is null");
+        }
+        int i = s.length() - 1;
+        while (i >= 0 && Character.isWhitespace(s.charAt(i))) {
+            i--;
+        }
+        return s.substring(0, i + 1);
     }
 
     public static void addMavenDependency(final MavenModuleInfo dependency, final MavenModuleInfo module, final Charset charset) throws IOException {

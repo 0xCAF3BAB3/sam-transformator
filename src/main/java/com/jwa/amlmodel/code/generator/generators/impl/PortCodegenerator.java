@@ -43,7 +43,7 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
     private static void addPortToComponentCommunicationserviceClass(final String portName, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
         final String portContent;
         final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_PORT_SNIPPET);
-        final Map<String, String> datamodel = new HashMap<>();
+        final Map<String, Object> datamodel = new HashMap<>();
         datamodel.put("portName", portName);
         try {
             portContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());

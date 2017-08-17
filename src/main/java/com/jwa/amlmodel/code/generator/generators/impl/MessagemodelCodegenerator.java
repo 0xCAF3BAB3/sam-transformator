@@ -83,7 +83,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
 
         final String logconfigFileContent;
         final Template logconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
-        final Map<String, String> logconfigDatamodel = new HashMap<>();
+        final Map<String, Object> logconfigDatamodel = new HashMap<>();
         logconfigDatamodel.put("name", artifactId);
         logconfigDatamodel.put("groupId", groupId);
         try {
