@@ -322,32 +322,72 @@ public final class CodefileUtils {
         Files.write(file, lines, charset);
     }
 
-    // TODO:
-    // refactor this method (port should not be part of its name)
-    public static void addToPortConfig(final String content, final String portName, final Path file, final Charset charset) throws IOException {
+    public static void insertStatementsToMethod(final String statements, final String methodName, final String headStatement, final String tailStatement, final Path file, final Charset charset) throws IOException {
+        if (statements == null || statements.isEmpty()) {
+            throw new IllegalArgumentException("Passed statements is invalid");
+        }
+        if (methodName == null || methodName.isEmpty()) {
+            throw new IllegalArgumentException("Passed method-name is invalid");
+        }
+        if (headStatement == null || headStatement.isEmpty()) {
+            throw new IllegalArgumentException("Passed head-statement is invalid");
+        }
+        if (tailStatement == null || tailStatement.isEmpty()) {
+            throw new IllegalArgumentException("Passed tail-statement is invalid");
+        }
+        if (!IOUtils.isValidFile(file)) {
+            throw new IllegalArgumentException("Passed file '" + file + "' is not valid file");
+        }
+        if (charset == null) {
+            throw new IllegalArgumentException("Passed charset is null");
+        }
         final List<String> lines = Files.readAllLines(file, charset);
-        Integer builderStart = null;
+        Integer indexMethodHead = null;
         for (int i = 0; i < lines.size(); i++) {
             final String line = lines.get(i);
-            if (line.equals("                \"" + portName + "\",")) {
-                builderStart = i + 1;
-            }
-        }
-        if (builderStart == null) {
-            throw new IOException("Start of port-config not found");
-        }
-        Integer builderEnd = null;
-        for (int i = builderStart; i < lines.size(); i++) {
-            final String line = lines.get(i);
-            if (line.equals("                        .build()")) {
-                builderEnd = i;
+            if (line.contains(methodName) && line.contains("{")) {
+                indexMethodHead = i;
                 break;
             }
         }
-        if (builderEnd == null) {
-            throw new IOException("End of port-config not found");
+        if (indexMethodHead == null) {
+            throw new IOException("Head of method '" + methodName + "' not found");
         }
-        lines.add(builderEnd, content);
+        Integer indexMethodTail = null;
+        for (int i = indexMethodHead; i < lines.size(); i++) {
+            final String line = lines.get(i);
+            if (line.contains("}")) {
+                indexMethodTail = i;
+                break;
+            }
+        }
+        if (indexMethodTail == null) {
+            throw new IOException("Tail of method '" + methodName + "' not found");
+        }
+        // now search between method head and tail
+        Integer indexHeadStatement = null;
+        for (int i = (indexMethodHead + 1); i < indexMethodTail; i++) {
+            final String line = lines.get(i);
+            if (line.contains(headStatement)) {
+                indexHeadStatement = i;
+                break;
+            }
+        }
+        if (indexHeadStatement == null) {
+            throw new IOException("Head-statement not found within method '" + methodName + "' (between line " + (indexMethodHead + 1) + " and " + indexMethodTail + ")");
+        }
+        Integer indexTailStatement = null;
+        for (int i = (indexHeadStatement + 1); i < indexMethodTail; i++) {
+            final String line = lines.get(i);
+            if (line.contains(tailStatement)) {
+                indexTailStatement = i;
+                break;
+            }
+        }
+        if (indexTailStatement == null) {
+            throw new IOException("Tail-statement not found within method '" + methodName + "' (between line " + (indexHeadStatement + 1) + " and " + indexMethodTail + ")");
+        }
+        lines.add(indexTailStatement, statements);
         Files.write(file, lines, charset);
     }
 

@@ -65,8 +65,9 @@ public final class Main {
     private static Path downloadFile(final String fileUrl) {
         try {
             final URL url = new URL(fileUrl);
+            LOGGER.trace("Downloading file '" + fileUrl + "' ...");
             final Path file = IOUtils.downloadFile(url, Paths.get("code-input/AMLmodel.aml"));
-            LOGGER.trace("File '" + fileUrl + "' was downloaded to '" + file + "'");
+            LOGGER.trace("File downloaded and saved to local file '" + file + "'");
             return file;
         } catch (IOException e) {
             throw new IllegalArgumentException("Downloading file failed: " + e.getMessage(), e);

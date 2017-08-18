@@ -48,8 +48,15 @@ public final class PortstyleCodegenerator implements Codegenerator<GeneratedPort
         final Map<String, Object> datamodel = new HashMap<>();
         datamodel.put("portStyle", portStyle);
         try {
-            final String portstyleContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
-            CodefileUtils.addToPortConfig(portstyleContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
+            final String portstyleStatement = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
+            CodefileUtils.insertStatementsToMethod(
+                    portstyleStatement,
+                    "init",
+                    "\"" + portName + "\"",
+                    ".build()",
+                    communicationserviceClassFile,
+                    GlobalConfig.getCharset()
+            );
         } catch (IOException e) {
             throw new CodegeneratorException("Adapting file '" + communicationserviceClassFile + "' failed: " + e.getMessage(), e);
         }

@@ -50,8 +50,15 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
             final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_PORTTYPE_SNIPPET);
             final Map<String, Object> datamodel = new HashMap<>();
             datamodel.put("portType", portType);
-            final String porttypeContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
-            CodefileUtils.addToPortConfig(porttypeContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
+            final String porttypeStatement = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
+            CodefileUtils.insertStatementsToMethod(
+                    porttypeStatement,
+                    "init",
+                    "\"" + portName + "\"",
+                    ".build()",
+                    communicationserviceClassFile,
+                    GlobalConfig.getCharset()
+            );
 
             final List<String> enums = new ArrayList<>();
             if (portType.equals("Receiver")) {
@@ -67,7 +74,12 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
             if (!enums.isEmpty()) {
                 final String enumStatement = CodefileUtils.toValidEnumValue(portName) + "(\"" + portName + "\")";
                 for(String e : enums) {
-                    CodefileUtils.addValueToEnum(enumStatement, e, communicationserviceClassFile, GlobalConfig.getCharset());
+                    CodefileUtils.addValueToEnum(
+                            enumStatement,
+                            e,
+                            communicationserviceClassFile,
+                            GlobalConfig.getCharset()
+                    );
                 }
             }
         } catch (IOException e) {

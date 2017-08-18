@@ -41,22 +41,31 @@ public final class PortCodegenerator implements Codegenerator<GeneratedPortsConf
     }
 
     private static void addPortToComponentCommunicationserviceClass(final String portName, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
-        final String portContent;
+        final String portStatements;
         final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.COMMSERVICE_PORT_SNIPPET);
         final Map<String, Object> datamodel = new HashMap<>();
         datamodel.put("portName", portName);
         try {
-            portContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
+            portStatements = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Generating port-content failed: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating port statements failed: " + e.getMessage(), e);
         }
 
         final Path communicationserviceClassFile = portsConfig.getComponentCommunicationserviceClassFile();
         try {
-            CodefileUtils.appendStatementsToMethod(portContent, "init", communicationserviceClassFile, GlobalConfig.getCharset());
+            CodefileUtils.appendStatementsToMethod(
+                    portStatements,
+                    "init",
+                    communicationserviceClassFile,
+                    GlobalConfig.getCharset()
+            );
             final String communicationMavenModulePackageName = portsConfig.getComponentConfig().getServiceConfig().getCommunicationMavenModuleInfo().getGroupAndArtifactId();
             final String importStatement = communicationMavenModulePackageName + ".port.config.PortConfigBuilder";
-            CodefileUtils.addImportStatement(importStatement, communicationserviceClassFile, GlobalConfig.getCharset());
+            CodefileUtils.addImportStatement(
+                    importStatement,
+                    communicationserviceClassFile,
+                    GlobalConfig.getCharset()
+            );
         } catch (IOException e) {
             throw new CodegeneratorException("Adapting file '" + communicationserviceClassFile + "' failed: " + e.getMessage(), e);
         }

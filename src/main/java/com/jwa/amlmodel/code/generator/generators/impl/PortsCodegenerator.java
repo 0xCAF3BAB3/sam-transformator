@@ -107,7 +107,12 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
             throw new CodegeneratorException("Copying directory failed: " + e.getMessage(), e);
         }
         try {
-            CodefileUtils.adaptPackageAndImportNames(communicationMavenModuleInfo.getCodeDirectory(), "{{communicationPackageName}}", communicationMavenModuleInfo.getGroupAndArtifactId(), GlobalConfig.getCharset());
+            CodefileUtils.adaptPackageAndImportNames(
+                    communicationMavenModuleInfo.getCodeDirectory(),
+                    "{{communicationPackageName}}",
+                    communicationMavenModuleInfo.getGroupAndArtifactId(),
+                    GlobalConfig.getCharset()
+            );
         } catch (IOException e) {
             throw new CodegeneratorException("Adapting package- and import-names failed: " + e.getMessage(), e);
         }
@@ -115,7 +120,11 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
 
     private static void addComponentCommunicationDependency(final MavenModuleInfo communicationMavenModuleInfo, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
         try {
-            CodefileUtils.addMavenDependency(communicationMavenModuleInfo, componentConfig.getComponentMavenModuleInfo(), GlobalConfig.getCharset());
+            CodefileUtils.addMavenDependency(
+                    communicationMavenModuleInfo,
+                    componentConfig.getComponentMavenModuleInfo(),
+                    GlobalConfig.getCharset()
+            );
         } catch (IOException e) {
             throw new CodegeneratorException("Adding Maven dependency failed: " + e.getMessage(), e);
         }
@@ -135,18 +144,23 @@ public final class PortsCodegenerator implements Codegenerator<GeneratedComponen
     }
 
     private static void adaptComponentMainClass(final MavenModuleInfo communicationMavenModuleInfo, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
-        final String commServiceUsageContent;
+        final String commServiceUsageStatements;
         final Template template = GlobalConfig.getTemplate(FreemarkerTemplate.MAIN_COMMSERVICEUSAGE_SNIPPET);
         final Map<String, Object> datamodel = new HashMap<>();
         try {
-            commServiceUsageContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
+            commServiceUsageStatements = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Generating CommunicationService-usage content failed: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating CommunicationService-usage statements failed: " + e.getMessage(), e);
         }
 
         final Path mainClassFile = componentConfig.getComponentMainClassFile();
         try {
-            CodefileUtils.appendStatementsToMethod(commServiceUsageContent, "main", mainClassFile, GlobalConfig.getCharset());
+            CodefileUtils.appendStatementsToMethod(
+                    commServiceUsageStatements,
+                    "main",
+                    mainClassFile,
+                    GlobalConfig.getCharset()
+            );
             final String[] importStatements = {
                     communicationMavenModuleInfo.getGroupAndArtifactId() + ".ports.PortsService",
                     communicationMavenModuleInfo.getGroupAndArtifactId() + ".ports.PortsServiceException"

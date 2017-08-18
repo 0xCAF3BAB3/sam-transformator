@@ -52,9 +52,16 @@ public final class PortparametersCodegenerator implements Codegenerator<Generate
         final Map<String, Object> datamodel = new HashMap<>();
         datamodel.put("portParameters", portParameters);
         try {
-            String portparametersContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
-            portparametersContent = CodefileUtils.rtrim(portparametersContent);
-            CodefileUtils.addToPortConfig(portparametersContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
+            String portparametersStatements = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
+            portparametersStatements = CodefileUtils.rtrim(portparametersStatements);
+            CodefileUtils.insertStatementsToMethod(
+                    portparametersStatements,
+                    "init",
+                    "\"" + portName + "\"",
+                    ".build()",
+                    communicationserviceClassFile,
+                    GlobalConfig.getCharset()
+            );
         } catch (IOException e) {
             throw new CodegeneratorException("Adapting file '" + communicationserviceClassFile + "' failed: " + e.getMessage(), e);
         }
