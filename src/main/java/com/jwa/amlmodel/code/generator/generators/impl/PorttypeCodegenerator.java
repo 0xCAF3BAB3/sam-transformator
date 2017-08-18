@@ -53,21 +53,21 @@ public final class PorttypeCodegenerator implements Codegenerator<GeneratedPortC
             final String porttypeContent = CodefileUtils.processTemplate(template, datamodel, GlobalConfig.getCharset());
             CodefileUtils.addToPortConfig(porttypeContent, portName, communicationserviceClassFile, GlobalConfig.getCharset());
 
-            final List<String> enumNames = new ArrayList<>();
+            final List<String> enums = new ArrayList<>();
             if (portType.equals("Receiver")) {
-                enumNames.add("Receivers");
+                enums.add("Receivers");
             } else if (portType.startsWith("Sender/")) {
-                enumNames.add("Senders");
+                enums.add("Senders");
                 if (portType.equals("Sender/SynchronousSender")) {
-                    enumNames.add("SynchronousSenders");
+                    enums.add("SynchronousSenders");
                 } else if (portType.equals("Sender/AsynchronousSender")) {
-                    enumNames.add("AsynchronousSenders");
+                    enums.add("AsynchronousSenders");
                 }
             }
-            if (!enumNames.isEmpty()) {
-                final String enumStatement = CodefileUtils.toValidJavaIdentifier(portName) + "(\"" + portName + "\")";
-                for(String enumName : enumNames) {
-                    CodefileUtils.addValueToEnum(enumStatement, enumName, communicationserviceClassFile, GlobalConfig.getCharset());
+            if (!enums.isEmpty()) {
+                final String enumStatement = CodefileUtils.toValidEnumValue(portName) + "(\"" + portName + "\")";
+                for(String e : enums) {
+                    CodefileUtils.addValueToEnum(enumStatement, e, communicationserviceClassFile, GlobalConfig.getCharset());
                 }
             }
         } catch (IOException e) {

@@ -58,7 +58,17 @@ public final class CodegeneratorService {
             throw new IllegalArgumentException("Exactly one instance-hierarchy expected");
         }
         // TODO: implement validation of passed AML-model (= check, that the AML model elements are used correctly)
-        // e.g. no service below a port, componentGroupId must be 'serviceGroupId.serviceArtifactId', ...
+        /*
+         *  - no service below a port
+         *  - services, components and ports must have unique names
+         *  - sender-port needs a messagemodel assigned (its optional for receiver-ports)
+         *  - componentGroupId must be 'serviceGroupId.serviceArtifactId'
+         *  - serviceName must be valid (folder with this name will be created)
+         *  - groupId and artifactId of services and components must be valid
+         *    (call methods 'isValidMavenGroupId(...)' and 'isValidMavenArtifactId(...)' in CodefileUtils.java)
+         *  - messagemodelName must be valid (call method 'isValidJavaIdentifier(...)' in CodefileUtils.java)
+         *  - ...
+         */
     }
 
     private static void generateRecursively(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {

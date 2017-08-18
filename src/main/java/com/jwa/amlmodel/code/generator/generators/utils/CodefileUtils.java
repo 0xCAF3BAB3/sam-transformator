@@ -5,6 +5,7 @@ import freemarker.template.TemplateException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -30,6 +31,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 public final class CodefileUtils {
     private CodefileUtils() {}
@@ -141,7 +146,9 @@ public final class CodefileUtils {
         try {
             final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            return documentBuilder.parse(file.toFile());
+            final Document document = documentBuilder.parse(file.toFile());
+            document.normalizeDocument();
+            return document;
         } catch (SAXException | ParserConfigurationException e) {
             throw new IOException(e);
         }
@@ -157,13 +164,25 @@ public final class CodefileUtils {
         if (charset == null) {
             throw new IllegalArgumentException("Passed charset is null");
         }
+        final XPath xPath = XPathFactory.newInstance().newXPath();
+        final NodeList nodeList;
+        try {
+            nodeList = (NodeList) xPath.evaluate("//text()[normalize-space()='']", document, XPathConstants.NODESET);
+        } catch (XPathExpressionException e) {
+            throw new IOException(e);
+        }
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            final Node node = nodeList.item(i);
+            node.getParentNode().removeChild(node);
+        }
         final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformerFactory.setAttribute("indent-number", 4);
+        final int indent = 4;
+        transformerFactory.setAttribute("indent-number", indent);
         try {
             final Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.ENCODING, charset.name());
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", Integer.toString(indent));
             transformer.transform(new DOMSource(document), new StreamResult(file.toFile()));
         } catch (TransformerException e) {
             throw new IOException(e);
@@ -171,11 +190,11 @@ public final class CodefileUtils {
     }
 
     public static MavenProjectInfo createMavenProject(final String groupId, final String artifactId, final Path outputDirectory, final String pomFileContent, final Charset charset) throws IOException {
-        if (groupId == null || groupId.isEmpty()) {
-            throw new IllegalArgumentException("Passed group-id is invalid");
+        if (!isValidMavenGroupId(groupId)) {
+            throw new IllegalArgumentException("Passed group-id '" + groupId + "' is invalid");
         }
-        if (artifactId == null || artifactId.isEmpty()) {
-            throw new IllegalArgumentException("Passed artifact-id is invalid");
+        if (!isValidMavenArtifactId(artifactId)) {
+            throw new IllegalArgumentException("Passed artifact-id '" + artifactId + "' is invalid");
         }
         if (outputDirectory == null) {
             throw new IllegalArgumentException("Passed output-directory is null");
@@ -192,44 +211,53 @@ public final class CodefileUtils {
         return new MavenProjectInfo(groupId, artifactId, outputDirectory, pomFile);
     }
 
-    // TODO:
-    public static MavenModuleInfo createMavenModule(final String artifactId, final MavenProjectInfo mavenProjectInfo, final String pomFileContent, final String logconfigFileContent, final Charset charset) throws IOException {
-        // TODO: add more exception-handling and parameter-checks
-        if (isMavenModuleExisting(artifactId, mavenProjectInfo)) {
-            throw new IllegalArgumentException("Module already existing");
+    public static MavenModuleInfo createMavenModule(final String artifactId, final MavenProjectInfo mavenProjectInfo, final String pomFileContent, final String loggerConfigFileContent, final Charset charset) throws IOException {
+        if (!isValidMavenArtifactId(artifactId)) {
+            throw new IllegalArgumentException("Passed artifact-id '" + artifactId + "' is invalid");
         }
-        // create directory
+        if (mavenProjectInfo == null) {
+            throw new IllegalArgumentException("Passed maven-project-info is null");
+        }
+        if (pomFileContent == null || pomFileContent.isEmpty()) {
+            throw new IllegalArgumentException("Passed POM file-content is invalid");
+        }
+        if (loggerConfigFileContent == null || loggerConfigFileContent.isEmpty()) {
+            throw new IllegalArgumentException("Passed logger-config file-content is invalid");
+        }
+        if (charset == null) {
+            throw new IllegalArgumentException("Passed charset is null");
+        }
+        if (isMavenModuleExisting(artifactId, mavenProjectInfo)) {
+            throw new IllegalArgumentException("Module '" + artifactId + "' already existing");
+        }
         final Path directory = mavenProjectInfo.getDirectory().resolve(artifactId);
         Files.createDirectory(directory);
-        // create pom.xml
         final Path pomFile = directory.resolve("pom.xml");
         Files.write(pomFile, pomFileContent.getBytes(charset));
-        // generate code-folder
         final Path mainDirectory = directory.resolve("src").resolve("main");
         Path codeDirectory = mainDirectory.resolve("java");
         for(String groupIdPart : mavenProjectInfo.getGroupAndArtifactId().split(Pattern.quote("."))) {
             codeDirectory = codeDirectory.resolve(groupIdPart);
         }
-        codeDirectory = codeDirectory.resolve(artifactId); // TODO: can an artifact-id have multiple parts?
+        codeDirectory = codeDirectory.resolve(artifactId);
         Files.createDirectories(codeDirectory);
-        // generate resource-folder with log-config
         final Path resourcesDirectory = mainDirectory.resolve("resources");
         Files.createDirectories(resourcesDirectory);
-        final Path logconfigFile = resourcesDirectory.resolve("log4j2.xml");
-        Files.write(logconfigFile, logconfigFileContent.getBytes(charset));
-        MavenModuleInfo mavenModuleInfo = new MavenModuleInfo(mavenProjectInfo, artifactId, directory, pomFile, codeDirectory, resourcesDirectory);
+        final Path loggerConfigFile = resourcesDirectory.resolve("log4j2.xml");
+        Files.write(loggerConfigFile, loggerConfigFileContent.getBytes(charset));
+        final MavenModuleInfo mavenModuleInfo = new MavenModuleInfo(mavenProjectInfo, artifactId, directory, pomFile, codeDirectory, resourcesDirectory);
         addMavenModuleToProject(mavenModuleInfo, charset);
         return mavenModuleInfo;
     }
 
-    private static boolean isMavenModuleExisting(final String moduleName, final MavenProjectInfo mavenProjectInfo) {
-        if (moduleName == null || moduleName.isEmpty()) {
-            throw new IllegalArgumentException("Passed module-name is invalid");
+    private static boolean isMavenModuleExisting(final String artifactId, final MavenProjectInfo mavenProjectInfo) {
+        if (artifactId == null || artifactId.isEmpty()) {
+            throw new IllegalArgumentException("Passed artifact-id is invalid");
         }
         if (mavenProjectInfo == null) {
             throw new IllegalArgumentException("Passed maven-project-info is null");
         }
-        final Path moduleDirectory = mavenProjectInfo.getDirectory().resolve(moduleName);
+        final Path moduleDirectory = mavenProjectInfo.getDirectory().resolve(artifactId);
         return Files.exists(moduleDirectory) && Files.isDirectory(moduleDirectory);
     }
 
@@ -297,7 +325,6 @@ public final class CodefileUtils {
     // TODO:
     // refactor this method (port should not be part of its name)
     public static void addToPortConfig(final String content, final String portName, final Path file, final Charset charset) throws IOException {
-        // TODO: add more exception-handling and parameter-checks
         final List<String> lines = Files.readAllLines(file, charset);
         Integer builderStart = null;
         for (int i = 0; i < lines.size(); i++) {
@@ -355,6 +382,7 @@ public final class CodefileUtils {
             throw new IOException("No import-statements found");
         }
         lines.add(indexLastImportStatement + 1, importStatementFull);
+        lines.add(indexLastImportStatement + 1, "");
         Files.write(file, lines, charset);
     }
 
@@ -408,14 +436,14 @@ public final class CodefileUtils {
         if (s == null) {
             throw new IllegalArgumentException("Passed String instance is null");
         }
-        String leadingWhitespaces = "";
+        final StringBuilder leadingWhitespaces = new StringBuilder();
         for(Character c : s.toCharArray()) {
             if (!Character.isWhitespace(c)) {
                 break;
             }
-            leadingWhitespaces += c;
+            leadingWhitespaces.append(c);
         }
-        return leadingWhitespaces;
+        return leadingWhitespaces.toString();
     }
 
     public static void adaptPackageAndImportNames(final Path baseDirectory, final String oldPackageName, final String newPackageName, Charset charset) throws IOException {
@@ -458,19 +486,40 @@ public final class CodefileUtils {
         });
     }
 
-    /*
-    // TODO:
-    private static boolean isValidJavaIdentifier(final String name) {
-        return name.matches("\\b[_a-zA-Z][_a-zA-Z0-9]*\\b");
-    }
-    */
-
-    // TODO:
-    public static String toValidJavaIdentifier(final String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Passed name is invalid");
+    private static boolean isValidJavaIdentifier(final String identifier) {
+        if (identifier == null || identifier.isEmpty()) {
+            return false;
         }
-        // TODO: implement me
-        return name.toUpperCase();
+        final char[] chars = identifier.toCharArray();
+        if (!Character.isJavaIdentifierStart(chars[0])) {
+            return false;
+        }
+        for (int i = 1; i < chars.length; i++) {
+            if (!Character.isJavaIdentifierPart(chars[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isValidMavenGroupId(final String groupId) {
+        return groupId != null && Pattern.matches("[a-z]+[a-z0-9.]*", groupId) && !groupId.endsWith(".");
+    }
+
+    private static boolean isValidMavenArtifactId(final String artifactId) {
+        return artifactId != null && Pattern.matches("[a-z]+[a-z0-9]*", artifactId);
+    }
+
+    public static String toValidEnumValue(final String value) {
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException("Passed value is invalid");
+        }
+        String validValue = value;
+        validValue = validValue.toUpperCase();
+        validValue = validValue.replace(" ", "_");
+        if (!isValidJavaIdentifier(validValue)) {
+            validValue = "VALUE_" + value.hashCode();
+        }
+        return validValue;
     }
 }

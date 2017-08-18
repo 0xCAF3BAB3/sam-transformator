@@ -81,15 +81,15 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
             throw new CodegeneratorException("Generating POM file-content failed: " + e.getMessage(), e);
         }
 
-        final String logconfigFileContent;
-        final Template logconfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
-        final Map<String, Object> logconfigDatamodel = new HashMap<>();
-        logconfigDatamodel.put("name", artifactId);
-        logconfigDatamodel.put("groupId", groupId);
+        final String loggerConfigFileContent;
+        final Template loggerConfigTemplate = GlobalConfig.getTemplate(FreemarkerTemplate.LOG4J2);
+        final Map<String, Object> loggerConfigDatamodel = new HashMap<>();
+        loggerConfigDatamodel.put("name", artifactId);
+        loggerConfigDatamodel.put("groupId", groupId);
         try {
-            logconfigFileContent = CodefileUtils.processTemplate(logconfigTemplate, logconfigDatamodel, GlobalConfig.getCharset());
+            loggerConfigFileContent = CodefileUtils.processTemplate(loggerConfigTemplate, loggerConfigDatamodel, GlobalConfig.getCharset());
         } catch (IOException e) {
-            throw new CodegeneratorException("Generating Log-Config file-content failed: " + e.getMessage(), e);
+            throw new CodegeneratorException("Generating logger-config file-content failed: " + e.getMessage(), e);
         }
 
         try {
@@ -97,7 +97,7 @@ public final class MessagemodelCodegenerator implements Codegenerator<GeneratedP
                     artifactId,
                     serviceConfig.getServiceMavenProjectInfo(),
                     pomFileContent,
-                    logconfigFileContent,
+                    loggerConfigFileContent,
                     GlobalConfig.getCharset()
             );
         } catch (IOException e) {
