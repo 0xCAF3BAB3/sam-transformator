@@ -19,9 +19,9 @@ public final class Main {
         final Path amlmodelFile;
         final Path outputDirectory;
         if (args.length == 0) {
-            amlmodelFile = downloadFile("https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml");
+            amlmodelFile = downloadAmlmodelFile("https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml");
             try {
-                outputDirectory = IOUtils.createDirectoryIfNotExists(Paths.get("code-output/"));
+                outputDirectory = IOUtils.createDirectoriesIfNotExists(Paths.get("code-output/"));
             } catch (IOException e) {
                 throw new IllegalArgumentException("Creating output-directory failed: " + e.getMessage(), e);
             }
@@ -33,7 +33,7 @@ public final class Main {
             }
             final String pathToAmlmodelFile = args[0];
             if (pathToAmlmodelFile.startsWith("http")) {
-                amlmodelFile = downloadFile(pathToAmlmodelFile);
+                amlmodelFile = downloadAmlmodelFile(pathToAmlmodelFile);
             } else {
                 amlmodelFile = Paths.get(pathToAmlmodelFile);
             }
@@ -62,15 +62,15 @@ public final class Main {
         LOGGER.info("Generator finished");
     }
 
-    private static Path downloadFile(final String fileUrl) {
+    private static Path downloadAmlmodelFile(final String amlmodelFileUrl) {
         try {
-            final URL url = new URL(fileUrl);
-            LOGGER.trace("Downloading file '" + fileUrl + "' ...");
+            final URL url = new URL(amlmodelFileUrl);
+            LOGGER.trace("Downloading aml-model file '" + amlmodelFileUrl + "' ...");
             final Path file = IOUtils.downloadFile(url, Paths.get("code-input/AMLmodel.aml"));
             LOGGER.trace("File downloaded and saved to local file '" + file + "'");
             return file;
         } catch (IOException e) {
-            throw new IllegalArgumentException("Downloading file failed: " + e.getMessage(), e);
+            throw new IllegalArgumentException("Downloading aml-model file failed: " + e.getMessage(), e);
         }
     }
 }
