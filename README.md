@@ -1,7 +1,7 @@
 # Readme for project 'Bachelor's Thesis Julian Waibel: Code-Artifact-Generator'
 
 ## 1. Content
-Contains the generator, which generates valid Maven/Java projects for [AutomationML][AutomationML page] models.
+Contains the generator, which generates valid Maven/Java software projects for [AutomationML][AutomationML page] models which use the [AutomationML][AutomationML page] entities, that are introduced in the thesis.
 
 ### 1.1. Usage
 
