@@ -35,7 +35,7 @@ public final class CodegeneratorService {
         }
 
         try {
-            validate(amlmodel);
+            validateModel(amlmodel);
         } catch (IllegalArgumentException e) {
             throw new CodegeneratorServiceException("AML-model not valid: " + e.getMessage(), e);
         }
@@ -47,13 +47,13 @@ public final class CodegeneratorService {
         }
 
         try {
-            generateRecursively(amlmodel, outputDirectory);
+            generateCode(amlmodel, outputDirectory);
         } catch (CodegeneratorException e) {
             throw new CodegeneratorServiceException("Code-generation failed: " + e.getMessage(), e);
         }
     }
 
-    private static void validate(final CAEXFile amlmodel) throws IllegalArgumentException {
+    private static void validateModel(final CAEXFile amlmodel) throws IllegalArgumentException {
         if (amlmodel.getInstanceHierarchy().size() != 1) {
             throw new IllegalArgumentException("Exactly one instance-hierarchy expected");
         }
@@ -71,72 +71,72 @@ public final class CodegeneratorService {
          */
     }
 
-    private static void generateRecursively(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {
+    private static void generateCode(final CAEXFile amlmodel, final Path outputDirectory) throws CodegeneratorException {
         InstanceHierarchy instanceHierarchy = amlmodel.getInstanceHierarchy().get(0);
         for(InternalElement node : instanceHierarchy.getInternalElement()) {
             if (AmlmodelConstants.hasServiceRole(node)) {
                 final GeneratedRootConfig rootConfig = new GeneratedRootConfig(outputDirectory);
-                generateRecursively(node, rootConfig);
+                generateServiceCode(node, rootConfig);
             }
         }
     }
 
-    private static void generateRecursively(final InternalElement node, final GeneratedRootConfig rootConfig) throws CodegeneratorException {
+    private static void generateServiceCode(final InternalElement node, final GeneratedRootConfig rootConfig) throws CodegeneratorException {
         final GeneratedServiceConfig serviceConfig = new ServiceCodegenerator().generate(node, rootConfig);
-        for(InternalElement children : node.getInternalElement()) {
-            if (AmlmodelConstants.hasComponentRole(children)) {
-                generateRecursively(children, serviceConfig);
+        for(InternalElement childNode : node.getInternalElement()) {
+            if (AmlmodelConstants.hasComponentRole(childNode)) {
+                generateComponentCode(childNode, serviceConfig);
             }
         }
     }
 
-    private static void generateRecursively(final InternalElement node, final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
+    private static void generateComponentCode(final InternalElement node, final GeneratedServiceConfig serviceConfig) throws CodegeneratorException {
         final GeneratedComponentConfig componentConfig = new ComponentCodegenerator().generate(node, serviceConfig);
-        for(InternalElement children : node.getInternalElement()) {
-            if (AmlmodelConstants.hasPortsRole(children)) {
-                generateRecursively(children, componentConfig);
+        for(InternalElement childNode : node.getInternalElement()) {
+            if (AmlmodelConstants.hasPortsRole(childNode)) {
+                generatePortsCode(childNode, componentConfig);
             }
         }
     }
 
-    private static void generateRecursively(final InternalElement node, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
+    private static void generatePortsCode(final InternalElement node, final GeneratedComponentConfig componentConfig) throws CodegeneratorException {
         final GeneratedPortsConfig portsConfig = new PortsCodegenerator().generate(node, componentConfig);
-        for(InternalElement children : node.getInternalElement()) {
-            if (AmlmodelConstants.hasPortRole(children)) {
-                generateRecursively(children, portsConfig);
+        for(InternalElement childNode : node.getInternalElement()) {
+            if (AmlmodelConstants.hasPortRole(childNode)) {
+                generatePortCode(childNode, portsConfig);
             }
         }
     }
 
-    private static void generateRecursively(final InternalElement node, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
+    private static void generatePortCode(final InternalElement node, final GeneratedPortsConfig portsConfig) throws CodegeneratorException {
         final GeneratedPortConfig portConfig = new PortCodegenerator().generate(node, portsConfig);
         if (AmlmodelConstants.hasPortstyleRole(node)) {
-            generatePortstyle(node, portConfig);
+            generatePortstyleCode(node, portConfig);
         }
         if (AmlmodelConstants.hasPortparametersRole(node)) {
-            generatePortparameters(node, portConfig);
+            generatePortparametersCode(node, portConfig);
         }
         if (AmlmodelConstants.hasPorttypeRole(node)) {
-            generatePorttype(node, portConfig);
+            generatePorttypeCode(node, portConfig);
         }
         if (AmlmodelConstants.hasMessagemodelRole(node)) {
-            generateMessagemodel(node, portConfig);
+            generateMessagemodelCode(node, portConfig);
         }
     }
 
-    private static void generatePortstyle(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+    private static void generatePortstyleCode(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
         new PortstyleCodegenerator().generate(node, portConfig);
     }
 
-    private static void generatePortparameters(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+    private static void generatePortparametersCode(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
         new PortparametersCodegenerator().generate(node, portConfig);
     }
 
-    private static void generatePorttype(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+    private static void generatePorttypeCode(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
         new PorttypeCodegenerator().generate(node, portConfig);
     }
 
-    private static void generateMessagemodel(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
+    private static void generateMessagemodelCode(final InternalElement node, final GeneratedPortConfig portConfig) throws CodegeneratorException {
         new MessagemodelCodegenerator().generate(node, portConfig);
     }
 }
