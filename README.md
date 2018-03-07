@@ -1,36 +1,43 @@
-# Readme for project 'Bachelor's Thesis Julian Waibel: Code-Artifact-Generator'
+# Readme
 
-## 1. Content
-Contains the generator, which generates valid Maven/Java software projects for [AutomationML][AutomationML page] models which use the [AutomationML][AutomationML page] entities, that are introduced in the thesis.
+## 1. About
+This repository is part of the bachelor's thesis of Julian Waibel at the Technical University of Vienna.
+The following repositories also belong to it:
 
-### 1.1. Usage
+ * [sam-model][sam-model repository]
+ * [sam-transformator-architecture][sam-transformator-architecture repository]
 
-#### 1.1.1. Preconditions
+## 2. Content
+Contains the transformator, which generates valid out-of-the-box runnable code artifacts for [SAM model][sam-model repository] files.
+
+### 2.1. Usage
+
+#### 2.1.1. Preconditions
  * [Java][Java page] >= 1.8
  * [Maven][Maven page]
 
-#### 1.1.2. Run
+#### 2.1.2. Run
 
-##### 1.1.2.1. Build project
+##### 2.1.2.1. Build project
 `mvn clean install`
 
-##### 1.1.2.2. Execute project (= generate code for AutomationML file)
- * `mvn exec:java -P generator` generates code for [this][PushListener file] AutomationML file in the output-directory `code-output/`
- * or specify other AutomationML file and output-directory: `mvn exec:java -P generator -Dexec.args="'<local path or URL (starting with http[s]) to AutomationML file>' '<local path to directory, in which the generated code should be placed>'"`
+##### 2.1.2.2. Execute project (= generate code artifacts for a SAM model)
+ * `mvn exec:java -P transformator` generates code for [this][SAM model file] SAM model file in the output-directory `code-output/`
+ * or specify other SAM model file and output-directory: `mvn exec:java -P transformator -Dexec.args="'<local path or URL (starting with http[s]) to SAM model file>' '<local path to directory, in which the generated code artifacts should be placed>'"`
 
 e.g.
 
- * `mvn exec:java -P generator -Dexec.args="'code-input/PushListener.aml' 'code-output/'"`
- * `mvn exec:java -P generator -Dexec.args="'https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml' 'code-output/'"`
+ * `mvn exec:java -P transformator -Dexec.args="'code-input/MySAMmodel.aml' 'code-output/'"`
+ * `mvn exec:java -P transformator -Dexec.args="'https://raw.githubusercontent.com/0xCAF3BAB3/sam-model/master/SAMmodel_v4.aml' 'code-output/'"`
 
-##### 1.1.2.3. Execute generated code
+##### 2.1.2.3. Execute generated code
 
-###### 1.1.2.3.1. Import code in IDE
+###### 2.1.2.3.1. Import code in IDE
  1. Find the generated code in the specified output-directory.
  2. Import a generated service into your favored IDE as a Maven project.
 
-###### 1.1.2.3.2. Implement business logic
-Implement the logic for the communication events of the ports of the components in the generated `Main` class.
+###### 2.1.2.3.2. Implement business logic
+Implement the business logic and logic for the communication events of the ports of the components in the generated `Main` class.
 Please take a look at the generated comments, which explain how and where to
 
  * add receiver-handlers
@@ -48,28 +55,21 @@ portsService.setReceiverHandler(
 );
 ```
 
-###### 1.1.2.3.3. Run code
+###### 2.1.2.3.3. Run code
  1. Build Maven project: `mvn clean install`
  2. Switch to a components directory: `cd <component-name>` and run it: `mvn exec:java -P <component-name>`
 
-### 1.2. More infos on the 'AutomationML model elements to code-artefacts' transformation
-The [transformation document][Transformation document directory] describes, which code-artefacts are generated for which AutomationML model element.
+### 2.2. More infos on the 'SAM model to code artifacts' transformation
+The [transformation details directory][Transformation details directory] documents briefly which code artifacts get generated for which SAM model elements.
 
-### 1.3. To-Dos
- * Currently the passed AutomationML file is not validated (= check, if the model elements are used correctly). Implementation should be done in method `validate` in `com.jwa.amlmodel.code.generator.service.CodegeneratorService`.
-
-## 2. About
-This repository is part of the bachelor thesis of JWa in the year 2017.
-The following repositories also belong to it:
-
- * [pushlistener-amlmodel][pushlistener-amlmodel repository]
- * [pushlistener-code-architecture][pushlistener-code-architecture repository]
+### 2.3. To-Dos
+ * Currently the passed SAM model file is not validated (= check, if the model elements are used correctly). Implementation should be done in method `validateModel(...)` in `com.jwa.sam.transformator.service.CodegeneratorService.java`.
 
 
-[Transformation document directory]: https://bitbucket.org/0xCAF3BAB3/amlmodel-code-generator/src/master/docs/AmlmodelToCodeTransformation/
-[PushListener file]: https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/raw/master/AMLmodel_v4/PushListener.aml
-[pushlistener-amlmodel repository]: https://bitbucket.org/0xCAF3BAB3/pushlistener-amlmodel/
-[pushlistener-code-architecture repository]: https://bitbucket.org/0xCAF3BAB3/pushlistener-code-architecture/
+[Transformation details directory]: https://github.com/0xCAF3BAB3/sam-transformator/tree/master/docs/transformation-details/
+[SAM model file]: https://raw.githubusercontent.com/0xCAF3BAB3/sam-model/master/SAMmodel_v4.aml
+[sam-model repository]: https://github.com/0xCAF3BAB3/sam-model/
+[sam-transformator-architecture repository]: https://github.com/0xCAF3BAB3/sam-transformator-architecture/
 [AutomationML page]: https://www.automationml.org/
 [Java page]: https://www.java.com/
 [Maven page]: https://maven.apache.org/
